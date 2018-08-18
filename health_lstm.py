@@ -1,12 +1,11 @@
 import numpy as np
 import pandas as pd
-import matplotlib as plt
 from matplotlib import pyplot
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 from keras.models import Sequential
-from keras.layers import Dense, LSTM
-
+from keras.layers import Dense, LSTM, Masking, Dropout, Activation
+from math import sqrt
 from datetime import datetime
 
 
@@ -16,11 +15,20 @@ def parse_all(file):
     raw_data.fillna(-1, inplace=True)
     return raw_data
 
+
+def loss_plt(histo):
+    x=1
+    # for i in range(500):
+    # pyplot.plot(histo.history['loss'], label='train')
+    # pyplot.plot(histo.history['val_loss'], label='test')
+    # pyplot.legend()
+    # pyplot.show()
+
 TEMPORARY = 16
 X = 1
 print(type(X))
 for year in range(15, TEMPORARY):
-    #,15,16
+    # ,15,16
     for station in [2, 7, 11, 14]:
         file = str(station).zfill(2)+'_'+str(year)
         y = parse_all(file)
@@ -47,16 +55,16 @@ for ind, people in enumerate(targets):
 y = pd.Series(y)
 y = y.values
 
-y_sure = y
+y_sure = y.astype('float32')
 values = y.astype('float32')
 values = values.reshape(-1, 1)
-scaler = MinMaxScaler(feature_range=(0, 1))
-y = scaler.fit_transform(values)
+scaler1 = MinMaxScaler(feature_range=(0, 1))
+y = scaler1.fit_transform(values)
 
 X = X.drop("date", axis=1)
 print(X[:5])
 X = X.values
-X_sure = X
+X_sure = X.astype('float32')
 values = X.astype('float32')
 scaler = MinMaxScaler(feature_range=(0, 1))
 X = scaler.fit_transform(values)
@@ -64,19 +72,123 @@ X = scaler.fit_transform(values)
 X = X.reshape((X.shape[0], 1, X.shape[1]))
 X_sure = X_sure.reshape((X_sure.shape[0], 1, X_sure.shape[1]))
 print("{} {}".format(X.shape, y.shape))
+
 # define model
 model = Sequential()
+model.add(Masking(mask_value=-1, input_shape=(1, 16)))
 model.add(LSTM(50, input_shape=(1, 16)))
 model.add(Dense(1))
 model.compile(loss='mean_squared_error', optimizer='adam')
 # fit model
-#for i in range(500):
-history = model.fit(X, y,epochs=500, batch_size=72, verbose=2, shuffle=False)
-pyplot.plot(history.history['loss'], label='train')
-#pyplot.plot(history.history['val_loss'], label='test')
-pyplot.legend()
-pyplot.show()
+history = model.fit(X, y, epochs=500, batch_size=50, verbose=2, shuffle=False)
+loss_plt(history)
 # evaluate model on new data
 yhat = model.predict(X_sure)
-for i in range(len(X)):
-    print('Expected', y_sure[i], 'Predicted', yhat[i])
+inv_yhat = scaler1.inverse_transform(yhat)
+inv_y = scaler1.inverse_transform(y)
+
+pyplot.plot(inv_y, label="real")
+pyplot.plot(inv_yhat, label="first")
+
+rmse = sqrt(mean_squared_error(inv_y, inv_yhat))
+mae = mean_absolute_error(inv_y, inv_yhat)
+
+# define model 1
+model = Sequential()
+model.add(Masking(mask_value=-1, input_shape=(1, 16)))
+model.add(LSTM(50, input_shape=(1, 16), return_sequences=True))
+model.add(Dropout(0.2))
+model.add(LSTM(100, return_sequences=False))
+model.add(Dropout(0.2))
+model.add(Dense(1))
+model.compile(loss='mean_squared_error', optimizer='adam')
+# fit model
+history = model.fit(X, y, epochs=500, batch_size=50, verbose=2, shuffle=False)
+loss_plt(history)
+# evaluate model on new data
+yhat = model.predict(X_sure)
+inv_yhat = scaler1.inverse_transform(yhat)
+inv_y = scaler1.inverse_transform(y)
+
+pyplot.plot(inv_yhat, label='second')
+
+rmse1 = sqrt(mean_squared_error(inv_y, inv_yhat))
+mae1 = mean_absolute_error(inv_y, inv_yhat)
+
+# define model 2
+model = Sequential()
+model.add(Masking(mask_value=-1, input_shape=(1, 16)))
+model.add(LSTM(50, input_shape=(1, 16), return_sequences=True))
+model.add(Dropout(0.2))
+model.add(LSTM(100, return_sequences=False))
+model.add(Dropout(0.2))
+model.add(Dense(1))
+model.compile(loss='mean_squared_error', optimizer='rmsprop')
+# fit model
+history = model.fit(X, y, epochs=500, batch_size=50, verbose=2, shuffle=False)
+loss_plt(history)
+# evaluate model on new data
+yhat = model.predict(X_sure)
+inv_yhat = scaler1.inverse_transform(yhat)
+inv_y = scaler1.inverse_transform(y)
+
+pyplot.plot(inv_yhat, label="third")
+
+rmse2 = sqrt(mean_squared_error(inv_y, inv_yhat))
+mae2 = mean_absolute_error(inv_y, inv_yhat)
+
+# define model 3
+model = Sequential()
+model.add(Masking(mask_value=-1, input_shape=(1, 16)))
+model.add(LSTM(50, input_shape=(1, 16), return_sequences=True))
+model.add(Dropout(0.2))
+model.add(LSTM(100, return_sequences=False))
+model.add(Dropout(0.2))
+model.add(Dense(1))
+model.add(Activation("linear"))
+model.compile(loss='mean_squared_error', optimizer='rmsprop')
+# fit model
+history = model.fit(X, y, epochs=500, batch_size=50, verbose=2, shuffle=False)
+loss_plt(history)
+# evaluate model on new data
+yhat = model.predict(X_sure)
+inv_yhat = scaler1.inverse_transform(yhat)
+inv_y = scaler1.inverse_transform(y)
+
+pyplot.plot(inv_yhat, label="fourth")
+pyplot.legend()
+
+rmse3 = sqrt(mean_squared_error(inv_y, inv_yhat))
+mae3 = mean_absolute_error(inv_y, inv_yhat)
+
+# define model 4
+model = Sequential()
+model.add(Masking(mask_value=-1, input_shape=(1, 16)))
+model.add(LSTM(50, input_shape=(1, 16), return_sequences=True))
+model.add(Dropout(0.2))
+model.add(LSTM(100, return_sequences=False))
+model.add(Dropout(0.2))
+model.add(Dense(1))
+model.add(Activation("linear"))
+model.compile(loss='mean_squared_error', optimizer='adam')
+# fit model
+history = model.fit(X, y, epochs=500, batch_size=50, verbose=2, shuffle=False)
+loss_plt(history)
+# evaluate model on new data
+yhat = model.predict(X_sure)
+inv_yhat = scaler1.inverse_transform(yhat)
+inv_y = scaler1.inverse_transform(y)
+
+pyplot.plot(inv_yhat, label="fifth")
+pyplot.legend()
+
+rmse4 = sqrt(mean_squared_error(inv_y, inv_yhat))
+mae4 = mean_absolute_error(inv_y, inv_yhat)
+# note adam is really bad
+
+pyplot.show()
+print('Test RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(rmse, mae))
+print('Test RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(rmse1, mae1))
+print('Test RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(rmse2, mae2))
+print('Test RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(rmse3, mae3))
+print('Test RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(rmse4, mae4))
