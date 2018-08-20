@@ -73,6 +73,7 @@ X = X.reshape((X.shape[0], 1, X.shape[1]))
 X_sure = X_sure.reshape((X_sure.shape[0], 1, X_sure.shape[1]))
 print("{} {}".format(X.shape, y.shape))
 
+loss = []
 # define model
 model = Sequential()
 model.add(Masking(mask_value=-1, input_shape=(1, 16)))
@@ -90,8 +91,7 @@ inv_y = scaler1.inverse_transform(y)
 pyplot.plot(inv_y, label="real")
 pyplot.plot(inv_yhat, label="first")
 
-rmse = sqrt(mean_squared_error(inv_y, inv_yhat))
-mae = mean_absolute_error(inv_y, inv_yhat)
+loss.append((sqrt(mean_squared_error(inv_y, inv_yhat)), mean_absolute_error(inv_y, inv_yhat)))
 
 # define model 1
 model = Sequential()
@@ -112,8 +112,7 @@ inv_y = scaler1.inverse_transform(y)
 
 pyplot.plot(inv_yhat, label='second')
 
-rmse1 = sqrt(mean_squared_error(inv_y, inv_yhat))
-mae1 = mean_absolute_error(inv_y, inv_yhat)
+loss.append((sqrt(mean_squared_error(inv_y, inv_yhat)), mean_absolute_error(inv_y, inv_yhat)))
 
 # define model 2
 model = Sequential()
@@ -134,8 +133,7 @@ inv_y = scaler1.inverse_transform(y)
 
 pyplot.plot(inv_yhat, label="third")
 
-rmse2 = sqrt(mean_squared_error(inv_y, inv_yhat))
-mae2 = mean_absolute_error(inv_y, inv_yhat)
+loss.append((sqrt(mean_squared_error(inv_y, inv_yhat)), mean_absolute_error(inv_y, inv_yhat)))
 
 # define model 3
 model = Sequential()
@@ -158,8 +156,7 @@ inv_y = scaler1.inverse_transform(y)
 pyplot.plot(inv_yhat, label="fourth")
 pyplot.legend()
 
-rmse3 = sqrt(mean_squared_error(inv_y, inv_yhat))
-mae3 = mean_absolute_error(inv_y, inv_yhat)
+loss.append((sqrt(mean_squared_error(inv_y, inv_yhat)), mean_absolute_error(inv_y, inv_yhat)))
 
 # define model 4
 model = Sequential()
@@ -182,13 +179,33 @@ inv_y = scaler1.inverse_transform(y)
 pyplot.plot(inv_yhat, label="fifth")
 pyplot.legend()
 
-rmse4 = sqrt(mean_squared_error(inv_y, inv_yhat))
-mae4 = mean_absolute_error(inv_y, inv_yhat)
+loss.append((sqrt(mean_squared_error(inv_y, inv_yhat)), mean_absolute_error(inv_y, inv_yhat)))
 # note adam is really bad
 
+# define model 5
+model = Sequential()
+model.add(Masking(mask_value=-1, input_shape=(1, 16)))
+model.add(LSTM(50, input_shape=(1, 16), return_sequences=True))
+model.add(Dropout(0.2))
+model.add(LSTM(100, return_sequences=False))
+model.add(Dropout(0.2))
+model.add(Dense(1))
+model.add(Activation("linear"))
+model.compile(loss='mean_squared_error', optimizer='rmsprop')
+# fit model
+history = model.fit(X, y, epochs=500, batch_size=10, verbose=2, shuffle=False)
+loss_plt(history)
+# evaluate model on new data
+yhat = model.predict(X_sure)
+inv_yhat = scaler1.inverse_transform(yhat)
+inv_y = scaler1.inverse_transform(y)
+
+pyplot.plot(inv_yhat, label="sixth")
+pyplot.legend()
+
+loss.append((sqrt(mean_squared_error(inv_y, inv_yhat)), mean_absolute_error(inv_y, inv_yhat)))
+
+
 pyplot.show()
-print('Test RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(rmse, mae))
-print('Test RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(rmse1, mae1))
-print('Test RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(rmse2, mae2))
-print('Test RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(rmse3, mae3))
-print('Test RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(rmse4, mae4))
+for error in loss:
+    print('Test RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(error[0], error[1]))
