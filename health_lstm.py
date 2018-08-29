@@ -5,7 +5,9 @@ from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, Masking, Dropout, Activation
+from keras.callbacks import TensorBoard
 from math import sqrt
+from time import time
 from datetime import datetime
 
 
@@ -24,25 +26,29 @@ def loss_plt(histo):
     # pyplot.legend()
     # pyplot.show()
 
-TEMPORARY = 16
-X = 1
-print(type(X))
+TEMPORARY = 17
+holder = {}
+X = pd.DataFrame()
 for year in range(15, TEMPORARY):
     # ,15,16
     for station in [2, 7, 11, 14]:
         file = str(station).zfill(2)+'_'+str(year)
         y = parse_all(file)
         print(y[:5])
-        if isinstance(X, int):
-            X = y
+        if year in holder:
+            holder[year] = pd.merge(holder[year], y, on="date", sort=False)
         else:
-            X = pd.merge(X, y, on="date", sort=False)
-print(X[:5])
+            holder[year] = y
+
+for key in holder:
+    X = X.append(other=holder[key], ignore_index=True)
+
+X.to_csv("bogo.csv")
 target_raw = pd.read_csv("target.csv")
-target_raw = target_raw[:4]
-quarters = [0, 0, 0, 0]
+target_raw = target_raw[:(TEMPORARY - 15) * 4]
+quarters = [0 for i in range((TEMPORARY - 15) * 4)]
 for date in X['date'].get_values():
-    which = (int(date[2:-3]) - 1)//3
+    which = ((int(date[2:-3]) - 1)//3) + (int(date[-2:]) - 15) * 4
     quarters[which] = quarters[which] + 1
 print(quarters)
 
@@ -73,15 +79,16 @@ X = X.reshape((X.shape[0], 1, X.shape[1]))
 X_sure = X_sure.reshape((X_sure.shape[0], 1, X_sure.shape[1]))
 print("{} {}".format(X.shape, y.shape))
 
+tensorboard = TensorBoard(log_dir="logs/{}".format(time()))
 loss = []
 # define model
 model = Sequential()
-model.add(Masking(mask_value=-1, input_shape=(1, 16)))
+model.add(Masking(mask_value=-1, input_shape=(X.shape[1], X.shape[2])))
 model.add(LSTM(50, input_shape=(1, 16)))
 model.add(Dense(1))
 model.compile(loss='mean_squared_error', optimizer='adam')
 # fit model
-history = model.fit(X, y, epochs=500, batch_size=50, verbose=2, shuffle=False)
+history = model.fit(X, y, epochs=500, batch_size=50, verbose=1, callbacks=[tensorboard], shuffle=False)
 loss_plt(history)
 # evaluate model on new data
 yhat = model.predict(X_sure)
@@ -103,7 +110,7 @@ model.add(Dropout(0.2))
 model.add(Dense(1))
 model.compile(loss='mean_squared_error', optimizer='adam')
 # fit model
-history = model.fit(X, y, epochs=500, batch_size=50, verbose=2, shuffle=False)
+history = model.fit(X, y, epochs=500, batch_size=50, verbose=1, callbacks=[tensorboard], shuffle=False)
 loss_plt(history)
 # evaluate model on new data
 yhat = model.predict(X_sure)
@@ -124,7 +131,7 @@ model.add(Dropout(0.2))
 model.add(Dense(1))
 model.compile(loss='mean_squared_error', optimizer='rmsprop')
 # fit model
-history = model.fit(X, y, epochs=500, batch_size=50, verbose=2, shuffle=False)
+history = model.fit(X, y, epochs=500, batch_size=50, verbose=1, callbacks=[tensorboard], shuffle=False)
 loss_plt(history)
 # evaluate model on new data
 yhat = model.predict(X_sure)
@@ -146,7 +153,7 @@ model.add(Dense(1))
 model.add(Activation("linear"))
 model.compile(loss='mean_squared_error', optimizer='rmsprop')
 # fit model
-history = model.fit(X, y, epochs=500, batch_size=50, verbose=2, shuffle=False)
+history = model.fit(X, y, epochs=500, batch_size=50, verbose=1, callbacks=[tensorboard], shuffle=False)
 loss_plt(history)
 # evaluate model on new data
 yhat = model.predict(X_sure)
@@ -169,7 +176,7 @@ model.add(Dense(1))
 model.add(Activation("linear"))
 model.compile(loss='mean_squared_error', optimizer='adam')
 # fit model
-history = model.fit(X, y, epochs=500, batch_size=50, verbose=2, shuffle=False)
+history = model.fit(X, y, epochs=500, batch_size=50, verbose=1, callbacks=[tensorboard], shuffle=False)
 loss_plt(history)
 # evaluate model on new data
 yhat = model.predict(X_sure)
@@ -193,7 +200,7 @@ model.add(Dense(1))
 model.add(Activation("linear"))
 model.compile(loss='mean_squared_error', optimizer='rmsprop')
 # fit model
-history = model.fit(X, y, epochs=500, batch_size=10, verbose=2, shuffle=False)
+history = model.fit(X, y, epochs=500, batch_size=10, verbose=1, callbacks=[tensorboard], shuffle=False)
 loss_plt(history)
 # evaluate model on new data
 yhat = model.predict(X_sure)
@@ -207,5 +214,11 @@ loss.append((sqrt(mean_squared_error(inv_y, inv_yhat)), mean_absolute_error(inv_
 
 
 pyplot.show()
+pyplot.gcf().clear()
+pyplot.plot(inv_y, label="real")
+pyplot.plot(inv_yhat, label="sixth")
+pyplot.legend()
+pyplot.show()
 for error in loss:
     print('Test RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(error[0], error[1]))
+print(model.summary())
