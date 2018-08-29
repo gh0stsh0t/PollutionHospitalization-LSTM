@@ -81,6 +81,18 @@ print("{} {}".format(X.shape, y.shape))
 
 tensorboard = TensorBoard(log_dir="logs/{}".format(time()))
 loss = []
+
+def model_fit(layers*, train_X, train_y, epochs=500, optim='rmsprop', batch=10)
+    model = Sequential(layers)
+    model.compile(loss='mean_squared_error', optimizer=optim)
+    history = model.fit(train_X, train_y, epochs=epochs, batch_size=batch, verbose=1, callbacks=[tensorboard], shuffle=False)
+    loss_plt(history)
+    yhat = model.predict(X_sure)
+    inv_yhat = scaler1.inverse_transform(yhat)
+    inv_y = scaler1.inverse_transform(y)
+    pyplot.plot(inv_yhat, label="third")
+    loss.append((sqrt(mean_squared_error(inv_y, inv_yhat)), mean_absolute_error(inv_y, inv_yhat)))
+
 # define model
 model = Sequential()
 model.add(Masking(mask_value=-1, input_shape=(X.shape[1], X.shape[2])))
@@ -99,6 +111,11 @@ pyplot.plot(inv_y, label="real")
 pyplot.plot(inv_yhat, label="first")
 
 loss.append((sqrt(mean_squared_error(inv_y, inv_yhat)), mean_absolute_error(inv_y, inv_yhat)))
+
+model_fit([Masking(mask_value=-1, input_shape=(X.shape[1], X.shape[2])),
+           LSTM(50, input_shape(input_shape=(X.shape[1], X.shape[2]))),
+           Dense(1)],
+           X, y, optim='adam', batch=50)
 
 # define model 1
 model = Sequential()
@@ -121,6 +138,12 @@ pyplot.plot(inv_yhat, label='second')
 
 loss.append((sqrt(mean_squared_error(inv_y, inv_yhat)), mean_absolute_error(inv_y, inv_yhat)))
 
+model_fit([Masking(mask_value=-1, input_shape=(X.shape[1], X.shape[2])),
+           LSTM(50, input_shape(input_shape=(X.shape[1], X.shape[2]), return_sequences=True)),
+           Dropout(0.2),
+           Dense(1)],
+           X, y, optim='adam', batch=50)
+
 # define model 2
 model = Sequential()
 model.add(Masking(mask_value=-1, input_shape=(1, 16)))
@@ -141,6 +164,14 @@ inv_y = scaler1.inverse_transform(y)
 pyplot.plot(inv_yhat, label="third")
 
 loss.append((sqrt(mean_squared_error(inv_y, inv_yhat)), mean_absolute_error(inv_y, inv_yhat)))
+
+model_fit([Masking(mask_value=-1, input_shape=(X.shape[1], X.shape[2])),
+           LSTM(50, input_shape(input_shape=(X.shape[1], X.shape[2]), return_sequences=True)),
+           Dropout(0.2),
+           LSTM(100),
+           Dropout(0.2),
+           Dense(1)],
+           X, y, batch=50)
 
 # define model 3
 model = Sequential()
@@ -165,6 +196,15 @@ pyplot.legend()
 
 loss.append((sqrt(mean_squared_error(inv_y, inv_yhat)), mean_absolute_error(inv_y, inv_yhat)))
 
+model_fit([Masking(mask_value=-1, input_shape=(X.shape[1], X.shape[2])),
+           LSTM(50, input_shape(input_shape=(X.shape[1], X.shape[2]), return_sequences=True)),
+           Dropout(0.2),
+           LSTM(100),
+           Dropout(0.2),
+           Dense(1)
+           Activation('linear')],
+           X, y, batch=50)
+
 # define model 4
 model = Sequential()
 model.add(Masking(mask_value=-1, input_shape=(1, 16)))
@@ -187,6 +227,16 @@ pyplot.plot(inv_yhat, label="fifth")
 pyplot.legend()
 
 loss.append((sqrt(mean_squared_error(inv_y, inv_yhat)), mean_absolute_error(inv_y, inv_yhat)))
+
+model_fit([Masking(mask_value=-1, input_shape=(X.shape[1], X.shape[2])),
+           LSTM(50, input_shape(input_shape=(X.shape[1], X.shape[2]), return_sequences=True)),
+           Dropout(0.2),
+           LSTM(100),
+           Dropout(0.2),
+           Dense(1)
+           Activation('linear')],
+           X, y, optim='adam', batch=50)
+
 # note adam is really bad
 
 # define model 5
@@ -212,6 +262,14 @@ pyplot.legend()
 
 loss.append((sqrt(mean_squared_error(inv_y, inv_yhat)), mean_absolute_error(inv_y, inv_yhat)))
 
+model_fit([Masking(mask_value=-1, input_shape=(X.shape[1], X.shape[2])),
+           LSTM(50, input_shape(input_shape=(X.shape[1], X.shape[2]), return_sequences=True)),
+           Dropout(0.2),
+           LSTM(100),
+           Dropout(0.2),
+           Dense(1)
+           Activation('linear')],
+           X, y)
 
 pyplot.show()
 pyplot.gcf().clear()
