@@ -5,19 +5,23 @@ from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, Masking, Dropout, Activation
-from keras.callbacks import TensorBoard
+from keras.callbacks import EarlyStopping
+from summarywriter import TrainValTensorBoard
 from math import sqrt
-from time import time
 from datetime import datetime
 
 
 class Pollution:
 
     def __init__(self):
-        self.tensorboard = TensorBoard(log_dir="logs/{}".format(time()))
+#log_dir="logs/{}".format(datetime.now().strftime("%Y%m%d-%H%M%S")),
+        tensorboard = TrainValTensorBoard(histogram_freq=1, write_graph=True)
+        earlystop = EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=0, mode='auto')
+        self.callbacks = [tensorboard, earlystop]
         self.loss = []
         self.scalers = [MinMaxScaler(feature_range=(0, 1)), MinMaxScaler(feature_range=(0, 1))]
         self.y = np.ndarray
+        self.X = np.ndarray
 
     def parse_all(self, file):
         print(file)
@@ -25,15 +29,15 @@ class Pollution:
         raw_data.fillna(-1, inplace=True)
         return raw_data
 
-    def model_fit(self, layers, train_X, train_y, label, epochs=500, optim='rmsprop', batch=10, ):
+    def model_fit(self, layers, train_X, train_y, label, epochs=500, optim='rmsprop', batch=10):
         model = Sequential(layers)
         model.compile(loss='mean_squared_error', optimizer=optim)
-        history = model.fit(train_X, train_y, epochs=epochs, batch_size=batch, verbose=1, callbacks=[self.tensorboard],
-                            shuffle=False)
-        yhat = model.predict(self.X_sure)
+        model.fit(train_X, train_y, epochs=epochs, batch_size=batch, verbose=1, callbacks=self.callbacks, validation_data=(self.X_test, self.y_test), shuffle=False)
+        yhat = model.predict(self.X)
         inv_yhat = self.scalers[0].inverse_transform(yhat)
         pyplot.plot(inv_yhat, label=label)
         self.loss.append((sqrt(mean_squared_error(self.y, inv_yhat)), mean_absolute_error(self.y, inv_yhat)))
+        return model
 
     def main(self):
         TEMPORARY = 17
@@ -67,17 +71,25 @@ class Pollution:
         for ind, people in enumerate(targets):
             y.extend([people // quarters[ind] for _ in range(quarters[ind])])
 
-        self.y = pd.Series(y).values.astype('float32').reshape(-1, 1)
+        self.y = pd.Series(y)[1:].values.astype('float32').reshape(-1, 1)
         pyplot.plot(self.y, label="real")
+
         y = self.scalers[0].fit_transform(self.y)
+        self.y_test = y[y.shape[0]//2:, :]
+        y = y[:y.shape[0]//2, :]
 
         X = X.drop("date", axis=1)
         print(X[:5])
-        self.X = X.values.astype('float32')
-        X = self.scalers[1].fit_transform(self.X)
+        X = X[:-1].values.astype('float32')
+        X = self.scalers[1].fit_transform(X)
+        all_X = X.reshape((X.shape[0], 1, X.shape[1]))
+
+        self.X = all_X
+        self.X_test = X[X.shape[0] // 2:, :]
+        self.X_test = self.X_test.reshape((self.X_test.shape[0], 1, self.X_test.shape[1]))
+        X = X[:X.shape[0] // 2, :]
         X = X.reshape((X.shape[0], 1, X.shape[1]))
         print("{} {}".format(X.shape, y.shape))
-
         # define and fit model 0
         self.model_fit([Masking(mask_value=-1, input_shape=(X.shape[1], X.shape[2])),
                         LSTM(50, input_shape=(X.shape[1], X.shape[2])),
@@ -124,13 +136,20 @@ class Pollution:
                         Dense(1),
                         Activation('linear')],
                        train_X=X, train_y=y, label="sixth")
+        # define and fit model 6
+        self.model_fit([LSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
+                        Dropout(0.2),
+                        LSTM(100),
+                        Dropout(0.2),
+                        Dense(1),
+                        Activation('linear')],
+                       train_X=X, train_y=y, label="seventh")
 
         pyplot.legend()
         pyplot.show()
         pyplot.gcf().clear()
         for error in self.loss:
             print('Test RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(error[0], error[1]))
-
 
 if __name__ == "__main__":
     Pollution().main()
