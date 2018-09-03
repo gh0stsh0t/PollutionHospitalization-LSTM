@@ -74,9 +74,10 @@ class Pollution:
         self.y = pd.Series(y)[1:].values.astype('float32').reshape(-1, 1)
         pyplot.plot(self.y, label="real")
 
+        splitter = y.shape[0] // 3
         y = self.scalers[0].fit_transform(self.y)
-        self.y_test = y[y.shape[0]//2:, :]
-        y = y[:y.shape[0]//2, :]
+        self.y_test = y[-splitter:, :]
+        y = y[:-splitter, :]
 
         X = X.drop("date", axis=1)
         print(X[:5])
@@ -85,9 +86,9 @@ class Pollution:
         all_X = X.reshape((X.shape[0], 1, X.shape[1]))
 
         self.X = all_X
-        self.X_test = X[X.shape[0] // 2:, :]
+        self.X_test = X[-splitter:, :]
         self.X_test = self.X_test.reshape((self.X_test.shape[0], 1, self.X_test.shape[1]))
-        X = X[:X.shape[0] // 2, :]
+        X = X[:-splitter, :]
         X = X.reshape((X.shape[0], 1, X.shape[1]))
         print("{} {}".format(X.shape, y.shape))
         # define and fit model 0
