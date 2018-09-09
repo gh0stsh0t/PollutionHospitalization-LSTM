@@ -227,12 +227,14 @@ class Pollution:
         pyplot.legend()
         pyplot.show()
         pyplot.gcf().clear()
-        for error in self.loss:
-            print('Test RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(error[0], error[1]))
+        splitter = (splitter / self.y.shape[0] ) * 100
+        print("Train-Test split: {:.2f} {.2f}".format(splitter, 100-splitter))
+        for index, error in enumerate(self.loss):
+            print('Model #{}\nTest RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(index+1, error[0], error[1]))
 
 if __name__ == "__main__":
-    if sys.argv[1]:
-        x = sys.argv[1]
+    if len(sys.argv) > 1:
+        x = int(sys.argv[1])
     else:
-        x = 1
+        x = 0
     Pollution().main(x)
