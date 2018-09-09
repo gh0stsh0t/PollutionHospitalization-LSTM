@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot
+from matplotlib import pyplot as plt
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from keras.models import Sequential
@@ -16,45 +16,47 @@ K.set_learning_phase(1)
 class Pollution:
 
     def __init__(self):
-#log_dir="logs/{}".format(datetime.now().strftime("%Y%m%d-%H%M%S")),
-        tensorboard = TrainValTensorBoard(histogram_freq=1, write_graph=True)
-        earlystop = EarlyStopping(monitor='val_loss', min_delta=0, patience=20, verbose=0, mode='auto')
-        self.callbacks = [tensorboard, earlystop]
         self.loss = []
         self.scalers = [MinMaxScaler(feature_range=(0, 1)), MinMaxScaler(feature_range=(0, 1))]
         self.y = np.ndarray
         self.X = np.ndarray
         self.times = []
-        self.models = []
+        self.predictions = []
 
     def parse_all(self, file):
         print(file)
         raw_data = pd.read_csv(file + ".csv")
         return raw_data
 
+    def create_loss(self, history):
+        plt.subplot(2, 1, 1)
+        plt.plot(hist.history['loss'], label=label)
+        plt.ylabel('Train Loss')
+        plt.subplot(2, 1, 2)
+        plt.plot(hist.history['val_loss'], label=label)
+        plt.ylabel('Test Loss')
+
     def model_fit(self, layers, train_X, train_y, label, epochs=500, optim='rmsprop', batch=10):
         start = datetime.now()
         model = Sequential(layers)
         model.compile(loss='mean_squared_error', optimizer=optim)
-        model.fit(train_X, train_y, epochs=epochs, batch_size=batch, verbose=self.verbosity, shuffle=False)#, callbacks=self.callbacks, validation_data=(self.X_test, self.y_test))
+        hist = model.fit(train_X, train_y, batch_size=batch, epochs=epochs, verbose=self.verbosity, shuffle=False, validation_data=(self.X_test, self.y_test))
+        self.create_loss(hist)
         model.summary()
         yhat = model.predict(self.X)
         inv_yhat = self.scalers[0].inverse_transform(yhat)
-        pyplot.plot(inv_yhat, label=label)
+        self.predictions.append((inv_yhat, label))
         self.loss.append((sqrt(mean_squared_error(self.y, inv_yhat)), mean_absolute_error(self.y, inv_yhat)))
         self.times.append(datetime.now() - start)
-        self.models.append(model)
 
     def main(self, verbosity):
         self.verbosity = verbosity
         holder = {}
         X = pd.DataFrame()
         for year in range(15, 18):
-            # ,15,16
             for station in [2, 7, 11, 14]:
                 file = str(station).zfill(2) + '_' + str(year)
                 y = self.parse_all(file)
-                print(y[:5])
                 if year in holder:
                     holder[year] = pd.merge(holder[year], y, how="outer", on="date", sort=False)
                 else:
@@ -64,6 +66,7 @@ class Pollution:
             X = X.append(other=holder[key], ignore_index=True)
 
         X.to_csv("bogo.csv")
+        X.dropna(thresh=6, inplace=True)
         X.fillna(-1, inplace=True)
         target_raw = pd.read_csv("MonthlyTarget.csv")
         weeks = [0 for _ in range(len(target_raw))]
@@ -76,12 +79,9 @@ class Pollution:
         y = []
         for ind, people in enumerate(targets):
             amp = [people // weeks[ind] for _ in range(weeks[ind])]
-            print(amp)
             y.extend(amp)
 
         self.y = pd.Series(y)[1:].values.astype('float32').reshape(-1, 1)
-        pyplot.plot(self.y, label="real")
-
         splitter = (self.y.shape[0] // 3) * 2
         y = self.scalers[0].fit_transform(self.y)
         self.y_test = y[splitter:, :]
@@ -90,7 +90,7 @@ class Pollution:
         # X = pd.read_csv("KNN.csv")
         X = X.drop("date", axis=1)
         print(X[:5])
-        X = X[:-1].values.astype('float32')
+        X = X.values.astype('float32')
         X = self.scalers[1].fit_transform(X)
         all_X = X.reshape((X.shape[0], 1, X.shape[1]))
 
@@ -226,9 +226,17 @@ class Pollution:
         for ind, x in enumerate(self.times):
             print("Time for {}: {}".format(ind, x))
         print("\nTraining time of All Models {}\n".format(datetime.now() - startTime))
-        pyplot.legend()
-        pyplot.show()
-        pyplot.gcf().clear()
+
+        plt.legend()
+        plt.show()
+        plt.gcf().clear()
+
+        plt.plot(self.y, label="real")
+        for vals in self.predictions:
+            plt.plot(vals[0], label=vals[1])
+        plt.legend()
+        plt.show()
+        plt.gcf().clear()
         splitter = (splitter / self.y.shape[0] ) * 100
         print("Train-Test split: {:.2f} {:.2f}".format(splitter, 100-splitter))
         for index, error in enumerate(self.loss):
