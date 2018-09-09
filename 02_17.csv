@@ -12,6 +12,7 @@ date,pm10,so2,no2,o3
 2/5/17,28.91,nan,nan,nan
 3/5/17,53.59,nan,nan,nan
 4/5/17,1.69,nan,nan,nan
+5/5/17,nan,nan,nan,nan
 1/6/17,72.34,nan,nan,nan
 2/6/17,66.53,nan,nan,nan
 3/6/17,14.25,nan,nan,nan
@@ -35,6 +36,8 @@ date,pm10,so2,no2,o3
 3/10/17,41.61,nan,nan,nan
 4/10/17,78.59,nan,nan,nan
 5/10/17,46.31,nan,nan,nan
+1/11/17,nan,nan,nan,nan
+2/11/17,nan,nan,nan,nan
 3/11/17,49.42,nan,nan,nan
 4/11/17,83.48,nan,nan,nan
 1/12/17,68.86,nan,nan,nan

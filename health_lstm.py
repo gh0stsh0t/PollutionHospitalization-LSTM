@@ -30,7 +30,6 @@ class Pollution:
     def parse_all(self, file):
         print(file)
         raw_data = pd.read_csv(file + ".csv")
-        raw_data.fillna(-1, inplace=True)
         return raw_data
 
     def model_fit(self, layers, train_X, train_y, label, epochs=500, optim='rmsprop', batch=10):
@@ -38,6 +37,7 @@ class Pollution:
         model = Sequential(layers)
         model.compile(loss='mean_squared_error', optimizer=optim)
         model.fit(train_X, train_y, epochs=epochs, batch_size=batch, verbose=self.verbosity, shuffle=False)#, callbacks=self.callbacks, validation_data=(self.X_test, self.y_test))
+        model.summary()
         yhat = model.predict(self.X)
         inv_yhat = self.scalers[0].inverse_transform(yhat)
         pyplot.plot(inv_yhat, label=label)
@@ -47,17 +47,16 @@ class Pollution:
 
     def main(self, verbosity):
         self.verbosity = verbosity
-        TEMPORARY = 18
         holder = {}
         X = pd.DataFrame()
-        for year in range(15, TEMPORARY):
+        for year in range(15, 18):
             # ,15,16
             for station in [2, 7, 11, 14]:
                 file = str(station).zfill(2) + '_' + str(year)
                 y = self.parse_all(file)
                 print(y[:5])
                 if year in holder:
-                    holder[year] = pd.merge(holder[year], y, on="date", sort=False)
+                    holder[year] = pd.merge(holder[year], y, how="outer", on="date", sort=False)
                 else:
                     holder[year] = y
 
@@ -65,18 +64,20 @@ class Pollution:
             X = X.append(other=holder[key], ignore_index=True)
 
         X.to_csv("bogo.csv")
-        target_raw = pd.read_csv("target.csv")
-        target_raw = target_raw[:(TEMPORARY - 15) * 4]
-        quarters = [0 for _ in range((TEMPORARY - 15) * 4)]
+        X.fillna(-1, inplace=True)
+        target_raw = pd.read_csv("MonthlyTarget.csv")
+        weeks = [0 for _ in range(len(target_raw))]
         for date in X['date'].get_values():
-            which = ((int(date[2:-3]) - 1) // 3) + (int(date[-2:]) - 15) * 4
-            quarters[which] = quarters[which] + 1
-        print(quarters)
+            which = (int(date[2:-3]) - 1) + (int(date[-2:]) - 15) * 12
+            weeks[which] = weeks[which] + 1
+        print(weeks)
 
         targets = target_raw['target'].get_values()
         y = []
         for ind, people in enumerate(targets):
-            y.extend([people // quarters[ind] for _ in range(quarters[ind])])
+            amp = [people // weeks[ind] for _ in range(weeks[ind])]
+            print(amp)
+            y.extend(amp)
 
         self.y = pd.Series(y)[1:].values.astype('float32').reshape(-1, 1)
         pyplot.plot(self.y, label="real")
@@ -86,6 +87,7 @@ class Pollution:
         self.y_test = y[splitter:, :]
         y = y[:splitter, :]
 
+        # X = pd.read_csv("KNN.csv")
         X = X.drop("date", axis=1)
         print(X[:5])
         X = X[:-1].values.astype('float32')
@@ -228,7 +230,7 @@ class Pollution:
         pyplot.show()
         pyplot.gcf().clear()
         splitter = (splitter / self.y.shape[0] ) * 100
-        print("Train-Test split: {:.2f} {.2f}".format(splitter, 100-splitter))
+        print("Train-Test split: {:.2f} {:.2f}".format(splitter, 100-splitter))
         for index, error in enumerate(self.loss):
             print('Model #{}\nTest RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(index+1, error[0], error[1]))
 
