@@ -28,7 +28,7 @@ class Pollution:
         raw_data = pd.read_csv(file + ".csv")
         return raw_data
 
-    def create_loss(self, history):
+    def create_loss(self, hist, label):
         plt.subplot(2, 1, 1)
         plt.plot(hist.history['loss'], label=label)
         plt.ylabel('Train Loss')
@@ -41,7 +41,7 @@ class Pollution:
         model = Sequential(layers)
         model.compile(loss='mean_squared_error', optimizer=optim)
         hist = model.fit(train_X, train_y, batch_size=batch, epochs=epochs, verbose=self.verbosity, shuffle=False, validation_data=(self.X_test, self.y_test))
-        self.create_loss(hist)
+        self.create_loss(hist, label)
         model.summary()
         yhat = model.predict(self.X)
         inv_yhat = self.scalers[0].inverse_transform(yhat)
@@ -81,7 +81,7 @@ class Pollution:
             amp = [people // weeks[ind] for _ in range(weeks[ind])]
             y.extend(amp)
 
-        self.y = pd.Series(y)[1:].values.astype('float32').reshape(-1, 1)
+        self.y = pd.Series(y).values.astype('float32').reshape(-1, 1)
         splitter = (self.y.shape[0] // 3) * 2
         y = self.scalers[0].fit_transform(self.y)
         self.y_test = y[splitter:, :]
