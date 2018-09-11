@@ -1,12 +1,13 @@
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
-from sklearn.preprocessing import MinMaxScaler, LabelEncoder
+from sklearn.model_selection import KFold, cross_val_score
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder, StandardScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error
+from sklearn.svm import SVR
 from keras.models import Sequential
 from keras.layers import Dense, CuDNNLSTM, Masking, Dropout, Activation
 from keras.callbacks import EarlyStopping
-from summarywriter import TrainValTensorBoard
 from math import sqrt
 from datetime import datetime
 import sys
@@ -49,6 +50,18 @@ class Pollution:
         self.loss.append((sqrt(mean_squared_error(self.y, inv_yhat)), mean_absolute_error(self.y, inv_yhat)))
         self.times.append(datetime.now() - start)
 
+    def svm_fit(self, X, y):
+        X_scaled = StandardScaler().fit_transform(X)
+        kfold = KFold(n_splits = 5, shuffle=False)
+        svm = SVR()
+        svm.fit(X_scaled, y)
+        scores = cross_val_score(svm, X_scaled, y, cv=kfold)
+        yhat = svm.predict(X_scaled)
+        self.predictions.append((yhat, "svm"))
+        print(self.predictions)
+        self.loss.append((sqrt(mean_squared_error(y, yhat)), mean_absolute_error(y, yhat)))
+        print(self.loss)
+
     def main(self, verbosity):
         self.verbosity = verbosity
         holder = {}
@@ -83,6 +96,7 @@ class Pollution:
 
         self.y = pd.Series(y).values.astype('float32').reshape(-1, 1)
         splitter = (self.y.shape[0] // 3) * 2
+        svm_y = y
         y = self.scalers[0].fit_transform(self.y)
         self.y_test = y[splitter:, :]
         y = y[:splitter, :]
@@ -91,6 +105,7 @@ class Pollution:
         X = X.drop("date", axis=1)
         print(X[:5])
         X = X.values.astype('float32')
+        svm_X=X
         X = self.scalers[1].fit_transform(X)
         all_X = X.reshape((X.shape[0], 1, X.shape[1]))
 
@@ -101,6 +116,9 @@ class Pollution:
         X = X.reshape((X.shape[0], 1, X.shape[1]))
         print("{} {}".format(X.shape, y.shape))
         startTime = datetime.now()
+
+        # SVM model
+        self.svm_fit(svm_X,svm_y)
 
         # define and fit model 0
         self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2])),
@@ -240,7 +258,7 @@ class Pollution:
         splitter = (splitter / self.y.shape[0] ) * 100
         print("Train-Test split: {:.2f} {:.2f}".format(splitter, 100-splitter))
         for index, error in enumerate(self.loss):
-            print('Model #{}\nTest RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(index+1, error[0], error[1]))
+            print('Model #{}\nTest RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(index, error[0], error[1]))
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
