@@ -1,19 +1,23 @@
 import numpy as np
 import pandas as pd
+import sys
 from matplotlib import pyplot as plt
 from sklearn.model_selection import KFold, cross_val_score
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder, StandardScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.svm import SVR
 from keras.models import Sequential
-from keras.layers import Dense, CuDNNLSTM, Masking, Dropout, Activation
+from keras.layers import Dense, Masking, Dropout, Activation
 from keras.callbacks import EarlyStopping
 from math import sqrt
 from datetime import datetime
-import sys
 from keras import backend as K
+if K.tensorflow_backend._get_available_gpus():
+    from keras.layers import CuDNNLSTM
+else:
+    from keras.layers import LSTM as CuDNNLSTM
 
-K.set_learning_phase(1)
+
 class Pollution:
 
     def __init__(self):
@@ -118,8 +122,7 @@ class Pollution:
         startTime = datetime.now()
 
         # SVM model
-        self.svm_fit(svm_X,svm_y)
-
+        self.svm_fit(svm_X, svm_y)
         # define and fit model 0
         self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2])),
                         Dense(1)],
