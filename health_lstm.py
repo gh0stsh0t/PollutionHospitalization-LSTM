@@ -24,14 +24,47 @@ class Pollution:
         self.loss = []
         self.scalers = [MinMaxScaler(feature_range=(0, 1)), MinMaxScaler(feature_range=(0, 1))]
         self.y = np.ndarray
-        self.X = np.ndarray
         self.times = []
         self.predictions = []
+        self.split = 0
 
     def parse_all(self, file):
         print(file)
         raw_data = pd.read_csv(file + ".csv")
         return raw_data
+
+    def model_fit(self, layers, train_X, train_y, label, test_X=0, test_y=0, epochs=500, optim='rmsprop', batch=10):
+        test_X = self.X_test if type(test_X) is int else test_X
+        test_y = self.y_test if type(test_y) is int else test_y
+        start = datetime.now()
+        model = Sequential(layers)
+        model.compile(loss='mean_squared_error', optimizer=optim)
+        hist = model.fit(train_X, train_y, batch_size=batch, epochs=epochs, verbose=self.verbosity, shuffle=False, validation_data=(test_X, test_y))
+        model.summary()
+        all_X = np.concatenate((train_X, test_X))
+        yhat = model.predict(all_X)
+        inv_yhat = self.scalers[0].inverse_transform(yhat)
+        self.predictor_magtanggol(inv_yhat, label)
+        self.create_loss(hist, label)
+        self.times.append(datetime.now() - start)
+
+    def svm_fit(self, X, y):
+        X_scaled = StandardScaler().fit_transform(X)
+        kfold = KFold(n_splits = 5, shuffle=False)
+        svm = SVR(verbose=True)
+        svm.fit(X_scaled, y)
+        scores = cross_val_score(svm, X_scaled, y, cv=kfold)
+        yhat = svm.predict(X_scaled)
+        self.predictor_magtanggol(yhat, "svm")
+
+    def predictor_magtanggol(self, inv_yhat, label):
+        yforms = [self.y,              inv_yhat,
+                  self.y[self.split:], inv_yhat[self.split:],
+                  self.y[:self.split], inv_yhat[:self.split]]
+        self.predictions.append((yforms[1], label))
+        self.loss.append((sqrt(mean_squared_error(yforms[0], yforms[1])), mean_absolute_error(yforms[0], yforms[1]),
+                          sqrt(mean_squared_error(yforms[2], yforms[3])), mean_absolute_error(yforms[2], yforms[3]),
+                          sqrt(mean_squared_error(yforms[4], yforms[5])), mean_absolute_error(yforms[4], yforms[5])))
 
     def create_loss(self, hist, label):
         plt.subplot(2, 1, 1)
@@ -40,31 +73,6 @@ class Pollution:
         plt.subplot(2, 1, 2)
         plt.plot(hist.history['val_loss'], label=label)
         plt.ylabel('Test Loss')
-
-    def model_fit(self, layers, train_X, train_y, label, epochs=500, optim='rmsprop', batch=10):
-        start = datetime.now()
-        model = Sequential(layers)
-        model.compile(loss='mean_squared_error', optimizer=optim)
-        hist = model.fit(train_X, train_y, batch_size=batch, epochs=epochs, verbose=self.verbosity, shuffle=False, validation_data=(self.X_test, self.y_test))
-        self.create_loss(hist, label)
-        model.summary()
-        yhat = model.predict(self.X)
-        inv_yhat = self.scalers[0].inverse_transform(yhat)
-        self.predictions.append((inv_yhat, label))
-        self.loss.append((sqrt(mean_squared_error(self.y, inv_yhat)), mean_absolute_error(self.y, inv_yhat)))
-        self.times.append(datetime.now() - start)
-
-    def svm_fit(self, X, y):
-        X_scaled = StandardScaler().fit_transform(X)
-        kfold = KFold(n_splits = 5, shuffle=False)
-        svm = SVR()
-        svm.fit(X_scaled, y)
-        scores = cross_val_score(svm, X_scaled, y, cv=kfold)
-        yhat = svm.predict(X_scaled)
-        self.predictions.append((yhat, "svm"))
-        print(self.predictions)
-        self.loss.append((sqrt(mean_squared_error(y, yhat)), mean_absolute_error(y, yhat)))
-        print(self.loss)
 
     def main(self, verbosity):
         self.verbosity = verbosity
@@ -99,11 +107,11 @@ class Pollution:
             y.extend(amp)
 
         self.y = pd.Series(y).values.astype('float32').reshape(-1, 1)
-        splitter = (self.y.shape[0] // 3) * 2
+        self.split = (self.y.shape[0] // 3) * 2
         svm_y = y
         y = self.scalers[0].fit_transform(self.y)
-        self.y_test = y[splitter:, :]
-        y = y[:splitter, :]
+        self.y_test = y[self.split:, :]
+        y = y[:self.split, :]
 
         # X = pd.read_csv("KNN.csv")
         X = X.drop("date", axis=1)
@@ -113,16 +121,22 @@ class Pollution:
         X = self.scalers[1].fit_transform(X)
         all_X = X.reshape((X.shape[0], 1, X.shape[1]))
 
-        self.X = all_X
-        self.X_test = X[splitter:, :]
+        self.X_test = X[self.split:, :]
         self.X_test = self.X_test.reshape((self.X_test.shape[0], 1, self.X_test.shape[1]))
-        X = X[:splitter, :]
+        X = X[:self.split, :]
         X = X.reshape((X.shape[0], 1, X.shape[1]))
         print("{} {}".format(X.shape, y.shape))
         startTime = datetime.now()
 
         # SVM model
         self.svm_fit(svm_X, svm_y)
+        # Basic feed forward neural network
+        mlp_train_X = self.scalers[1].transform(svm_X[:self.split])
+        mlp_test_X = self.scalers[1].transform(svm_X[self.split:])
+        self.model_fit([Dense(12, input_dim=svm_X.shape[1], activation='relu'),
+                        Dense(8, activation='relu'),
+                        Dense(1)],
+                        train_X=mlp_train_X, train_y=y, test_X=mlp_test_X, optim='adam',epochs=500, batch=2, label="FFDNN")
         # define and fit model 0
         self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2])),
                         Dense(1)],
@@ -252,16 +266,17 @@ class Pollution:
         plt.show()
         plt.gcf().clear()
 
+        split = (self.split / self.y.shape[0] ) * 100
+        print("Train-Test split: {:.2f} {:.2f}".format(split, 100-split))
+        for index, error in enumerate(self.loss):
+            print('Model #{}\nTotal RMSE: {:.2f}\nTotal MAE: {:.2f}\nTrain RMSE: {:.2f}\nTrain  MAE: {:.2f}\nTest RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(index-1, error[0], error[1],error[2], error[3], error[4], error[5]))
+
         plt.plot(self.y, label="real")
         for vals in self.predictions:
             plt.plot(vals[0], label=vals[1])
         plt.legend()
         plt.show()
         plt.gcf().clear()
-        splitter = (splitter / self.y.shape[0] ) * 100
-        print("Train-Test split: {:.2f} {:.2f}".format(splitter, 100-splitter))
-        for index, error in enumerate(self.loss):
-            print('Model #{}\nTest RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(index, error[0], error[1]))
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
