@@ -30,7 +30,7 @@ class Pollution:
 
     def parse_all(self, file):
         print(file)
-        raw_data = pd.read_csv(file + ".csv")
+        raw_data = pd.read_csv("Data/" + file + ".csv")
         return raw_data
 
     def model_fit(self, layers, train_X, train_y, label, test_X=0, epochs=500, optim='rmsprop', batch=10):
@@ -90,10 +90,10 @@ class Pollution:
         for key in holder:
             X = X.append(other=holder[key], ignore_index=True)
 
-        X.to_csv("bogo.csv")
+        X.to_csv("Data/Features.csv")
         X.dropna(thresh=6, inplace=True)
         X.fillna(-1, inplace=True)
-        target_raw = pd.read_csv("MonthlyTarget.csv")
+        target_raw = pd.read_csv("Data/MonthlyTarget.csv")
         weeks = [0 for _ in range(len(target_raw))]
         for date in X['date'].get_values():
             which = (int(date[2:-3]) - 1) + (int(date[-2:]) - 15) * 12
