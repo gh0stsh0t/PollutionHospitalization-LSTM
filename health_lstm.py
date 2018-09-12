@@ -33,9 +33,9 @@ class Pollution:
         raw_data = pd.read_csv(file + ".csv")
         return raw_data
 
-    def model_fit(self, layers, train_X, train_y, label, test_X=0, test_y=0, epochs=500, optim='rmsprop', batch=10):
+    def model_fit(self, layers, train_X, train_y, label, test_X=0, epochs=500, optim='rmsprop', batch=10):
         test_X = self.X_test if type(test_X) is int else test_X
-        test_y = self.y_test if type(test_y) is int else test_y
+        test_y = self.y_test
         start = datetime.now()
         model = Sequential(layers)
         model.compile(loss='mean_squared_error', optimizer=optim)
@@ -121,9 +121,9 @@ class Pollution:
         X = self.scalers[1].fit_transform(X)
         all_X = X.reshape((X.shape[0], 1, X.shape[1]))
 
-        self.X_test = X[self.split:, :]
+        self.X_test = X[self.split:]
         self.X_test = self.X_test.reshape((self.X_test.shape[0], 1, self.X_test.shape[1]))
-        X = X[:self.split, :]
+        X = X[:self.split]
         X = X.reshape((X.shape[0], 1, X.shape[1]))
         print("{} {}".format(X.shape, y.shape))
         startTime = datetime.now()
