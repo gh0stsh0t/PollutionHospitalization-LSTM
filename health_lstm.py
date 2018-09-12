@@ -257,6 +257,15 @@ class Pollution:
                         Dense(1),
                         Activation('linear')],
                        train_X=X, train_y=y, batch=20, label="fifteenth")
+        # define and fit model 15
+        self.model_fit([CuDNNLSTM(150, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
+                        Dropout(0.2),
+                        CuDNNLSTM(400, return_sequences=True),
+                        Dropout(0.2),
+                        CuDNNLSTM(300),
+                        Dense(1),
+                        Activation('linear')],
+                       train_X=X, train_y=y, batch=4, label="sixteenth")
 
         for ind, x in enumerate(self.times):
             print("Time for {}: {}".format(ind, x))
