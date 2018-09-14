@@ -14,8 +14,10 @@ from datetime import datetime
 from keras import backend as K
 if K.tensorflow_backend._get_available_gpus():
     from keras.layers import CuDNNLSTM
+    print("Using GPU for training")
 else:
     from keras.layers import LSTM as CuDNNLSTM
+    print("Using CPU for training")
 
 
 class Pollution:
