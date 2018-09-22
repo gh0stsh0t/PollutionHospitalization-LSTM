@@ -85,22 +85,22 @@ class Pollution:
         self.predictor_magtanggol(yhat, "svm")
 
     def manual(self, X, y):
-        # define and fit model 0
-        self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2])),
-                        Dense(1)],
-                       train_X=X, train_y=y, optim='adam', batch=50, label="first")
-        # define and fit model 1
-        self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2])),
-                        Dropout(0.2),
-                        Dense(1)],
-                       train_X=X, train_y=y, optim='adam', batch=50, label="second")
-        # define and fit model 2
-        self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-                        Dropout(0.2),
-                        CuDNNLSTM(100),
-                        Dropout(0.2),
-                        Dense(1)],
-                       train_X=X, train_y=y, batch=50, label="third")
+        # # define and fit model 0
+        # self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2])),
+        #                 Dense(1)],
+        #                train_X=X, train_y=y, optim='adam', batch=50, label="first")
+        # # define and fit model 1
+        # self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2])),
+        #                 Dropout(0.2),
+        #                 Dense(1)],
+        #                train_X=X, train_y=y, optim='adam', batch=50, label="second")
+        # # define and fit model 2
+        # self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
+        #                 Dropout(0.2),
+        #                 CuDNNLSTM(100),
+        #                 Dropout(0.2),
+        #                 Dense(1)],
+        #                train_X=X, train_y=y, batch=50, label="third")
         # define and fit model 3
         self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
                         Dropout(0.2),
@@ -119,37 +119,37 @@ class Pollution:
                        train_X=X, train_y=y, optim='adam', batch=50, label="fifth")
         # Note: adam is really bad
         # define and fit model 5
-        self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-                        Dropout(0.2),
-                        CuDNNLSTM(100),
-                        Dropout(0.2),
-                        Dense(1),
-                        Activation('linear')],
-                       train_X=X, train_y=y, label="sixth")
+        # self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
+        #                 Dropout(0.2),
+        #                 CuDNNLSTM(100),
+        #                 Dropout(0.2),
+        #                 Dense(1),
+        #                 Activation('linear')],
+        #                train_X=X, train_y=y, label="sixth")
         # define and fit model 6
-        self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-                        Dropout(0.2),
-                        CuDNNLSTM(100),
-                        Dropout(0.2),
-                        Dense(1),
-                        Activation('linear')],
-                       train_X=X, train_y=y, label="seventh")
+        # self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
+        #                 Dropout(0.2),
+        #                 CuDNNLSTM(100),
+        #                 Dropout(0.2),
+        #                 Dense(1),
+        #                 Activation('linear')],
+        #                train_X=X, train_y=y, label="seventh")
         # define and fit model 7
-        self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-                        Dropout(0.2),
-                        CuDNNLSTM(100),
-                        Dropout(0.2),
-                        Dense(1),
-                        Activation('linear')],
-                       train_X=X, train_y=y, epochs=100, batch=5, label="eighth")
-        # define and fit model 8
-        self.model_fit([CuDNNLSTM(25, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-                        Dropout(0.2),
-                        CuDNNLSTM(50),
-                        Dropout(0.2),
-                        Dense(1),
-                        Activation('linear')],
-                       train_X=X, train_y=y, epochs=250, batch=5, label="ninth")
+        # self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
+        #                 Dropout(0.2),
+        #                 CuDNNLSTM(100),
+        #                 Dropout(0.2),
+        #                 Dense(1),
+        #                 Activation('linear')],
+        #                train_X=X, train_y=y, epochs=100, batch=5, label="eighth")
+        # # define and fit model 8
+        # self.model_fit([CuDNNLSTM(25, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
+        #                 Dropout(0.2),
+        #                 CuDNNLSTM(50),
+        #                 Dropout(0.2),
+        #                 Dense(1),
+        #                 Activation('linear')],
+        #                train_X=X, train_y=y, epochs=250, batch=5, label="ninth")
         # define and fit model 9
         self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
                         Dropout(0.2),
@@ -160,14 +160,14 @@ class Pollution:
                         Activation('linear')],
                        train_X=X, train_y=y, batch=5, label="tenth")
         # define and fit model 10
-        self.model_fit([CuDNNLSTM(100, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-                        Dropout(0.2),
-                        CuDNNLSTM(200, return_sequences=True),
-                        Dropout(0.2),
-                        CuDNNLSTM(100),
-                        Dense(1),
-                        Activation('linear')],
-                       train_X=X, train_y=y, label="eleventh")
+        # self.model_fit([CuDNNLSTM(100, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
+        #                 Dropout(0.2),
+        #                 CuDNNLSTM(200, return_sequences=True),
+        #                 Dropout(0.2),
+        #                 CuDNNLSTM(100),
+        #                 Dense(1),
+        #                 Activation('linear')],
+        #                train_X=X, train_y=y, label="eleventh")
         # define and fit model 11
         self.model_fit([CuDNNLSTM(150, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
                         Dropout(0.2),
@@ -185,35 +185,56 @@ class Pollution:
                         CuDNNLSTM(200),
                         Dense(1),
                         Activation('linear')],
-                       train_X=X, train_y=y, batch=5, label="thirteenth ")
+                       train_X=X, train_y=y, batch=5, label="thirteenth")
         # Note: Worse performing, thus batch size must be 50 > s > 5
         # define and fit model 13
-        self.model_fit([CuDNNLSTM(150, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-                        Dropout(0.2),
-                        CuDNNLSTM(300, return_sequences=True),
-                        Dropout(0.2),
-                        CuDNNLSTM(200),
-                        Dense(1),
-                        Activation('linear')],
-                       train_X=X, train_y=y, batch=20, label="fourteenth")
-        # define and fit model 14
-        self.model_fit([CuDNNLSTM(150, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-                        Dropout(0.2),
-                        CuDNNLSTM(300, return_sequences=True),
-                        Dropout(0.2),
-                        CuDNNLSTM(300),
-                        Dense(1),
-                        Activation('linear')],
-                       train_X=X, train_y=y, batch=20, label="fifteenth")
+        # self.model_fit([CuDNNLSTM(150, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
+        #                 Dropout(0.2),
+        #                 CuDNNLSTM(300, return_sequences=True),
+        #                 Dropout(0.2),
+        #                 CuDNNLSTM(200),
+        #                 Dense(1),
+        #                 Activation('linear')],
+        #                train_X=X, train_y=y, batch=20, label="fourteenth")
+        # # define and fit model 14
+        # self.model_fit([CuDNNLSTM(150, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
+        #                 Dropout(0.2),
+        #                 CuDNNLSTM(300, return_sequences=True),
+        #                 Dropout(0.2),
+        #                 CuDNNLSTM(300),
+        #                 Dense(1),
+        #                 Activation('linear')],
+        #                train_X=X, train_y=y, batch=20, label="fifteenth")
         # define and fit model 15
+        # self.model_fit([CuDNNLSTM(150, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
+        #                 Dropout(0.2),
+        #                 CuDNNLSTM(400, return_sequences=True),
+        #                 Dropout(0.2),
+        #                 CuDNNLSTM(300),
+        #                 Dense(1),
+        #                 Activation('linear')],
+        #                train_X=X, train_y=y, batch=4, label="sixteenth")
+        # define and fit model BEST
         self.model_fit([CuDNNLSTM(150, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
                         Dropout(0.2),
-                        CuDNNLSTM(400, return_sequences=True),
+                        CuDNNLSTM(300, return_sequences=True),
                         Dropout(0.2),
-                        CuDNNLSTM(300),
+                        CuDNNLSTM(200, return_sequences=True),
+                        Dropout(0.2),
+                        CuDNNLSTM(450),
                         Dense(1),
                         Activation('linear')],
-                       train_X=X, train_y=y, batch=4, label="sixteenth")
+                       train_X=X, train_y=y, batch=20, label="Four layers")
+        self.model_fit([CuDNNLSTM(150, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
+                        Dropout(0.2),
+                        CuDNNLSTM(300, return_sequences=True),
+                        Dropout(0.2),
+                        CuDNNLSTM(200, return_sequences=True),
+                        Dropout(0.2),
+                        CuDNNLSTM(450),
+                        Dense(1),
+                        Activation('linear')],
+                       train_X=X, train_y=y, batch=5, label="Four layers v2")
         # define and fit model BEST
         self.model_fit([CuDNNLSTM(250, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
                         Dropout(0.2),
@@ -222,15 +243,7 @@ class Pollution:
                         CuDNNLSTM(300),
                         Dense(1),
                         Activation('linear')],
-                       train_X=X, train_y=y, batch=5, label="best3")
-        # define and fit model BEST
-        self.model_fit([CuDNNLSTM(250, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-                        Dropout(0.2),
-                        CuDNNLSTM(200),
-                        Dropout(0.2),
-                        Dense(1),
-                        Activation('linear')],
-                       train_X=X, train_y=y, batch=20, label="best2")
+                       train_X=X, train_y=y, batch=5, label="Grid Searched")
 
     def predictor_magtanggol(self, inv_yhat, label):
         yforms = [self.y,              inv_yhat,
@@ -249,7 +262,7 @@ class Pollution:
         plt.plot(hist.history['val_loss'], label=label)
         plt.ylabel('Test Loss')
 
-    def main(self, verbosity, auto):
+    def main(self, verbosity, auto, graphing):
         self.verbosity = verbosity
         holder = {}
         X = pd.DataFrame()
@@ -282,7 +295,7 @@ class Pollution:
             y.extend(amp)
 
         self.y = pd.Series(y).values.astype('float32').reshape(-1, 1)
-        self.split = (self.y.shape[0] // 3) * 2
+        self.split = (self.y.shape[0] // 5) * 4
         svm_y = y
         y = self.scalers[0].fit_transform(self.y)
         self.y_test = y[self.split:, :]
@@ -319,15 +332,16 @@ class Pollution:
             print("\nTraining time of All Models {}\n".format(datetime.now() - startTime))
 
             plt.legend()
-            plt.show()
+            if(graphing < 1):
+                plt.show()
             plt.gcf().clear()
 
             split = (self.split / self.y.shape[0]) * 100
             print("Train-Test split: {:.2f} {:.2f}".format(split, 100 - split))
             for index, error in enumerate(self.loss):
                 print(
-                    'Model #{}\nTotal RMSE: {:.2f}\nTotal MAE: {:.2f}\nTrain RMSE: {:.2f}\nTrain  MAE: {:.2f}\nTest RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(
-                        index - 1, error[0], error[1], error[2], error[3], error[4], error[5]))
+                    'Model #{}\nTotal RMSE: {:.2f}\nTotal MAE: {:.2f}\nTrain RMSE: {:.2f}\nTrain  MAE: {:.2f}'.format(index - 1, error[0], error[1], error[2], error[3]))
+                print('\nTest RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(error[4], error[5]), file=open("Loss_vals.txt", "a"))
         else:
             print("Starting GridSearch in 5")
             time.sleep(5)
@@ -350,19 +364,22 @@ class Pollution:
             inv_yhat = self.scalers[0].inverse_transform(yhat)
             self.predictor_magtanggol(inv_yhat, "Best")
             plt.legend()
-            plt.show()
+            if(graphing < 1):
+                plt.show()
             plt.gcf().clear()
         plt.plot(self.y, label="real")
         for vals in self.predictions:
             plt.plot(vals[0], label=vals[1])
         plt.legend()
-        plt.show()
+        if(graphing < 1):
+            plt.show()
         plt.gcf().clear()
 
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        x = int(sys.argv[1])
+        x = int(sys.argv[1])%2
+        z = int(sys.argv[1])//2
         if len(sys.argv) > 2:
             y = int(sys.argv[2])
         else:
@@ -370,4 +387,5 @@ if __name__ == "__main__":
     else:
         x = 0
         y = 0
-    Pollution().main(x, y)
+        z = 0
+    Pollution().main(x, y, z)
