@@ -1,4 +1,4 @@
-\documentclass[10pt,11pt,12pt,oneside]{book}
+ \documentclass[10pt,11pt,12pt,oneside]{book}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{emptypage}
@@ -122,10 +122,19 @@ Air pollution is a growing concern in the developing world, and its presence is 
 \section{Conceptual Framework}
 \includegraphics[height=6in]{conframework.png}
 \section{Methodology}
-    \subsection{Gather environment and hospitalization data}
-    The proponents will collate publicly released data from local institutions which contain the variables needed. These variables contain the dates when the data was collected, PM10 concentration, PM2.5 concentrations and number of hospitalized individuals caused by lung diseases. 
-    \subsection{Organizing data}
-    The proponents will then organize the data into two CSV files, a training set, and a test set.
+    \subsection{Gathering of Pollution and Hospitalization Data}
+    The proponents collated 2 sets of data. First set of data, labeled as Target, contains hospitalizations sourced from medical records of Davao Doctors Hospital. The hospitalizations listed patients who were diagnosed of lung diseases; specifically, Asthma, Chronic Obstructive Pulmonary Disease, Chronic Bronchitis, Emphysema, Lung Cancer, Pneumonia, and Tuberculosis. The second set of data, labeled as Features, contains pollution data sourced from the Department of Environment and Natural Resources. The pollution data consists of the levels of concentrations of different pollutants that have been detected in different areas in Davao City; namely, PM10, PM2.5, NO2, O3, and SO2. All data gathered took place in 2015-2017, with a monthly interval.  
+    \subsection{Organizing Data}
+    The proponents typed and organized the data from gathered documents into CSV files.
+    \subsection{Preprocessing of Data}
+    The proponents preprocessed the organized data to fix gaps. The steps were as follows:
+    \begin{enumerate}
+        \item Read CSV files and merged all station data into one data frame
+        \item Dropped all rows with more than 6 NaN values
+        \item Replaced remaining NaN values with -1
+        \item Distributed Target values between each month
+        \item Scaled all data between the values 0 and 1
+    \end{enumerate}
     \subsection{Defining, Training and Fitting the Model}
     The proponents will then define the number of layers, neurons, and number of features that the LSTM model will have. Then multiple iterations of training will be performed to realize the ideal number of epochs and batch sizes that would be fitted to the model.
     \subsection{Evaluating the Model}
