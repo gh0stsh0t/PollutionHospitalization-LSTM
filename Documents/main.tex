@@ -9,6 +9,13 @@
 \definecolor{grey}{RGB}{183,183,183}
 \usepackage[font={color=grey},figurename=figure.]{caption}
 \usepackage[left=1.2in,right=1in,top=1in,bottom=.8in]{geometry}
+\begin{figure}
+         \includegraphics[width=\linewidth]{rmseformula.png}
+         \caption{RMSE Formula}
+         \label{fig:formula}
+\end{figure}
+
+
 \title{Predicting Lung Related Hospitalization Rate in Davao City due to Air Quality via Recurrent Neural Networks}
 \author{rjsperias}
 \date{July 2018}
@@ -49,16 +56,16 @@ Air pollution is a growing concern in the developing world, and its presence is 
     \begin{enumerate}
         \item How do Recurrent Neural Networks work
         \item How to determine the concentration of pollutants in the air
-        \item How to calculate the percentage change of hospitalizations due to lung-related diseases
-        \item How to determine accuracy of percentage change of hospitalizations due to lung-related diseases
+        \item How to to predict the number of hospitalizations due to lung-related diseases
+        \item How to determine accuracy of prediction of number of hospitalizations due to lung-related diseases
     \end{enumerate}
     \section{Objectives}
     The study aims to develop a method to use data collected by sensors to illustrate the correlation of hospitalization due to lung diseases and pollutants and predict the changes based on the concentration of pollution. Additionally, it intends to accomplish the following objectives:
     \begin{enumerate}
         \item To explain how Recurrent Neural Networks work.
         \item To explain the methods of determining the concentration of pollutants in the air
-        \item To explain how to calculate the percentage change of hospitalizations due to lung-related diseases
-        \item To explain how to determine accuracy of percentage change of hospitalizations due to lung-related diseases 
+        \item To explain how to predict the number of hospitalizations due to lung-related diseases
+        \item To explain how to determine accuracy of prediction of number of hospitalizations due to lung-related diseases 
     \end{enumerate}
     \section{Significance of the Study}
     The results of the study could be used in health and air monitoring systems. It could be used in medical institutions as a tracker of what particles have been exposed to an individual thus giving the doctor a preliminary idea of what diseases the individual could have contracted. The study could also be used for estimating the needed supplies by a hospital, should the change in hospitalization dramatically increase, institutions could be prepared, and treatments be administered much more efficiently.
@@ -66,6 +73,7 @@ Air pollution is a growing concern in the developing world, and its presence is 
     Additionally, it could be a starting point for future studies relating the multiple variables involved in lung health of individuals and or a population in an area. Should the focus be the algorithm, accuracy and speed could be improved, thus making a better implementation. On the other hand, it could give an insight on how each factor interacts with the human body and further studies on the effect of specific matter to the human body.
     \section{Scope and Limitations}
     The study utilizes local data sourced from institutions in Davao city which contain the relevant data and ignoring those which lack several factors. The study only estimated percentage change for hospitalization of any lung disease and does not assume which specific disease it is, as it requires very specific data and situations. The study utilized an NVIDIA GTX 1060 6GB GPU for training the neural network from the lack of funds to apply for a cloud computing service.
+    Originally, the data intervals should've been daily, 
 \chapter{Review of Related Literature}
     \section{Air Pollutants and correlation to Health Exposure}
         \subsection{Particulate Matter}
@@ -84,7 +92,7 @@ Air pollution is a growing concern in the developing world, and its presence is 
         According to Nuria et. al (2016), current monitoring systems monitor air pollution concentration through measuring pollutants such as carbon monoxide, nitrogen oxide, and particulate matter (PM10 and PM2.5). Most of these sensors are very expensive in installing and maintaining; hence, they tested several commercial low-cost sensors (AQMesh v3.5) in their study. 
         
         When measuring the concentration of several pollutants, the expanded uncertainty met the DQO criteria in the Air Quality Directive for some pollutants like NO, PM10, and PM2.5 while other pollutants like CO and NO2 showed expanded uncertainty exceeding the Data Quality Objectives’ (DQO) indicative methods. In short, the commercial low-cost sensors were deemed unsuitable; however, recent studies have shown that the application of field calibrations based on machine learning techniques can reduce the expanded uncertainty and improve overall performance. \cite{Castell2017}
-    \section{Related Studies that used Recurring Neural Networks}
+    \section{Types of Recurring Neural Networks}
         \subsection{Long Short-Term Memory (LSTM)}
         Hochreiter and Schmidhuber [1997] invented Long Short-Term Memory networks, which are designed to solve the vanishing, and exploding gradient problem due to back-propagation when training artificial neural networks. Since then, it has been used in applications such as image processing and classification due to their ridiculous accuracy, and for their ability to store information over long-time intervals with minimal to no risk of it getting lost. \cite{Hochreiter:1997:LSM:1246443.1246450} 
         
@@ -97,6 +105,10 @@ Air pollution is a growing concern in the developing world, and its presence is 
     Machine learning has been a definite staple in computer science, especially with the exploration and construction of algorithms. With risk estimation and prediction, machine learning has been proven to be useful in risk estimation, with its different methods being underutilized and can be further studied and can be further studied and polished. \cite{Kruppa2012} Other machine-learning approaches besides neural networks have also been used in other fields of risk estimation and prediction. 
         \subsection{Artificial Neural Network}
         One study by Weng et al. (2017) tested four machine-learning approaches, neural networks included, against existing algorithms of cardiovascular risk prediction. The study proved that these machine-learning approaches significantly improved the overall performance of detecting individuals who will develop CVD and those that will not, with neural networks performing the best with predictive accuracy improved by 3.6\%. \cite{Weng2017}
+
+        \subsection{Feedforward Neural Network}
+        Studies by Jain et.al (2013) and Nasri (2010) showed that Artificial Neural Networks are not only good at predicting health risks, but also managing risks in general. The ANNs used are of Feedforward (FFNN) type, which are neural networks that consists of nodes that doesn’t form a cycle; information goes in only one way (Hornik et al., 1988). Jain et. al’s model has an accuracy up to 90% with a very low false positive rate (FPR) of 8.3% at max. Nasri’s model has a much higher efficiency rate in risk management compared to fuzzy logic system and genetic algorithms. \cite{jain_singh_2013, nasri2010application}
+
         \subsection{Random Forest}
         A study by Gurm et al. (2014) created and analyzed a random forest-based risk model of receipt of transfusion in patients undergoing Percutaneous Coronary Intervention. The model, restricted based on Michigan, was indeed successful, albeit improvements can still be made. The model helped identify patient subgroups with a higher or lower risk of needing a transfusion, and it also proved PCI can be reliably estimated. \cite{Gurm2014}
         
@@ -107,6 +119,12 @@ Air pollution is a growing concern in the developing world, and its presence is 
         Atkinson et al. (2013) used gradient boosting machine models (GBM) to assess whether it can improve bone fracture prediction. Gradient boosting “focuses on combining information from many variables that individually may not be significant but together are very informative.” Taking advantage all of the variables needed for the analysis, the GBM were able to differentiate fracture and non-fracture subjects with surprisingly high predictive ability. 
         
         The study demonstrated that GBM has the potential to be very effective in its risk predicting in terms of the medical fields, precisely because of 3 reasons as stated by Atkinson et al.: (1) there is evidence that boosting methods are one of the approaches least affected by overfitting; (2) GBM models’ non-linearity and interactions between variables can be captured without prior specification; and (3) GBM incorporates the stochastic component, e.g. falling, that is so important in fracture pathogenesis. \cite{Atkinson2012}
+    \section{Root-Mean-Square Error (RMSE)}
+    The Root-Mean-Square Error is a statistical metric commonly used in measuring model performance. It is widely considered as the standard metric in model errors. As concluded by Chai et. al (2014) in their research, RMSE best represents model performance when error distribution is expected to be normal, and that it satisfies the triangle inequality requirement to be considered as a distance metric. The formula, with respect to with respect to the estimated variable Xmodel is defined as the square root of the mean squared error (MSE): 
+                           \ref{fig:formula}
+
+    where Xobs is observed values and Xmodel is modelled values at time/place i.
+
    \pagebreak
     \section{Theoretical framework}
     \begin{figure} [ht]
@@ -136,11 +154,11 @@ Air pollution is a growing concern in the developing world, and its presence is 
         \item Scaled all data between the values 0 and 1
     \end{enumerate}
     \subsection{Defining, Training and Fitting the Model}
-    The proponents will then define the number of layers, neurons, and number of features that the LSTM model will have. Then multiple iterations of training will be performed to realize the ideal number of epochs and batch sizes that would be fitted to the model.
+    The proponents defined the number of layers, neurons and number of features that the basic LSTM model would have. The basic LSTM model consisted of 2 layers with 50 and 100 neurons in each layer, 0.2 dropout, a batch size of 50 and 500 epochs. Multiple iterations of training and tuning were performed to realize the ideal number of epochs and batch sizes that would be fitted to the model.
     \subsection{Evaluating the Model}
-    The proponents will then run the trained model on the test set which would then collect all predictions and calculate an error score. The output shall be the calculated Root Mean Squared Error (RMSE) that gives error in the same units as the variable itself. The data will be presented in a graph format to illustrate the improvement of the model over time.
+    The proponents run the trained model on the test set which would then collect all predictions and calculate an error score. The output shall be the calculated Root Mean Squared Error (RMSE) that gives error in the same units as the variable itself. The data will be presented in a graph format to illustrate the improvement of the model over time.
     \subsection{Implementing the Model}
-    Upon achieving an acceptable accuracy, the model will then be implemented by the proponents in a real-world scenario which collects data from several sensors.
+    Upon achieving the best possible accuracy, the model was embedded by the proponents in a web script.
     \bibliographystyle{acm}
     \bibliography{ref}
 \end{document}
