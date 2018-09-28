@@ -14,6 +14,16 @@
          \caption{RMSE Formula}
          \label{fig:formula}
 \end{figure}
+\begin{figure}
+         \includegraphics[width=\linewidth]{results.png}
+         \caption{Prediction Results of each Models}
+         \label{fig:results}
+\end{figure}
+\begin{figure}
+         \includegraphics[width=\linewidth]{results.png}
+         \caption{Prediction Results of each Models}
+         \label{fig:results}
+\end{figure}
 
 
 \title{Predicting Lung Related Hospitalization Rate in Davao City due to Air Quality via Recurrent Neural Networks}
@@ -159,6 +169,18 @@ Air pollution is a growing concern in the developing world, and its presence is 
     The proponents run the trained model on the test set which would then collect all predictions and calculate an error score. The output shall be the calculated Root Mean Squared Error (RMSE) that gives error in the same units as the variable itself. The data will be presented in a graph format to illustrate the improvement of the model over time.
     \subsection{Implementing the Model}
     Upon achieving the best possible accuracy, the model was embedded by the proponents in a web script.
+    
+\chapter{Results and Discussions}    
+Out of 22 models with different parameters which were trained and tested, the proponents handpicked 7 essential models, and these models were trained and tested 10 times. Each run, the 2 best performing models’ parameters were used in a grid search to calculate even better parameter values. The efficiency of the 7 models along with the grid search was gauged through an accompanying feedforward neural network on each run. The RMSE, MAE, and range values of the models, grid search, and FFNN was recorded and averaged. The results are as follows:
+    \ref{fig:results}
+
+    Parameters of the models are as follows:
+
+    \ref{fig:results}
+
+    The 2 best performing models are Lower Batch_4 and Grid Search_3. Based on the results,
+
+    
     \bibliographystyle{acm}
     \bibliography{ref}
 \end{document}
