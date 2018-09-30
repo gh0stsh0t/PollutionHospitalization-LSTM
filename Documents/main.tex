@@ -9,21 +9,15 @@
 \definecolor{grey}{RGB}{183,183,183}
 \usepackage[font={color=grey},figurename=figure.]{caption}
 \usepackage[left=1.2in,right=1in,top=1in,bottom=.8in]{geometry}
-\begin{figure}
-         \includegraphics[width=\linewidth]{rmseformula.png}
-         \caption{RMSE Formula}
-         \label{fig:formula}
-\end{figure}
+
+
+\iffalse
 \begin{figure}
          \includegraphics[width=\linewidth]{results.png}
          \caption{Prediction Results of each Models}
          \label{fig:results}
 \end{figure}
-\begin{figure}
-         \includegraphics[width=\linewidth]{results.png}
-         \caption{Prediction Results of each Models}
-         \label{fig:results}
-\end{figure}
+\fi
 
 
 \title{Predicting Lung Related Hospitalization Rate in Davao City due to Air Quality via Recurrent Neural Networks}
@@ -131,7 +125,13 @@ Air pollution is a growing concern in the developing world, and its presence is 
         The study demonstrated that GBM has the potential to be very effective in its risk predicting in terms of the medical fields, precisely because of 3 reasons as stated by Atkinson et al.: (1) there is evidence that boosting methods are one of the approaches least affected by overfitting; (2) GBM models’ non-linearity and interactions between variables can be captured without prior specification; and (3) GBM incorporates the stochastic component, e.g. falling, that is so important in fracture pathogenesis. \cite{Atkinson2012}
     \section{Root-Mean-Square Error (RMSE)}
     The Root-Mean-Square Error is a statistical metric commonly used in measuring model performance. It is widely considered as the standard metric in model errors. As concluded by Chai et. al (2014) in their research, RMSE best represents model performance when error distribution is expected to be normal, and that it satisfies the triangle inequality requirement to be considered as a distance metric. The formula, with respect to with respect to the estimated variable Xmodel is defined as the square root of the mean squared error (MSE): 
-                           \ref{fig:formula}
+                           \begin{figure}
+         \includegraphics[width=\linewidth]{rmseformula.png}
+         \caption{RMSE Formula}
+         \label{fig:formula}
+         
+             \ref{fig:formula}
+\end{figure}
 
     where Xobs is observed values and Xmodel is modelled values at time/place i.
 
@@ -172,13 +172,18 @@ Air pollution is a growing concern in the developing world, and its presence is 
     
 \chapter{Results and Discussions}    
 Out of 22 models with different parameters which were trained and tested, the proponents handpicked 7 essential models, and these models were trained and tested 10 times. Each run, the 2 best performing models’ parameters were used in a grid search to calculate even better parameter values. The efficiency of the 7 models along with the grid search was gauged through an accompanying feedforward neural network on each run. The RMSE, MAE, and range values of the models, grid search, and FFNN was recorded and averaged. The results are as follows:
-    \ref{fig:results}
+    \begin{figure}
+         \includegraphics[width=\linewidth]{results.png}
+         \caption{Prediction Results of each Models}
+         \label{fig:results}
+         \ref{fig:results}
+\end{figure}
 
     Parameters of the models are as follows:
+    
 
-    \ref{fig:results}
 
-    The 2 best performing models are Lower Batch_4 and Grid Search_3. Based on the results,
+    The 2 best performing models are Lower Batch4 and Grid Search3. Based on the results,
 
     
     \bibliographystyle{acm}

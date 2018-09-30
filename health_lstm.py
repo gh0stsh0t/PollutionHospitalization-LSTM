@@ -67,7 +67,9 @@ class Pollution:
         model = Sequential(layers)
         model.compile(loss='mean_squared_error', optimizer=optim)
         hist = model.fit(train_X, train_y, batch_size=batch, epochs=epochs, verbose=self.verbosity, shuffle=False, validation_data=(test_X, test_y))
-        model.summary()
+        with open('report.txt','a') as fh:
+             model.summary(print_fn=lambda x: fh.write(x + '\n'))
+        
         all_X = np.concatenate((train_X, test_X))
         yhat = model.predict(all_X)
         inv_yhat = self.scalers[0].inverse_transform(yhat)
