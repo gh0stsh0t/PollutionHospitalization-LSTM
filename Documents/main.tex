@@ -76,8 +76,8 @@ Air pollution is a growing concern in the developing world, and its presence is 
     
     Additionally, it could be a starting point for future studies relating the multiple variables involved in lung health of individuals and or a population in an area. Should the focus be the algorithm, accuracy and speed could be improved, thus making a better implementation. On the other hand, it could give an insight on how each factor interacts with the human body and further studies on the effect of specific matter to the human body.
     \section{Scope and Limitations}
-    The study utilizes local data sourced from institutions in Davao city which contain the relevant data and ignoring those which lack several factors. The study only estimated percentage change for hospitalization of any lung disease and does not assume which specific disease it is, as it requires very specific data and situations. The study utilized an NVIDIA GTX 1060 6GB GPU for training the neural network from the lack of funds to apply for a cloud computing service.
-    Originally, the data intervals should've been daily, 
+    The study utilizes local data sourced from institutions in Davao city which contain the relevant data and ignoring those which lack several factors. The study only estimated percentage change for hospitalization of any lung disease and does not assume which specific disease it is, as it requires very specific data and situations. The study utilized an NVIDIA GTX 1060 6GB GPU for training the neural network from the lack of funds to apply for a cloud computing service.\\
+    Originally, the data intervals of hospitalizations and pollution concentration should have been daily for maximum efficiency of the model, but due to lack of data from other approached hospitals and departments, the interval was changed to monthly.
 \chapter{Review of Related Literature}
     \section{Air Pollutants and correlation to Health Exposure}
         \subsection{Particulate Matter}
@@ -171,7 +171,38 @@ Air pollution is a growing concern in the developing world, and its presence is 
     Upon achieving the best possible accuracy, the model was embedded by the proponents in a web script.
     
 \chapter{Results and Discussions}    
-Out of 22 models with different parameters which were trained and tested, the proponents handpicked 7 essential models, and these models were trained and tested 10 times. Each run, the 2 best performing models’ parameters were used in a grid search to calculate even better parameter values. The efficiency of the 7 models along with the grid search was gauged through an accompanying feedforward neural network on each run. The RMSE, MAE, and range values of the models, grid search, and FFNN was recorded and averaged. The results are as follows:
+Out of 22 models with different parameters which were trained and tested, the proponents handpicked 7 essential models, and these models were trained and tested 10 times. Each run, the 2 best performing models’ parameters were used in a grid search to calculate even better parameter values. The accuracy of the 7 models along with the grid search was gauged through an accompanying feedforward neural network on each run. The RMSE, MAE, and range values of the models, grid search, and FFDNN was recorded and averaged. The parameters of the models are as follows:
+
+\begin{tabular}{ |p{2cm}||p{2.5cm}|p{1.5cm}|p{1.5cm}| p{2.5cm} | p{1.5cm}| p{1.5cm} |   }
+ \hline
+ \multicolumn{7}{|c|}{Parameters} \\
+ \hline
+Models & Number of Layers & Dropout & Dense & Optimization & Epochs & Batch Size\\
+ \hline
+ FFDNN & N/A & 0 & 3 (12, 8, 1) & adam & 500 & 2\\
+ \hline
+ Basic2 & 2 (50, 100) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 50\\
+ \hline
+ Basic ADAM2 & 2 (50, 100) & 2 (0.2)* & 1 (1) & adam & 500 & 50\\
+ \hline
+ Lower Batch3 & 3 (50, 100, 100) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 5\\
+ \hline
+ Basic3 & 3 (150, 250, 200) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 10\\
+ \hline
+Higher Neurons3 & 3 (150, 300, 200) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 5\\
+ \hline
+ Basic4 & 4 (150, 300, 200, 450) & 3 (0.2)* & 1 (1) & rmsprop & 500 & 20\\
+ \hline
+ Lower Batch4 & 4 (150, 300, 200, 450) & 3 (0.2)* & 1 (1) & rmsprop & 500 & 5\\
+ \hline
+ Grid Search3 & 3 (250, 200, 300) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 5\\
+ \hline
+ 
+ 
+ \hline
+\end{tabular}
+    \\ * denotes values are the same consecutively in an interval\\
+    The overall averaged values of the models are as follows:
     \begin{figure}
          \includegraphics[width=\linewidth]{results.png}
          \caption{Prediction Results of each Models}
@@ -179,12 +210,10 @@ Out of 22 models with different parameters which were trained and tested, the pr
          \ref{fig:results}
 \end{figure}
 
-    Parameters of the models are as follows:
-    
 
 
-    The 2 best performing models are Lower Batch4 and Grid Search3. Based on the results,
-
+    The 2 best performing models are Lower Batch4 and Grid Search3. Based on the results, it shows that RNNs can accurately predict hospitalization rate, with a 3 point difference from the FFDNN. A lower dropout and batch size results in an accurate prediction regardless of the number of layers as long as nodes are 100 and above.   
+ 
     
     \bibliographystyle{acm}
     \bibliography{ref}
