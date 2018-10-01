@@ -69,10 +69,11 @@ class Pollution:
         hist = model.fit(train_X, train_y, batch_size=batch, epochs=epochs, verbose=self.verbosity, shuffle=False, validation_data=(test_X, test_y))
         with open('report.txt','a') as fh:
              model.summary(print_fn=lambda x: fh.write(x + '\n'))
-        
+
         all_X = np.concatenate((train_X, test_X))
         yhat = model.predict(all_X)
         inv_yhat = self.scalers[0].inverse_transform(yhat)
+# Himua na ang predictions kayma pasa nalang sa dictionry para ma chuy, pero nag groupings must be in a special way
         self.predictor_magtanggol(inv_yhat, label)
         self.create_loss(hist, label)
         self.times.append(datetime.now() - start)
