@@ -43,7 +43,6 @@
 \chapter*{Abstract}
 Air pollution is a growing concern in the developing world, and its presence is difficult to realize. Continuous exposure to pollution increases the risk of developing lung-related diseases. However, due to the numerous factors affecting the development of disease, thorough statistical models have not been formulated that can reliably fit pollution concentration and change in hospitalizations from lung diseases. With the emergence of machine learning, more specifically Long Short-Term Memory (LSTM) based Recurrent Neural Networks (RNN), this study aims to develop a model that could reliably predict the changes in hospitalization based on the characteristics of an area and its pollution, taking into account the pollution present in previous days in a time-series. This model could then be used as a baseline for hospitals to distribute resources and overall be more efficient in administering aid to patients.
 \tableofcontents{Table of Contents}
-\listoffigures
 \mainmatter
 \chapter{Introduction}
 \section{Background of the Study}
@@ -77,6 +76,7 @@ Air pollution is a growing concern in the developing world, and its presence is 
     Additionally, it could be a starting point for future studies relating the multiple variables involved in lung health of individuals and or a population in an area. Should the focus be the algorithm, accuracy and speed could be improved, thus making a better implementation. On the other hand, it could give an insight on how each factor interacts with the human body and further studies on the effect of specific matter to the human body.
     \section{Scope and Limitations}
     The study utilizes local data sourced from institutions in Davao city which contain the relevant data and ignoring those which lack several factors. The study only estimated percentage change for hospitalization of any lung disease and does not assume which specific disease it is, as it requires very specific data and situations. The study utilized an NVIDIA GTX 1060 6GB GPU for training the neural network from the lack of funds to apply for a cloud computing service.\\
+    
     Originally, the data intervals of hospitalizations and pollution concentration should have been daily for maximum efficiency of the model, but due to lack of data from other approached hospitals and departments, the interval was changed to monthly.
 \chapter{Review of Related Literature}
     \section{Air Pollutants and correlation to Health Exposure}
@@ -173,8 +173,8 @@ Air pollution is a growing concern in the developing world, and its presence is 
 \chapter{Results and Discussions}    
 \section{Experiments}
 \subsection{Basic Model}
-In order to know the number of epochs all the models would be trained at, the basic Model with 2 layers containing 50 and 100 neurons and a Dropout of 0.2 was trained with the Early Stopping function enabled to determine when the model would no longer improve. Then it was determined that after 500 epochs the model no longer improves, and thus this would be the default number of epochs for all procceding models. Based on the previous research by "hehecite pls" \%\%\%\% Adam
-and RMSprop are rather similar algorithms that do well in the same circumstances, however Adam slightly outperforms RMSprop, thus being the recommended optimizer. Nonetheless both optimizers were tested using the basic model. From the results the RMSProp model had a lower RMSE and thus is chosen as the default optimizer for all proceding models.
+In order to know the number of epochs all the models would be trained at, the basic Model with 2 layers containing 50 and 100 neurons and a Dropout of 0.2 was trained with the Early Stopping function enabled to determine when the model would no longer improve. Then it was determined that after 500 epochs the model no longer improves, and thus this would be the default number of epochs for all procceding models.\\ Based on the previous research by Ruder, Adam
+and RMSprop are rather similar algorithms that do well in the same circumstances, however Adam slightly outperforms RMSprop, thus being the recommended optimizer. \cite{DBLP:journals/corr/Ruder16} Nonetheless both optimizers were tested using the basic model. From the results the RMSProp model had a lower RMSE and thus is chosen as the default optimizer for all proceding models.
 \subsection{Batch size}
 The batch size was then adjusted to see whether a lower or higher batch size will improve the model. the batch size was then decreased to 20 and the RMSE decreased slightly, then it was set to 5 and the batch size had a more noticable change
 \subsection{Layers stacked}
@@ -225,9 +225,11 @@ Higher Neurons3 & 3 (150, 300, 200) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 5\\
 
     The 2 best performing models are Lower Batch4 and Grid Search3. Based on the results, it shows that RNNs can accurately predict hospitalization rate, with a 3 point difference from the FFDNN. A lower dropout and batch size results in an accurate prediction regardless of the number of layers as long as nodes are 100 and above.   
 \chapter{Conclusions and Recommendations}
-RNNs are Neural Networks that utilize its internal state as memory to process sequences of inputs thus learning from previous inputs or time sequences. Using data from DENR-EMB sensors in Davao City, the number of hospitalizations for the next week was then predicted by the LSTMs. Based on the RMSE calculated from the predictions, the accuracy of the model can be measured.
+RNNs are Neural Networks that utilize its internal state as memory to process sequences of inputs thus learning from previous inputs or time sequences. Using data from DENR-EMB sensors in Davao City, the number of hospitalizations for the next week was then predicted by the LSTMs. Based on the RMSE calculated from the predictions, the accuracy of the model can be measured.\\
+
 Although the LSTMs show good results, it is still outperformed by a simpler Neural Network. However this is only a start to researches regarding these networks utilizing this type of data. As the research could be improved in several ways, starting from the data, the data gathered is very much lacking as it was originally planned to gather daily data but due to time constraints and communication problems with hospitals, the data given to the proponents is weekly. This
-time interval affects the amount of dependence each data point has with each other. In these cases using a simpler network or model is better. Next, a better way to handle missing data could be done, as there wil be times that sensors fail and data will be lost, imputation could be applied before or during training. Finally ???
+time interval affects the amount of dependence each data point has with each other. In these cases using a simpler network or model is better. Next, a better way to handle missing data could be done, as there wil be times that sensors fail and data will be lost, imputation could be applied before or during training. Finally ??? \\
+
 Based on this study LSTMs are then shown to be rather accurate as it deviates around 10\% of the real value which could help inform and prepare hospitals for patients with lung diseases. Also based on the tested models, a multiple output LSTM could be created to predict the number of hospitalizations of specific lung diseases.  
     
     \bibliographystyle{acm}
