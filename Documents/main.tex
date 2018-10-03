@@ -151,9 +151,10 @@ Air pollution is a growing concern in the developing world, and its presence is 
 \includegraphics[height=6in]{conframework.png}
 \section{Methodology}
     \subsection{Gathering of Pollution and Hospitalization Data}
-    The proponents collated 2 sets of data. First set of data, labeled as Target, contains hospitalizations sourced from medical records of Davao Doctors Hospital. The hospitalizations listed patients who were diagnosed of lung diseases; specifically, Asthma, Chronic Obstructive Pulmonary Disease, Chronic Bronchitis, Emphysema, Lung Cancer, Pneumonia, and Tuberculosis. The second set of data, labeled as Features, contains pollution data sourced from the Department of Environment and Natural Resources. The pollution data consists of the levels of concentrations of different pollutants that have been detected in different areas in Davao City; namely, PM10, PM2.5, NO2, O3, and SO2. All data gathered took place in 2015-2017, with a monthly interval.  
+    The proponents collated 2 sets of data. First set of data, labeled as Target, contains hospitalizations sourced from medical records of Davao Doctors Hospital. The hospitalizations listed patients who were diagnosed of lung diseases; specifically, Asthma, Chronic Obstructive Pulmonary Disease, Chronic Bronchitis, Emphysema, Lung Cancer, Pneumonia, and Tuberculosis. The second set of data, labeled as Features, contains pollution data sourced from the Department of Environment and Natural
+    Resources(DENR). The pollution data consists of the levels of concentrations of different pollutants that have been detected in different areas in Davao City; namely, PM10, PM2.5, NO2, O3, and SO2. All data gathered took place in 2015-2017, with a monthly interval.  
     \subsection{Organizing Data}
-    The proponents typed and organized the data from gathered documents into CSV files.
+    The proponents typed and organized the data from gathered documents into Comma Separated Value(CSV) files.
     \subsection{Preprocessing of Data}
     The proponents preprocessed the organized data to fix gaps. The steps were as follows:
     \begin{enumerate}
@@ -172,15 +173,31 @@ Air pollution is a growing concern in the developing world, and its presence is 
     
 \chapter{Results and Discussions}    
 \section{Experiments}
-\subsection{Basic Model}
+\subsection{Gathering of Pollution and Hospitalization Data}
+Pollution data was given by the DENR to the proponents in several pdf files, each containing daily and weekly data for a year. The data contained the measurements collected by six monitoring stations, namely: DC Station 02, DC Station 07, DC Station 11, DC Station 14, DC Station 15, and DC Station 16, which were located at Amparo Subdivision Open Lot, Barangay Compound, Brgy 12-B, davao Memorial Park, Phase II, Toril Open Park Area, Toril Poblacion, Davao City, Davao International Airport, AGL Open
+Area, and Calinan National High School, Oval Open Area, respectively. The former four stations sample the air weekly while the latter two sample continously daily.
+
+Hospitalization data was requested, and given to the proponents by the following institions, Department of Health, City Heath Office Davao, Davao Medical School Foundation, and Davao Doctors Hospital. Unfortunately only the data received from Davao Doctors was usable, as other data were either very sparse or were recorded in different time intervals. In addition, the data acquired from Davao Doctors Hospital was recorded monthly, although daily and weekly data could be retrieved from
+their system it would take a longer time and would not leave enough time for experimentation.
+\subsection{Organization Data}
+Data from the PDF files given by DENR was extracted into CSV files named by the station and year the data came from eg. "02\_15.csv". The columns were date, pm10, so2, no2, and o3, the date is formatted as week/month/year and blank entries were encoded as "nan". Sample data is shown below:
+
+Data from Davao Doctors was a printed worksheet with the number of hospital cases for specific lung diseases for every month, all the cases per month were then summed and encoded into the file "MonthlyTarget.csv" with the columns date and target. the date was formatted as month/year. Sample data is shown below:
+\subsection{Preprocessing of Data}
+The csv files with weekly intervals were then parsed into pandas DataFrames and all station data per year was merged based on their date, then all years were concatenated into a single DataFrame. Next, all rows with more than 6 NaN values were dropped and the remaining NaN values were replaced with -1 to indicate a lack of data. The target data was then parsed into a DataFrame, and each month's value was then divided by the number of feature rows in the corresponding month and appended
+to a list the same number of times, effectively distributing the value of the feature to all the weeks of the months.
+
+The date column of the features were then dropped and then rescaled to a range of [0, 1], and the targets were similarly scaled. Both target and feature data was then split 2/3 train and 1/3 test. Finally the features were reshaped into a 3d shape so that the LSTM would accept it as input.
+\subsection{Defining, Training and Evaluating the Model}
+\subsubsection{Basic Model}
 In order to know the number of epochs all the models would be trained at, the basic Model with 2 layers containing 50 and 100 neurons and a Dropout of 0.2 was trained with the Early Stopping function enabled to determine when the model would no longer improve. Then it was determined that after 500 epochs the model no longer improves, and thus this would be the default number of epochs for all procceding models.\\ Based on the previous research by Ruder, Adam
 and RMSprop are rather similar algorithms that do well in the same circumstances, however Adam slightly outperforms RMSprop, thus being the recommended optimizer. \cite{DBLP:journals/corr/Ruder16} Nonetheless both optimizers were tested using the basic model. From the results the RMSProp model had a lower RMSE and thus is chosen as the default optimizer for all proceding models.
-\subsection{Batch size}
+\subsubsection{Batch size}
 The batch size was then adjusted to see whether a lower or higher batch size will improve the model. the batch size was then decreased to 20 and the RMSE decreased slightly, then it was set to 5 and the batch size had a more noticable change
-\subsection{Layers stacked}
+\subsubsection{Layers stacked}
 Then the proponents tested adding more layers and increasing neurons. Simply adding a layer caused a great decrease in the RMSE. Doubling Neurons also had a noticable decrease in the RMSE
-\subsection{Grid Search}
-A parameter grid based on all the models with a good RMSE score was then created and then a gridsearch was performed. The best model that was found by the grid search was then found and its score is the best performing amongst other LSTM models
+\subsubsection{Grid Search}
+A parameter grid based on all the models with a good RMSE score was then created and then a GridSearch was performed. The best model that was found by the grid search was then found and its score is the best performing amongst other LSTM models
 \section{Results}
 Out of 22 models with different parameters which were trained and tested, the proponents handpicked 7 essential models, and these models were trained and tested 10 times. Each run, the 2 best performing models’ parameters were used in a grid search to calculate even better parameter values. The accuracy of the 7 models along with the grid search was gauged through an accompanying feedforward neural network on each run. The RMSE, MAE, and range values of the models, grid search, and FFDNN was recorded and averaged. The parameters of the models are as follows:
 
