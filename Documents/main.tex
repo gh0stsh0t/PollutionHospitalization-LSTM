@@ -1,4 +1,4 @@
- \documentclass[10pt,11pt,12pt,oneside]{book}
+\documentclass[10pt,11pt,12pt,oneside]{book}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{emptypage}
@@ -9,7 +9,7 @@
 \definecolor{grey}{RGB}{183,183,183}
 \usepackage[font={color=grey},figurename=figure.]{caption}
 \usepackage[left=1.2in,right=1in,top=1in,bottom=.8in]{geometry}
-
+\usepackage{booktabs}
 
 \iffalse
 \begin{figure}
@@ -46,15 +46,15 @@ Air pollution is a growing concern in the developing world, and its presence is 
 \mainmatter
 \chapter{Introduction}
 \section{Background of the Study}
-    Increase in the concentration of air pollutants in various regions of the globe also increase the risk of death from lung complications. Due to the nature of air pollution, it is not easy to realize the presence and dangers of continued exposure. The human body can filter the air that is inhaled. However, it is not  enough to remove all the risks from particles and pollutants ever present in the air.\cite{1971} Air pollutants are commonly not visible to the naked eye and could be small enough to penetrate conventional face masks. \cite{Shakya2016} Thus, without any visible indication, it becomes a factor for lung complications. \cite{2009} All lung complications have the symptoms of coughing and shortness of breath, which causes them to be dismissed as a simple cold or similar. Such is the case until the symptoms persist for several weeks and upon checkup, the person is diagnosed with severe diseases such as Pneumonia or Chronic bronchitis. Illustrating the risk from data collected by sensors could alert the person of what diseases he or she could contract from the polluted air. 
+    Increase in the concentration of air pollutants in various regions of the globe also increase the risk of death from lung complications. Due to the nature of air pollution, it is not easy to realize the presence and dangers of continued exposure. The human body can filter the air that is inhaled. However, it is not  enough to remove all the risks from particles and pollutants ever present in the air.\cite{1971} Air pollutants are commonly not visible to the naked eye and could be small enough to penetrate conventional face masks. \cite{Shakya2016} Thus, without any visible indication, it becomes a factor for lung complications. \cite{2009} All lung complications have the symptoms of coughing and shortness of breath, which causes them to be dismissed as a simple cold or similar. Such is the case until the symptoms persist for several weeks and upon checkup, the person is diagnosed with severe diseases such as Pneumonia or Chronic bronchitis. Illustrating the risk from data collected by sensors could alert the person of what diseases he or she could contract from the polluted air.
 
     There are multiple studies that measured the pollution density in countries. There were also studies that took this pollution density and aligned it with the amount of hospitalized for lung-related diseases. These studies took note of environmental conditions and measured the trends in pollution for certain time periods. One such study was by Mansourian et al. (2011). However, data and numbers were the focus of these studies. The conclusion from observing the data was the presence of a statistically significant linear relationship between pollution density and number of hospitalized individuals. \cite{Mansourian2011}
-     
+
     Other studies had organized previous data, while also including other factors such as age and previous lung complications, such as asthma. These studies had results trying to correlate risk factors and the actual risk of disease development. According to the study by Amadeo et al. (2015) children who have asthma who are continuously exposed to low concentration of pollution are found to have reduced lung function afterwards. However, a thorough statistical model has not been created due to the number of factors involved. \cite{Amadeo2015}
-     
-    More recently, from the development of machine learning techniques, algorithms have been made to relate risk factors with the percent risk of the onset of diseases. Although, these algorithms are currently applied to heart complications and post-organ transplant diseases. As the risk factors for these conditions are almost exclusively found within the body, for example, Body Fluid Analysis, Imaging, and Electric Pulse Measures. Thus, more data is compiled in a standard format, making the development of algorithms faster and easier. 
+
+    More recently, from the development of machine learning techniques, algorithms have been made to relate risk factors with the percent risk of the onset of diseases. Although, these algorithms are currently applied to heart complications and post-organ transplant diseases. As the risk factors for these conditions are almost exclusively found within the body, for example, Body Fluid Analysis, Imaging, and Electric Pulse Measures. Thus, more data is compiled in a standard format, making the development of algorithms faster and easier.
     \section{Statement of the Problem}
-    
+
     The study aims to develop a method to use data collected by sensors in real time to illustrate the correlation of hospitalization due to lung diseases and pollutants. Through a machine learning approach, the data will be aggregated and used to generate a model for prediction. This study also seeks to answer the following questions:
     \begin{enumerate}
         \item How do Recurrent Neural Networks work
@@ -68,45 +68,46 @@ Air pollution is a growing concern in the developing world, and its presence is 
         \item To explain how Recurrent Neural Networks work.
         \item To explain the methods of determining the concentration of pollutants in the air
         \item To explain how to predict the number of hospitalizations due to lung-related diseases
-        \item To explain how to determine accuracy of prediction of number of hospitalizations due to lung-related diseases 
+        \item To explain how to determine accuracy of prediction of number of hospitalizations due to lung-related diseases
     \end{enumerate}
     \section{Significance of the Study}
-    The results of the study could be used in health and air monitoring systems. It could be used in medical institutions as a tracker of what particles have been exposed to an individual thus giving the doctor a preliminary idea of what diseases the individual could have contracted. The study could also be used for estimating the needed supplies by a hospital, should the change in hospitalization dramatically increase, institutions could be prepared, and treatments be administered much more efficiently.
-    
+    The results of the study could be used in health and air monitoring systems. The study could also be used for estimating the needed supplies by a hospital, should the change in hospitalization dramatically increase, institutions could be prepared, and treatments be administered much more efficiently.
+
     Additionally, it could be a starting point for future studies relating the multiple variables involved in lung health of individuals and or a population in an area. Should the focus be the algorithm, accuracy and speed could be improved, thus making a better implementation. On the other hand, it could give an insight on how each factor interacts with the human body and further studies on the effect of specific matter to the human body.
     \section{Scope and Limitations}
     The study utilizes local data sourced from institutions in Davao city which contain the relevant data and ignoring those which lack several factors. The study only estimated percentage change for hospitalization of any lung disease and does not assume which specific disease it is, as it requires very specific data and situations. The study utilized an NVIDIA GTX 1060 6GB GPU for training the neural network from the lack of funds to apply for a cloud computing service.\\
-    
-    Originally, the data intervals of hospitalizations and pollution concentration should have been daily for maximum efficiency of the model, but due to lack of data from other approached hospitals and departments, the interval was changed to monthly.
+
+    Hospitalization data was requested, and given to the proponents by the following institutions, Department of Health, City Heath Office Davao, Davao Medical School Foundation, and Davao Doctors Hospital. Unfortunately only the data received from Davao Doctors was usable, as other data were either very sparse or were recorded in different time intervals. In addition, the data acquired from Davao Doctors Hospital was recorded monthly, although daily and weekly data could be retrieved from
+their system it would take a longer time. Originally, the data intervals of hospitalizations and pollution concentration should have been daily for maximum efficiency of the model, but due to lack of data from other approached hospitals and departments, the interval was changed to monthly.
 \chapter{Review of Related Literature}
     \section{Air Pollutants and correlation to Health Exposure}
         \subsection{Particulate Matter}
-        Particles are small objects that can be ascribed with properties such as volume or mass. It includes hazardous stuff such as dirt and soot, being one of the oldest air pollutants. They enter the atmosphere through natural or anthropogenic means \cite{knudsen2012particulate}. When particles become suspended in the air or atmosphere for long periods of time, they are now known as Particulate Matter, one of the common hazardous form of air pollutants. 
-        
+        Particles are small objects that can be ascribed with properties such as volume or mass. It includes hazardous stuff such as dirt and soot, being one of the oldest air pollutants. They enter the atmosphere through natural or anthropogenic means \cite{knudsen2012particulate}. When particles become suspended in the air or atmosphere for long periods of time, they are now known as Particulate Matter, one of the common hazardous form of air pollutants.
+
         They can be classified as primary particles, which are particles that are directly emitted into the atmosphere or form by rapid condensation of gas molecules, or secondary particles which are formed from chemical transformation of existing gases (e.g. sulfur dioxide, nitrogen oxides, ammonia, etc.). \cite{finlayson2000chemistry}
-        
+
         They are generally found in heavily urbanized areas, areas such as mines or factories that uses several chemicals, and even in homes. Studies stated by Rasmussen et al. in his work in 2012 show that 4 to 8\% percent of the total annual mortality rate are caused by air pollution due to PM alone in homes. PM2.5 and PM10 (2.5 and 10 denoting size in micrometers) are associated with cardiovascular and respiratory effects, respectively. Long-term exposure to PM2.5 have confirmed links with increase risks of pneumonia \cite{Neupane2010} and exposure to PM10 has indeed have relations with increase mortality due to pneumonia and Chronic obstructive pulmonary disease (COPD), with mortality rates being modified depending on the overall characteristics of the city \cite{MedinaRamn2006}
         \subsection{Atmosphere-based Chemical Substances}
-        Chemical-based substances also play a big role in air pollution and health risks. Besides the fact that some particulate matter, as mentioned, are formed from chemical gases, the latter themselves are already poisonous to humans. When it comes to the air, harmful substances such as nitrogen oxides, ozone, and sulfur dioxide come into play. 
-        
+        Chemical-based substances also play a big role in air pollution and health risks. Besides the fact that some particulate matter, as mentioned, are formed from chemical gases, the latter themselves are already poisonous to humans. When it comes to the air, harmful substances such as nitrogen oxides, ozone, and sulfur dioxide come into play.
+
         In studies stated by Chauhan \& Johnston in their book in 2003, there is a 1.3\% increase in daily mortality rate with the increase of NO2 or O3 at 50 micrograms/m3. In addition, increased exposure of SO2 on asthmatic children led to increased respiratory symptoms, fever, and asthmatic medication. Furthermore, fine particles associated with the SO2 increased dyspnoea in children with mild asthma. \cite{doi:10.1093/bmb/ldg022}
         \subsection{Air Quality Index/Directive}
         The Air Quality Index/Directive (AQI/AQD) is a number used to summarize or describe the current pollution levels of the air or atmosphere. Each country has its own AQI, and each levels in the AQI denote different levels of air pollution and adverse health risks as stated by the Environmental Protection Agency (EPA) in their website. \cite{airbasics}
         \subsection{Low-cost Sensors}
-        According to Nuria et. al (2016), current monitoring systems monitor air pollution concentration through measuring pollutants such as carbon monoxide, nitrogen oxide, and particulate matter (PM10 and PM2.5). Most of these sensors are very expensive in installing and maintaining; hence, they tested several commercial low-cost sensors (AQMesh v3.5) in their study. 
-        
+        According to Nuria et. al (2016), current monitoring systems monitor air pollution concentration through measuring pollutants such as carbon monoxide, nitrogen oxide, and particulate matter (PM10 and PM2.5). Most of these sensors are very expensive in installing and maintaining; hence, they tested several commercial low-cost sensors (AQMesh v3.5) in their study.
+
         When measuring the concentration of several pollutants, the expanded uncertainty met the DQO criteria in the Air Quality Directive for some pollutants like NO, PM10, and PM2.5 while other pollutants like CO and NO2 showed expanded uncertainty exceeding the Data Quality Objectives’ (DQO) indicative methods. In short, the commercial low-cost sensors were deemed unsuitable; however, recent studies have shown that the application of field calibrations based on machine learning techniques can reduce the expanded uncertainty and improve overall performance. \cite{Castell2017}
     \section{Types of Recurring Neural Networks}
         \subsection{Long Short-Term Memory (LSTM)}
-        Hochreiter and Schmidhuber [1997] invented Long Short-Term Memory networks, which are designed to solve the vanishing, and exploding gradient problem due to back-propagation when training artificial neural networks. Since then, it has been used in applications such as image processing and classification due to their ridiculous accuracy, and for their ability to store information over long-time intervals with minimal to no risk of it getting lost. \cite{Hochreiter:1997:LSM:1246443.1246450} 
-        
+        Hochreiter and Schmidhuber [1997] invented Long Short-Term Memory networks, which are designed to solve the vanishing, and exploding gradient problem due to back-propagation when training artificial neural networks. Since then, it has been used in applications such as image processing and classification due to their ridiculous accuracy, and for their ability to store information over long-time intervals with minimal to no risk of it getting lost. \cite{Hochreiter:1997:LSM:1246443.1246450}
+
         A study by Zachary, et al. [2016] tested the efficiency of LSTM in diagnosing time series data gathered in the intensive care unit (ICU). While the networks were able to produce impressive results, there are some areas where LSTM performed worse due to the fact that some data progression does not follow with the standard linear progression commonly used in networks. \cite{DBLP:journals/corr/LiptonKEW15}
         \subsection{Gated Recurrent Unit (GRU)}
         GRUs are RNNs that functions mostly like LSTMs albeit with key differences, mainly that GRUs has fewer gates and that it is more efficient in sequence modeling and time series data analyzing when there are fewer parameters, and gathered data are used in short-time intervals (Britz, 2015). \cite{britz_2016}
-        
+
         Zhengping et al. (2016) experimented on GRUs using multivariate series with missing values. The proponents wanted to exploit those missing values as a means to improve overall predicting performance in models; hence, the proponents created a new model called GRU-D, GRUs with decay mechanism that addresses the overall impact of missing values in the data in specific time intervals. The model itself proved valuable; it effectively handled the missing values in multivariate data through incorporating masking and time interval directly inside GRU architecture. Moreover, the model was able to make accurate early predictions before seeing all of the time series data, making it useful in fields such as healthcare. \cite{DBLP:journals/corr/ChePCSL16}
     \section{Other Machine Learning Approaches in Other Fields}
-    Machine learning has been a definite staple in computer science, especially with the exploration and construction of algorithms. With risk estimation and prediction, machine learning has been proven to be useful in risk estimation, with its different methods being underutilized and can be further studied and can be further studied and polished. \cite{Kruppa2012} Other machine-learning approaches besides neural networks have also been used in other fields of risk estimation and prediction. 
+    Machine learning has been a definite staple in computer science, especially with the exploration and construction of algorithms. With risk estimation and prediction, machine learning has been proven to be useful in risk estimation, with its different methods being underutilized and can be further studied and can be further studied and polished. \cite{Kruppa2012} Other machine-learning approaches besides neural networks have also been used in other fields of risk estimation and prediction.
         \subsection{Artificial Neural Network}
         One study by Weng et al. (2017) tested four machine-learning approaches, neural networks included, against existing algorithms of cardiovascular risk prediction. The study proved that these machine-learning approaches significantly improved the overall performance of detecting individuals who will develop CVD and those that will not, with neural networks performing the best with predictive accuracy improved by 3.6\%. \cite{Weng2017}
 
@@ -115,21 +116,21 @@ Air pollution is a growing concern in the developing world, and its presence is 
 
         \subsection{Random Forest}
         A study by Gurm et al. (2014) created and analyzed a random forest-based risk model of receipt of transfusion in patients undergoing Percutaneous Coronary Intervention. The model, restricted based on Michigan, was indeed successful, albeit improvements can still be made. The model helped identify patient subgroups with a higher or lower risk of needing a transfusion, and it also proved PCI can be reliably estimated. \cite{Gurm2014}
-        
+
         Another study by Ghatasheh (2014) used random forest trees to evaluate credit risk. Due to other approaches being black-boxed, random forest was suggested since it gives some insight on the dynamics and interactions between the underlying factors of credit risks. The results of the research show that random forest trees are a promising opportunity in Business Analytics, with pros like effective classification and accuracy being more beneficial to business domain experts. The findings also show how to improve decision trees in general through thorough investigation, testing and improving classification models. \cite{Ghatasheh2014BusinessAU}
         \subsection{Logistic Regression}
         Yanfeng et al. (2017) used logistic regression to create a risk model for pneumothorax after CT-guided needle biopsy and the different risk factors involved. Using univariate logistic regression analysis to determine risk factors, and then multivariate logistic regression analysis to break down which aforementioned risk factors are independent of each other, a regression analysis formula was formed to create the model. The model, integrated with all independent risk factors, predicted pneumothorax among patients with high accuracy. \cite{Zhao2017}
         \subsection{Gradient Boosting}
-        Atkinson et al. (2013) used gradient boosting machine models (GBM) to assess whether it can improve bone fracture prediction. Gradient boosting “focuses on combining information from many variables that individually may not be significant but together are very informative.” Taking advantage all of the variables needed for the analysis, the GBM were able to differentiate fracture and non-fracture subjects with surprisingly high predictive ability. 
-        
+        Atkinson et al. (2013) used gradient boosting machine models (GBM) to assess whether it can improve bone fracture prediction. Gradient boosting “focuses on combining information from many variables that individually may not be significant but together are very informative.” Taking advantage all of the variables needed for the analysis, the GBM were able to differentiate fracture and non-fracture subjects with surprisingly high predictive ability.
+
         The study demonstrated that GBM has the potential to be very effective in its risk predicting in terms of the medical fields, precisely because of 3 reasons as stated by Atkinson et al.: (1) there is evidence that boosting methods are one of the approaches least affected by overfitting; (2) GBM models’ non-linearity and interactions between variables can be captured without prior specification; and (3) GBM incorporates the stochastic component, e.g. falling, that is so important in fracture pathogenesis. \cite{Atkinson2012}
     \section{Root-Mean-Square Error (RMSE)}
-    The Root-Mean-Square Error is a statistical metric commonly used in measuring model performance. It is widely considered as the standard metric in model errors. As concluded by Chai et. al (2014) in their research, RMSE best represents model performance when error distribution is expected to be normal, and that it satisfies the triangle inequality requirement to be considered as a distance metric. The formula, with respect to with respect to the estimated variable Xmodel is defined as the square root of the mean squared error (MSE): 
+    The Root-Mean-Square Error is a statistical metric commonly used in measuring model performance. It is widely considered as the standard metric in model errors. As concluded by Chai et. al (2014) in their research, RMSE best represents model performance when error distribution is expected to be normal, and that it satisfies the triangle inequality requirement to be considered as a distance metric. The formula, with respect to with respect to the estimated variable Xmodel is defined as the square root of the mean squared error (MSE):
                            \begin{figure}
          \includegraphics[width=\linewidth]{rmseformula.png}
          \caption{RMSE Formula}
          \label{fig:formula}
-         
+
              \ref{fig:formula}
 \end{figure}
 
@@ -143,7 +144,7 @@ Air pollution is a growing concern in the developing world, and its presence is 
         \medskip
     \end{figure}
     A framework is created in the study conducted by Esteban, et al. wherein static and dynamic data of patients were used as predictors of future clinical events for several RNN implementations. It shows that the static information was first fed into an independent Feedforward Neural Network and the dynamic information into the RNN. Afterward they then concatenated the hidden layers of both networks and provided the information into the output layer.
-    
+
     As shown in the figure, the networks are fed latent representations of the data. The latent representations are computed by applying linear transformation on the raw input, which contains dynamic data and static data of the patient, except for the input for the independent network which only contains the static data of the patient. From the output of the network, a cost is calculated, the cost function applied was based on the Binary Cross Entropy function. \cite{DBLP:journals/corr/EstebanSYT16}
     \FloatBarrier
 \chapter{Project Design and Methodology}
@@ -152,7 +153,7 @@ Air pollution is a growing concern in the developing world, and its presence is 
 \section{Methodology}
     \subsection{Gathering of Pollution and Hospitalization Data}
     The proponents collated 2 sets of data. First set of data, labeled as Target, contains hospitalizations sourced from medical records of Davao Doctors Hospital. The hospitalizations listed patients who were diagnosed of lung diseases; specifically, Asthma, Chronic Obstructive Pulmonary Disease, Chronic Bronchitis, Emphysema, Lung Cancer, Pneumonia, and Tuberculosis. The second set of data, labeled as Features, contains pollution data sourced from the Department of Environment and Natural
-    Resources(DENR). The pollution data consists of the levels of concentrations of different pollutants that have been detected in different areas in Davao City; namely, PM10, PM2.5, NO2, O3, and SO2. All data gathered took place in 2015-2017, with a monthly interval.  
+    Resources(DENR). The pollution data consists of the levels of concentrations of different pollutants that have been detected in different areas in Davao City; namely, PM10, PM2.5, NO2, O3, and SO2. All data gathered took place in 2015-2017, with a monthly interval.
     \subsection{Organizing Data}
     The proponents typed and organized the data from gathered documents into Comma Separated Value(CSV) files.
     \subsection{Preprocessing of Data}
@@ -169,20 +170,109 @@ Air pollution is a growing concern in the developing world, and its presence is 
     \subsection{Evaluating the Model}
     The proponents run the trained model on the test set which would then collect all predictions and calculate an error score. The output shall be the calculated Root Mean Squared Error (RMSE) that gives error in the same units as the variable itself. The data will be presented in a graph format to illustrate the improvement of the model over time.
     \subsection{Implementing the Model}
-    Upon achieving the best possible accuracy, the model was embedded by the proponents in a web script.
-    
-\chapter{Results and Discussions}    
+    Upon achieving the best possible accuracy, the model was embedded by the proponents in a simple web app.
+
+\chapter{Results and Discussions}
 \section{Experiments}
 \subsection{Gathering of Pollution and Hospitalization Data}
 Pollution data was given by the DENR to the proponents in several pdf files, each containing daily and weekly data for a year. The data contained the measurements collected by six monitoring stations, namely: DC Station 02, DC Station 07, DC Station 11, DC Station 14, DC Station 15, and DC Station 16, which were located at Amparo Subdivision Open Lot, Barangay Compound, Brgy 12-B, davao Memorial Park, Phase II, Toril Open Park Area, Toril Poblacion, Davao City, Davao International Airport, AGL Open
-Area, and Calinan National High School, Oval Open Area, respectively. The former four stations sample the air weekly while the latter two sample continously daily.
-
-Hospitalization data was requested, and given to the proponents by the following institions, Department of Health, City Heath Office Davao, Davao Medical School Foundation, and Davao Doctors Hospital. Unfortunately only the data received from Davao Doctors was usable, as other data were either very sparse or were recorded in different time intervals. In addition, the data acquired from Davao Doctors Hospital was recorded monthly, although daily and weekly data could be retrieved from
-their system it would take a longer time and would not leave enough time for experimentation.
+Area, and Calinan National High School, Oval Open Area, respectively. The former four stations sample the air weekly while the latter two sample continuously daily. Hospitalization data was requested, and given to the proponents by the Davao Doctors Hospital.
 \subsection{Organization Data}
-Data from the PDF files given by DENR was extracted into CSV files named by the station and year the data came from eg. "02\_15.csv". The columns were date, pm10, so2, no2, and o3, the date is formatted as week/month/year and blank entries were encoded as "nan". Sample data is shown below:
+Data from the PDF files given by DENR was extracted into CSV files named by the station and year the data came from eg. "02\_15.csv". The columns were date, pm10, so2, no2, and o3, the date is formatted as week/month/year and blank entries were encoded as "nan" as shown in \ref{table:data_csv1}
 
-Data from Davao Doctors was a printed worksheet with the number of hospital cases for specific lung diseases for every month, all the cases per month were then summed and encoded into the file "MonthlyTarget.csv" with the columns date and target. the date was formatted as month/year. Sample data is shown below:
+Data from Davao Doctors was a printed worksheet with the number of hospital cases for specific lung diseases for every month, all the cases per month were then summed and encoded into the file "MonthlyTarget.csv" with the columns date and target. the date was formatted as month/year. Sample data is shown below in \ref{table:data_csv2}
+
+\begin{table}
+\parbox{.45\linewidth}{
+\centering
+\begin{tabular}{|l|l|l|l|l|}
+\toprule
+date    & pm10  & so2   & no2   & o3    \\
+\hline
+2/9/15  & 55.30 & 2.4   & 9     & 0.4   \\
+\hline
+3/9/15  & 41.50 & 0.001 & 7.9   & nan   \\
+\hline
+4/9/15  & 96.40 & 1.10  & 11.30 & 1.10  \\
+\hline
+1/10/15 & 55.60 & 0.001 & 14.6  & 28    \\
+\hline
+2/10/15 & 35.80 & 1     & 7.2   & 0.4   \\
+\hline
+3/10/15 & 46.40 & 0.001 & 15    & nan   \\
+\hline
+4/10/15 & 81.50 & 0.001 & 6.8   & 2.9   \\
+\hline
+5/10/15 & 30.20 & 0.001 & 9     & nan   \\
+\hline
+1/11/15 & 48.90 & 6.3   & 4.4   & 0.2   \\
+\hline
+2/11/15 & 27.20 & 2.7   & 9.8   & 0.6   \\
+\hline
+3/11/15 & 21.20 & 2.5   & 6.8   & 0.2   \\
+\hline
+4/11/15 & 24.40 & 5.9   & 5.8   & 1.1   \\
+\hline
+1/12/15 & 20.40 & nan   & 5.3   & nan   \\
+\hline
+2/12/15 & 26.60 & 0.2   & 5.5   & 5     \\
+\hline
+3/12/15 & 40.40 & 0.6   & 5.9   & 3.2   \\
+\hline
+4/12/15 & 27.20 & 0.20  & 7.80  & 1.10  \\
+\bottomrule
+\end{tabular}
+\caption{Sample pollution data from station 12}
+\label{table:data_csv1}
+}
+\hfill
+\parbox{.45\linewidth}{
+\centering
+\begin{tabular}{|l|l|}
+\toprule
+date  & target  \\
+\hline
+8/15  & 422     \\
+\hline
+9/15  & 460     \\
+\hline
+10/15 & 430     \\
+\hline
+11/15 & 365     \\
+\hline
+12/15 & 391     \\
+\hline
+1/16  & 503     \\
+\hline
+2/16  & 366     \\
+\hline
+3/16  & 318     \\
+\hline
+4/16  & 283     \\
+\hline
+5/16  & 286     \\
+\hline
+6/16  & 330     \\
+\hline
+7/16  & 445     \\
+\hline
+8/16  & 509     \\
+\hline
+9/16  & 460     \\
+\hline
+10/16 & 472     \\
+\hline
+11/16 & 465     \\
+\hline
+
+\end{tabular}
+\caption{Sample hospitalization data}
+\label{table:data_csv2}
+}
+\end{table}
+
+
+
 \subsection{Preprocessing of Data}
 The csv files with weekly intervals were then parsed into pandas DataFrames and all station data per year was merged based on their date, then all years were concatenated into a single DataFrame. Next, all rows with more than 6 NaN values were dropped and the remaining NaN values were replaced with -1 to indicate a lack of data. The target data was then parsed into a DataFrame, and each month's value was then divided by the number of feature rows in the corresponding month and appended
 to a list the same number of times, effectively distributing the value of the feature to all the weeks of the months.
@@ -225,8 +315,8 @@ Higher Neurons3 & 3 (150, 300, 200) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 5\\
  \hline
  Grid Search3 & 3 (250, 200, 300) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 5\\
  \hline
- 
- 
+
+
  \hline
 \end{tabular}
     \\ * denotes values are the same consecutively in an interval\\
@@ -240,15 +330,14 @@ Higher Neurons3 & 3 (150, 300, 200) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 5\\
 
 \section{Discussion}
 
-    The 2 best performing models are Lower Batch4 and Grid Search3. Based on the results, it shows that RNNs can accurately predict hospitalization rate, with a 3 point difference from the FFDNN. A lower dropout and batch size results in an accurate prediction regardless of the number of layers as long as nodes are 100 and above.   
+    The 2 best performing models are Lower Batch4 and Grid Search3. Based on the results, it shows that RNNs can accurately predict hospitalization rate, with a 3 point difference from the FFDNN. A lower dropout and batch size results in an accurate prediction regardless of the number of layers as long as nodes are 100 and above.
 \chapter{Conclusions and Recommendations}
-RNNs are Neural Networks that utilize its internal state as memory to process sequences of inputs thus learning from previous inputs or time sequences. Using data from DENR-EMB sensors in Davao City, the number of hospitalizations for the next week was then predicted by the LSTMs. Based on the RMSE calculated from the predictions, the accuracy of the model can be measured.\\
+\section{Conclusions}
+The results show that LSTM 
 
-Although the LSTMs show good results, it is still outperformed by a simpler Neural Network. However this is only a start to researches regarding these networks utilizing this type of data. As the research could be improved in several ways, starting from the data, the data gathered is very much lacking as it was originally planned to gather daily data but due to time constraints and communication problems with hospitals, the data given to the proponents is weekly. This
-time interval affects the amount of dependence each data point has with each other. In these cases using a simpler network or model is better. Next, a better way to handle missing data could be done, as there wil be times that sensors fail and data will be lost, imputation could be applied before or during training. Finally ??? \\
+\section{Recommendations}
+For future studies related to this research, the proponents recommend utilizing a larger dataset with shorter time intervals, eg. daily data. The larger amount of data could possibly help the model detect more trends and increase the accuracy. In addition to that, the proponents recommend using MLPs in future studies using rather similar data to this research, as a simple MLP model had a higher accuracy.
 
-Based on this study LSTMs are then shown to be rather accurate as it deviates around 10\% of the real value which could help inform and prepare hospitals for patients with lung diseases. Also based on the tested models, a multiple output LSTM could be created to predict the number of hospitalizations of specific lung diseases.  
-    
     \bibliographystyle{acm}
     \bibliography{ref}
 \end{document}
