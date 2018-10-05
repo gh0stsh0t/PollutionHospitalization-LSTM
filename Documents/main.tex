@@ -269,16 +269,48 @@ to a list the same number of times, effectively distributing the value of the fe
 
 \subsection{Defining, Training and Evaluating the Model}
 \subsubsection{Basic Model}
-In order to know the number of epochs all the models would be trained at, the basic Model with 2 layers containing 50 and 100 neurons and a Dropout of 0.2 was trained with the Early Stopping function enabled to determine when the model would no longer improve. Then it was determined that after 500 epochs the model no longer improves, and thus this would be the default number of epochs for all procceding models.\\ Based on the previous research by Ruder(2016), Adam
-and RMSprop are rather similar algorithms that do well in the same circumstances, however Adam slightly outperforms RMSprop, thus being the recommended optimizer. \cite{DBLP:journals/corr/Ruder16} Nonetheless both optimizers were tested using the basic model. From the results the RMSProp model had a lower RMSE and thus is chosen as the default optimizer for all proceding models.
+In order to know the number of epochs all the models would be trained at, the basic Model with 2 layers containing 50 and 100 neurons and a Dropout of 0.2 was trained with the Early Stopping function enabled to determine when the model would no longer improve. Then it was determined that after 500 epochs the model no longer improves, and thus this would be the default number of epochs for all proceeding models.
+
+Based on the previous research by Ruder(2016), Adam
+and RMSprop are rather similar algorithms that do well in the same circumstances, however Adam slightly outperforms RMSprop, thus being the recommended optimizer. \cite{DBLP:journals/corr/Ruder16} Nonetheless both optimizers were tested using the basic model. From the results the RMSProp model, labelled "fifth", had a lower RMSE compared to the Adam model, labelled "fourth", and thus is chosen as the default optimizer for all proceeding models.\\
+\begin{figure}[H]
+\centering
+\includegraphics[width=5in,height=3in]{Data/optimizer.pdf}
+\caption{Adam vs RMSprop}
+\label{fig:basic}
+\end{figure}
 \subsubsection{Batch size}
-The batch size was then adjusted to see whether a lower or higher batch size will improve the model. the batch size was then decreased to 20 and the RMSE decreased slightly, then it was set to 5 and the batch size had a more noticable change
+The batch size was then adjusted to see whether a lower or higher batch size will improve the model. the batch size was then decreased to 20 and the RMSE decreased slightly, then it was set to 5 and the batch size had a more noticable change\\
+\begin{figure}[H]
+\centering
+\includegraphics[width=5in,height=3in]{Data/batch_size.pdf}
+\caption{Batch Size}
+\label{fig:batch}
+\end{figure}
 \subsubsection{Layers stacked}
-Then more layers were added and the number of neurons was increase. Simply adding a layer caused a great decrease in the RMSE. Doubling Neurons also had a noticable decrease in the RMSE
+Then more layers were added and the number of neurons was increase. Simply adding a layer caused a great decrease in the RMSE. Doubling Neurons also had a noticable decrease in the RMSE\\
+\begin{figure}[H]
+\centering
+\includegraphics[width=5in,height=3in]{Data/layer_3.pdf}
+\caption{Grid Search}
+\label{fig:grid}
+\end{figure}
 \subsubsection{Grid Search}
-A parameter grid based on all the models with a good RMSE score was then created and then a GridSearch was performed. The best model that was found by the grid search was then found and its score is the best performing amongst other LSTM models
+A parameter grid based on all the models with a good RMSE score was then created and then a GridSearch was performed. The best model that was found by the grid search was then found and its score is the best performing amongst other LSTM models\\
+\begin{figure}[H]
+\centering
+\includegraphics[width=5in,height=3in]{Data/grid_search.pdf}
+\caption{Grid Search}
+\label{fig:grid}
+\end{figure}
 \subsubsection{Feed Forward Deep Neural Network}
-Although outside the scope of the study, a basic Feed Forward Deep Neural Network (FFDNN) also known as a Multilayer Perceptron (MLP) was created to show the effect of a simpler model on a small dataset. This model averaged a 6.something RMSE and is consistently more accurate than LSTM models. 
+Although outside the scope of the study, a basic Feed Forward Deep Neural Network (FFDNN) also known as a Multilayer Perceptron (MLP) was created to show the effect of a simpler model on a small dataset. This model averaged a 6.something RMSE and is consistently more accurate than LSTM models. \\
+\begin{figure}[H]
+\centering
+\includegraphics[width=5in,height=3in]{Data/ffdnn.pdf}
+\caption{Feed Forward Deep Neural Network (MLP)}
+\label{fig:mlp}
+\end{figure}
 \section{Results}
 Out of 22 models with different parameters which were trained and tested, 7 essential models were handpicked, and these models were trained and tested 10 times. Each run, the 2 best performing models’ parameters were used in a grid search to calculate even better parameter values. The accuracy of the 7 models along with the grid search was gauged through an accompanying feedforward neural network on each run. The RMSE, MAE, and range values of the models, grid search, and FFDNN was recorded and averaged. The parameters of the models are as follows:
 
