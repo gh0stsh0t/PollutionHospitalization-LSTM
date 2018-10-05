@@ -6,6 +6,7 @@
 \usepackage{indentfirst}
 \usepackage{placeins}
 \usepackage[svgnames]{xcolor}
+\usepackage[flushleft]{threeparttable}
 \definecolor{grey}{RGB}{183,183,183}
 \usepackage[font={color=grey},figurename=figure.]{caption}
 \usepackage[left=1.2in,right=1in,top=1in,bottom=.8in]{geometry}
@@ -77,7 +78,7 @@ Air pollution is a growing concern in the developing world, and its presence is 
     \section{Scope and Limitations}
     The study utilizes local data sourced from institutions in Davao city which contain the relevant data and ignoring those which lack several factors. The study only estimated the total number of hospitalization from any lung disease and does not assume which specific disease it is, as it requires very specific data and situations. The study utilized an NVIDIA GTX 1060 6GB GPU for training the neural network from the lack of funds to apply for a cloud computing service.\\
 
-    Hospitalization data was requested, and given by the following institutions, Department of Health, City Heatlh Office Davao, Davao Medical School Foundation, and Davao Doctors Hospital. Unfortunately only the data received from Davao Doctors was usable, as other data were either very sparse or were recorded in different time intervals. In addition, the data acquired from Davao Doctors Hospital was recorded monthly, although daily and weekly data could be retrieved from
+    Hospitalization data was requested, and given by the following institutions, Department of Health, City Health Office Davao, Davao Medical School Foundation, and Davao Doctors Hospital. Unfortunately only the data received from Davao Doctors was usable, as other data were either very sparse or were recorded in different time intervals. In addition, the data acquired from Davao Doctors Hospital was recorded monthly, although daily and weekly data could be retrieved from
 their system it would take a longer time. Initially, the data intervals of hospitalizations and pollution concentration should have been daily for maximum efficiency of the model, but due to lack of data from other approached hospitals and departments, the interval was changed to monthly.
 \chapter{Review of Related Literature}
     \section{Air Pollutants and correlation to Health Exposure}
@@ -293,7 +294,7 @@ Then more layers were added and the number of neurons was increase. Simply addin
 \centering
 \includegraphics[width=5in,height=3in]{Data/layer_3.pdf}
 \caption{Grid Search}
-\label{fig:grid}
+\label{fig:layers}
 \end{figure}
 \subsubsection{Grid Search}
 A parameter grid based on all the models with a good RMSE score was then created and then a GridSearch was performed. The best model that was found by the grid search was then found and its score is the best performing amongst other LSTM models\\
@@ -304,16 +305,20 @@ A parameter grid based on all the models with a good RMSE score was then created
 \label{fig:grid}
 \end{figure}
 \subsubsection{Feed Forward Deep Neural Network}
-Although outside the scope of the study, a basic Feed Forward Deep Neural Network (FFDNN) also known as a Multilayer Perceptron (MLP) was created to show the effect of a simpler model on a small dataset. This model averaged a 6.something RMSE and is consistently more accurate than LSTM models. \\
+Although outside the scope of the study, a basic Feed Forward Deep Neural Network (FFDNN) also known as a Multilayer Perceptron (MLP) was created to show the effect of a simpler model on a small dataset. This model averaged a 6.85 RMSE and is consistently more accurate than LSTM models. \\
 \begin{figure}[H]
 \centering
 \includegraphics[width=5in,height=3in]{Data/ffdnn.pdf}
 \caption{Feed Forward Deep Neural Network (MLP)}
 \label{fig:mlp}
 \end{figure}
+\pagebreak
 \section{Results}
-Out of 22 models with different parameters which were trained and tested, 7 essential models were handpicked, and these models were trained and tested 10 times. Each run, the 2 best performing models’ parameters were used in a grid search to calculate even better parameter values. The accuracy of the 7 models along with the grid search was gauged through an accompanying feedforward neural network on each run. The RMSE, MAE, and range values of the models, grid search, and FFDNN was recorded and averaged. The parameters of the models are as follows:
+Out of 22 models with different parameters which were trained and tested, 7 essential models were handpicked, and these models were trained and tested 10 times. Each run, the 2 best performing models’ parameters were used in a grid search to calculate even better parameter values. The accuracy of the 7 models along with the grid search was gauged through an accompanying feedforward neural network on each run. The RMSE, MAE, and range values of the models, grid search, and FFDNN was recorded and averaged. The parameters of the models are shown in \ref{table:params} while the overall averaged values of the models are shown in \ref{fig:results}\\
 
+\begin{table}[H]
+\centering
+\begin{threeparttable}
 \begin{tabular}{ |p{2cm}||p{2.5cm}|p{1.5cm}|p{1.5cm}| p{2.5cm} | p{1.5cm}| p{1.5cm} |   }
  \hline
  \multicolumn{7}{|c|}{Parameters} \\
@@ -338,17 +343,19 @@ Higher Neurons3 & 3 (150, 300, 200) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 5\\
  \hline
  Grid Search3 & 3 (250, 200, 300) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 5\\
  \hline
-
-
- \hline
 \end{tabular}
-    \\ * denotes values are the same consecutively in an interval\\
-    The overall averaged values of the models are as follows:
-    \begin{figure}[H]
-         \includegraphics[width=\linewidth]{results.png}
-         \caption{Prediction Results of each Models}
-         \label{fig:results}
-         \ref{fig:results}
+\begin{tablenotes}
+      \small
+      \item * denotes values are the same consecutively in an interval
+    \end{tablenotes}
+\end{threeparttable}
+\caption{Parameters}
+\label{table:params}
+\end{table}
+\begin{figure}[H]
+\includegraphics[width=\linewidth]{results.png}
+\caption{Prediction Results of each Models}
+\label{fig:results}
 \end{figure}
 
 \section{Discussion}
