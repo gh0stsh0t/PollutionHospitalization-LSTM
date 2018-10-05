@@ -1,7 +1,12 @@
 import numpy as np
 import pandas as pd
 import sys
+import matplotlib
+matplotlib.use("pgf")
 from matplotlib import pyplot as plt
+matplotlib.rcParams['text.latex.unicode']=True
+matplotlib.rcParams['text.usetex']=True
+matplotlib.rcParams['pgf.texsystem'] = 'pdflatex'
 from sklearn.model_selection import KFold, cross_val_score, GridSearchCV, TimeSeriesSplit
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder, StandardScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error
@@ -16,8 +21,7 @@ import time
 from datetime import datetime
 from keras import backend as K
 if K.tensorflow_backend._get_available_gpus():
-    from keras.layers import LSTM as CuDNNLSTM
-    #from keras.layers import CuDNNLSTM
+    from keras.layers import CuDNNLSTM
     print("Using GPU for training")
 else:
     from keras.layers import LSTM as CuDNNLSTM
@@ -28,6 +32,7 @@ class Pollution:
 
     def __init__(self):
         self.loss = []
+        self.history = []
         self.scalers = [MinMaxScaler(feature_range=(0, 1)), MinMaxScaler(feature_range=(0, 1))]
         self.y = np.ndarray
         self.times = []
@@ -127,13 +132,13 @@ class Pollution:
                        train_X=X, train_y=y, optim='adam', batch=50, label="fifth")
         # Note: adam is really bad
         # define and fit model 5
-        # self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-        #                 Dropout(0.2),
-        #                 CuDNNLSTM(100),
-        #                 Dropout(0.2),
-        #                 Dense(1),
-        #                 Activation('linear')],
-        #                train_X=X, train_y=y, label="sixth")
+        self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
+                        Dropout(0.2),
+                        CuDNNLSTM(100),
+                        Dropout(0.2),
+                        Dense(1),
+                        Activation('linear')],
+                       train_X=X, train_y=y, label="sixth")
         # define and fit model 6
         # self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
         #                 Dropout(0.2),
@@ -252,6 +257,27 @@ class Pollution:
                         Dense(1),
                         Activation('linear')],
                        train_X=X, train_y=y, batch=5, label="Grid Searched", save=True)
+        self.graph_flush("optimizer.pdf", [1, 2])
+        self.graph_flush("batch_size.pdf", [1, 3])
+        self.graph_flush("layer_3.pdf", [3, 4, 5])
+        self.graph_flush("grid_search.pdf", [5, 9])
+        self.graph_flush("ffdnn.pdf", [0, 9])
+
+    def graph_flush(self, fn, models):
+        plt.gcf().clear()
+        fig = plt.figure()
+        a = np.array(self.history)
+        for i in a[models]:
+            sub1 = fig.add_subplot(2, 1, 1)
+            sub1.plot(i['loss'], label=i['label'])
+            sub1.set_title('Train Loss')
+            sub2 = fig.add_subplot(2, 1, 2)
+            sub2.plot(i['val_loss'], label=i['label'])
+            sub2.set_title('Test Loss')
+        sub1.legend()
+        sub2.legend()
+        plt.savefig("Data/"+fn)
+        plt.gcf().clear()
 
     def predictor_magtanggol(self, inv_yhat, label):
         yforms = [self.y,              inv_yhat,
@@ -263,6 +289,7 @@ class Pollution:
                           sqrt(mean_squared_error(yforms[4], yforms[5])), mean_absolute_error(yforms[4], yforms[5])))
 
     def create_loss(self, hist, label):
+        self.history.append({'loss':hist.history['loss'], 'val_loss':hist.history['val_loss'], 'label':label})
         plt.subplot(2, 1, 1)
         plt.plot(hist.history['loss'], label=label)
         plt.ylabel('Train Loss')
