@@ -185,7 +185,6 @@ class Pollution:
         plt.plot(self.y, label="real")
         for vals in [self.predictions[i] for i in models]:
             plt.plot(vals[0], label=vals[1])
-        plt.axvline(x=self.split)
         plt.legend()
         plt.savefig("Data/predictions_" + fn, bbox_inches='tight')
         plt.gcf().clear()
