@@ -3,6 +3,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.externals import joblib
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation
+from keras.callbacks import TensorBoard
 import json
 from keras.layers import CuDNNLSTM
 scalers = [MinMaxScaler(feature_range=(0, 1)), MinMaxScaler(feature_range=(0, 1))]
@@ -74,10 +75,12 @@ def main():
 
 
 def model_fit(layers, train_X, train_y, test_X, test_y, epochs=500, optim='rmsprop', batch=10, save=False):
+    call = TensorBoard(log_dir='./Graph', histogram_freq=0,
+                                write_graph=True, write_images=True)
     model = Sequential(layers)
     model.compile(loss='mean_squared_error', optimizer=optim)
     model.fit(train_X, train_y, batch_size=batch, epochs=epochs, verbose=1, shuffle=False,
-                     validation_data=(test_X, test_y))
+                     validation_data=(test_X, test_y), callbacks=[call])
     if save:
         model.save("models/lstm.h5")
         with open('models/lstm.json', 'w') as file:
