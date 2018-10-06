@@ -5,6 +5,7 @@
 \usepackage{datetime}
 \usepackage{indentfirst}
 \usepackage{placeins}
+\usepackage{subfig}
 \usepackage[svgnames]{xcolor}
 \usepackage[flushleft]{threeparttable}
 \definecolor{grey}{RGB}{183,183,183}
@@ -285,50 +286,52 @@ Test RMSE: 16.42
 Test  MAE: 11.51
 \end{verbatim}
 \begin{figure}[H]
-\centering
-\includegraphics[width=5in,height=3in]{../Data/optimizer.pdf}
-\caption{Adam vs RMSprop}
-\label{fig:basic}
+    \centering
+    \subfloat[train/test loss graph]{{\includegraphics[width=5in,height=3in]{Data/optimizer.pdf}}}%
+    \qquad
+    \subfloat[prediction graph]{{\includegraphics[width=5in,height=3in]{Data/predictions_optimizer.pdf} }}%
+    \caption{Adam vs RMSprop}%
+    \label{fig:basic}%
 \end{figure}
 \subsubsection{Batch size}
 The batch size was then adjusted to see whether a lower or higher batch size will improve the model. the batch size was then decreased to 20 and the RMSE decreased slightly, then it was set to 5 and the batch size had a more noticable change\\
 \begin{figure}[H]
     \centering
-    \subfloat[label 1]{{\includegraphics[width=5in,height=3in]{Data/batch_size.pdf}}}%
+    \subfloat[train/test loss graph]{{\includegraphics[width=5in,height=3in]{Data/batch_size.pdf}}}%
     \qquad
-    \subfloat[label 2]{{\includegraphics[width=5in,height=3in]{Data/} }}%
+    \subfloat[prediction graph]{{\includegraphics[width=5in,height=3in]{Data/predictions_batch_size.pdf} }}%
     \caption{Batch Size}%
-    \label{fig:example}%
-\end{figure}
-\begin{figure}[H]
-\centering
-\includegraphics[width=5in,height=3in]{../Data/batch_size.pdf}
-\caption{Batch Size}
-\label{fig:batch}
+    \label{fig:batch}%
 \end{figure}
 \subsubsection{Layers stacked}
 Then more layers were added and the number of neurons was increase. Simply adding a layer caused a great decrease in the RMSE. Doubling Neurons also had a noticable decrease in the RMSE\\
 \begin{figure}[H]
-\centering
-\includegraphics[width=5in,height=3in]{../Data/layer_3.pdf}
-\caption{Grid Search}
-\label{fig:layers}
+    \centering
+    \subfloat[train/test loss graph]{{\includegraphics[width=5in,height=3in]{Data/layer_3.pdf}}}%
+    \qquad
+    \subfloat[prediction graph]{{\includegraphics[width=5in,height=3in]{Data/predictions_layer_3.pdf} }}%
+    \caption{Layers and Neurons tuned}%
+    \label{fig:layers}%
 \end{figure}
 \subsubsection{Grid Search}
 A parameter grid based on all the models with a good RMSE score was then created and then a GridSearch was performed. The best model that was found by the grid search was then found and its score is the best performing amongst other LSTM models\\
 \begin{figure}[H]
-\centering
-\includegraphics[width=5in,height=3in]{../Data/grid_search.pdf}
-\caption{Grid Search}
-\label{fig:grid}
+    \centering
+    \subfloat[train/test loss graph]{{\includegraphics[width=5in,height=3in]{Data/grid_search.pdf}}}%
+    \qquad
+    \subfloat[prediction graph]{{\includegraphics[width=5in,height=3in]{Data/predictions_grid_search.pdf} }}%
+    \caption{Grid Search}%
+    \label{fig:grid}%
 \end{figure}
 \subsubsection{Feed Forward Deep Neural Network}
 Although outside the scope of the study, a basic Feed Forward Deep Neural Network (FFDNN) also known as a Multilayer Perceptron (MLP) was created to show the effect of a simpler model on a small dataset. This model averaged a 6.85 RMSE and is consistently more accurate than LSTM models. \\
 \begin{figure}[H]
-\centering
-\includegraphics[width=5in,height=3in]{../Data/ffdnn.pdf}
-\caption{Feed Forward Deep Neural Network (MLP)}
-\label{fig:mlp}
+    \centering
+    \subfloat[train/test loss graph]{{\includegraphics[width=5in,height=3in]{Data/ffdnn.pdf}}}%
+    \qquad
+    \subfloat[prediction graph]{{\includegraphics[width=5in,height=3in]{Data/predictions_ffdnn.pdf} }}%
+    \caption{Multilayer Perceptron}%
+    \label{fig:mlp}%
 \end{figure}
 \pagebreak
 \section{Results}
