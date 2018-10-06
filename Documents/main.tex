@@ -273,7 +273,16 @@ to a list the same number of times, effectively distributing the value of the fe
 In order to know the number of epochs all the models would be trained at, the basic Model with 2 layers containing 50 and 100 neurons and a Dropout of 0.2 was trained with the Early Stopping function enabled to determine when the model would no longer improve. Then it was determined that after 500 epochs the model no longer improves, and thus this would be the default number of epochs for all proceeding models.
 
 Based on the previous research by Ruder(2016), Adam
-and RMSprop are rather similar algorithms that do well in the same circumstances, however Adam slightly outperforms RMSprop, thus being the recommended optimizer. \cite{DBLP:journals/corr/Ruder16} Nonetheless both optimizers were tested using the basic model. From the results the RMSProp model, labelled "fifth", had a lower RMSE compared to the Adam model, labelled "fourth", and thus is chosen as the default optimizer for all proceeding models.\\
+and RMSprop are rather similar algorithms that do well in the same circumstances, however Adam slightly outperforms RMSprop, thus being the recommended optimizer. \cite{DBLP:journals/corr/Ruder16} Nonetheless both optimizers were tested using the basic model. From the results the RMSProp model had a lower RMSE compared to the Adam model and thus is chosen as the default optimizer for all proceeding models.\\
+\begin{verbatim}
+Model basic_rmsprop2:
+Test RMSE: 18.84
+Test  MAE: 12.39
+
+Model basic_adam2:
+Test RMSE: 16.42
+Test  MAE: 11.51
+\end{verbatim}
 \begin{figure}[H]
 \centering
 \includegraphics[width=5in,height=3in]{Data/optimizer.pdf}
@@ -282,6 +291,14 @@ and RMSprop are rather similar algorithms that do well in the same circumstances
 \end{figure}
 \subsubsection{Batch size}
 The batch size was then adjusted to see whether a lower or higher batch size will improve the model. the batch size was then decreased to 20 and the RMSE decreased slightly, then it was set to 5 and the batch size had a more noticable change\\
+\begin{figure}[H]
+    \centering
+    \subfloat[label 1]{{\includegraphics[width=5in,height=3in]{Data/batch_size.pdf}}}%
+    \qquad
+    \subfloat[label 2]{{\includegraphics[width=5in,height=3in]{Data/} }}%
+    \caption{Batch Size}%
+    \label{fig:example}%
+\end{figure}
 \begin{figure}[H]
 \centering
 \includegraphics[width=5in,height=3in]{Data/batch_size.pdf}
