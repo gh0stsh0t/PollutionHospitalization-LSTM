@@ -108,7 +108,14 @@ class Pollution:
                         Dropout(0.2),
                         Dense(1),
                         Activation('linear')],
-                       train_X=X, train_y=y, label="Lower_batch2")
+                       train_X=X, train_y=y, batch=20, label="Lower_batch2")
+        self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
+                        Dropout(0.2),
+                        CuDNNLSTM(100),
+                        Dropout(0.2),
+                        Dense(1),
+                        Activation('linear')],
+                       train_X=X, train_y=y, label="Lowest_batch2")
         self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
                         Dropout(0.2),
                         CuDNNLSTM(100, return_sequences=True),
@@ -162,10 +169,10 @@ class Pollution:
                         Activation('linear')],
                        train_X=X, train_y=y, batch=5, label="Grid Searched", save=True)
         self.graph_flush("optimizer.pdf", [1, 2])
-        self.graph_flush("batch_size.pdf", [1, 3])
-        self.graph_flush("layer_3.pdf", [3, 4, 5])
-        self.graph_flush("grid_search.pdf", [5, 9])
-        self.graph_flush("ffdnn.pdf", [0, 9])
+        self.graph_flush("batch_size.pdf", [1, 3, 4])
+        self.graph_flush("layer_3.pdf", [3, 6, 7])
+        self.graph_flush("grid_search.pdf", [6, 10])
+        self.graph_flush("ffdnn.pdf", [0, 10])
 
     def graph_flush(self, fn, models):
         plt.gcf().clear()
@@ -180,7 +187,7 @@ class Pollution:
             sub2.set_title('Test Loss')
         sub1.legend()
         sub2.legend()
-        # plt.savefig("Data/"+fn, bbox_inches='tight')
+        plt.savefig("Data/"+fn, bbox_inches='tight')
         plt.gcf().clear()
         plt.plot(self.y, label="real")
         for vals in [self.predictions[i] for i in models]:
@@ -272,12 +279,6 @@ class Pollution:
             for ind, x in enumerate(self.times):
                 print("Time for {}:{}".format(self.history[ind]['label'], x))
             print("\nTraining time of All Models {}\n".format(datetime.now() - startTime))
-
-            plt.legend()
-            if graphing < 1:
-                plt.show()
-            plt.gcf().clear()
-
             split = (self.split / self.y.shape[0]) * 100
             print("Train-Test split: {:.2f} {:.2f}".format(split, 100 - split))
             for index, error in enumerate(self.loss):
@@ -310,14 +311,7 @@ class Pollution:
             if graphing < 1:
                 plt.show()
             plt.gcf().clear()
-        plt.plot(self.y, label="real")
-        for vals in self.predictions:
-            plt.plot(vals[0], label=vals[1])
-        plt.axvline(x=self.split, color='k', linestyle='--')
-        plt.legend()
-        if graphing < 1:
-            plt.show()
-        plt.gcf().clear()
+        self.graph_flush("all_models.pdf", [i for i in range(0, 11)])
 
 
 if __name__ == "__main__":
