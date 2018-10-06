@@ -1,18 +1,8 @@
-# USAGE
-# Start the server:
-# 	python run_keras_server.py
-# Submit a request via cURL:
-# 	curl -X POST -F image=@dog.jpg 'http://localhost:5000/predict'
-# Submita a request via Python:
-#	python simple_request.py
-
-# import the necessary packages
+import numpy as np
 from sklearn.externals import joblib
 from flask import Flask, render_template, request, jsonify
-from werkzeug.utils import secure_filename
 import pandas as pd
 import tensorflow as tf
-import keras
 from keras.models import load_model
 from keras import backend as kk
 
@@ -30,19 +20,16 @@ def load_models():
         model = load_model('models/lstm.h5')
     else:
         import json
-        from keras.models import model_from_json, model_to_json
+        from keras.models import model_from_json
         with open('models/lstm.json', 'r') as file:
             json_data = json.load(file)
-            for item in json_data:
-                # change below
-                if item['ParameterKey'] in ["Shell","Type"]:
-                    item['ParameterKey'] = "new value"
-        with open('/models/lstm.json', 'w') as file:
-            json.dump(json_data, file, indent=2)
-        model = model_from_json('models/lstm.json')
+            json_data = json_data.replace('CuDNNLSTM', 'LSTM')
+            json_data = json_data.replace('cu_dnn', '')
+        model = model_from_json(json_data)
         model.load_weights('models/lstm_weights.h5')
     x_scaler = joblib.load('models/x_scaler.save')
-    y_scaler = joblib.load('models/x_scaler.save')
+    y_scaler = joblib.load('models/y_scaler.save')
+    model.summary()
 
 
 @app.route("/predict", methods=["POST"])
@@ -82,18 +69,19 @@ def read_submission():
 def uploadr_file():
     if request.method == 'POST':
         f = request.files['file']
-        X = pd.read_csv(f)
+        X = pd.read_csv(f, index_col=0)
         X.fillna(-1, inplace=True)
         X = X.drop("date", axis=1)
         X = X.values.astype('float32')
         return predictor(X)
 
 def predictor(data):
-        data = x_scaler.fit_transform(data)
+        data = x_scaler.transform(data)
         data = data.reshape((data.shape[0], 1, data.shape[1]))
-        yhat = model.predict(data)
+        with graph.as_default():
+            yhat = model.predict(data)
         inv_yhat = y_scaler.inverse_transform(yhat)
-        return inv_yhat
+        return str(inv_yhat)
 
 
 # if this is the main thread of execution first load the model and

@@ -73,8 +73,7 @@ class Pollution:
         model = Sequential(layers)
         model.compile(loss='mean_squared_error', optimizer=optim)
         hist = model.fit(train_X, train_y, batch_size=batch, epochs=epochs, verbose=self.verbosity, shuffle=False, validation_data=(test_X, test_y))
-        with open('report.txt','a') as fh:
-             model.summary(print_fn=lambda x: fh.write(x + '\n'))
+        model.summary()
         if save:
             model.save("models/lstm.h5")
             joblib.dump(self.scalers[1], "models/x_scaler.save")
@@ -167,7 +166,7 @@ class Pollution:
                         CuDNNLSTM(300),
                         Dense(1),
                         Activation('linear')],
-                       train_X=X, train_y=y, batch=5, label="Grid Searched", save=True)
+                       train_X=X, train_y=y, batch=5, label="Grid Searched")
         self.graph_flush("optimizer.pdf", [1, 2])
         self.graph_flush("batch_size.pdf", [1, 3, 4])
         self.graph_flush("layer_3.pdf", [3, 6, 7])
