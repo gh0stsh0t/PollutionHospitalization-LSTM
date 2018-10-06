@@ -42,7 +42,8 @@
 \end{titlepage}
 \frontmatter
 \chapter*{Abstract}
-Air pollution is a growing concern in the developing world, and its presence is difficult to realize. Continuous exposure to pollution increases the risk of developing lung-related diseases. However, due to the numerous factors affecting the development of disease, thorough statistical models have not been formulated that can reliably fit pollution concentration and change in hospitalizations from lung diseases. With the emergence of machine learning, more specifically Long Short-Term Memory (LSTM) based Recurrent Neural Networks (RNN), this study aims to develop a model that could reliably predict the changes in hospitalization based on the characteristics of an area and its pollution, taking into account the pollution present in previous days in a time-series. This model could then be used as a baseline for hospitals to distribute resources and overall be more efficient in administering aid to patients.
+Air pollution is a growing concern in the developing world, and its presence is difficult to realize. Continuous exposure to pollution increases the risk of developing lung-related diseases.
+However, due to the numerous factors affecting the development of disease, thorough statistical models have not been formulated that can reliably fit pollution concentration and change in hospitalizations from lung diseases. With the emergence of machine learning, more specifically Long Short-Term Memory (LSTM) based Recurrent Neural Networks (RNN), this study aims to develop a model that could reliably predict the changes in hospitalization based on the characteristics of an area and its pollution, taking into account the pollution present in previous days in a time-series. This model could then be used as a baseline for hospitals to distribute resources and overall be more efficient in administering aid to patients.
 \tableofcontents{Table of Contents}
 \mainmatter
 \chapter{Introduction}
@@ -276,7 +277,7 @@ Based on the previous research by Ruder(2016), Adam
 and RMSprop are rather similar algorithms that do well in the same circumstances, however Adam slightly outperforms RMSprop, thus being the recommended optimizer. \cite{DBLP:journals/corr/Ruder16} Nonetheless both optimizers were tested using the basic model. From the results the RMSProp model, labelled "fifth", had a lower RMSE compared to the Adam model, labelled "fourth", and thus is chosen as the default optimizer for all proceeding models.\\
 \begin{figure}[H]
 \centering
-\includegraphics[width=5in,height=3in]{Data/optimizer.pdf}
+\includegraphics[width=5in,height=3in]{../Data/optimizer.pdf}
 \caption{Adam vs RMSprop}
 \label{fig:basic}
 \end{figure}
@@ -284,7 +285,7 @@ and RMSprop are rather similar algorithms that do well in the same circumstances
 The batch size was then adjusted to see whether a lower or higher batch size will improve the model. the batch size was then decreased to 20 and the RMSE decreased slightly, then it was set to 5 and the batch size had a more noticable change\\
 \begin{figure}[H]
 \centering
-\includegraphics[width=5in,height=3in]{Data/batch_size.pdf}
+\includegraphics[width=5in,height=3in]{../Data/batch_size.pdf}
 \caption{Batch Size}
 \label{fig:batch}
 \end{figure}
@@ -292,7 +293,7 @@ The batch size was then adjusted to see whether a lower or higher batch size wil
 Then more layers were added and the number of neurons was increase. Simply adding a layer caused a great decrease in the RMSE. Doubling Neurons also had a noticable decrease in the RMSE\\
 \begin{figure}[H]
 \centering
-\includegraphics[width=5in,height=3in]{Data/layer_3.pdf}
+\includegraphics[width=5in,height=3in]{../Data/layer_3.pdf}
 \caption{Grid Search}
 \label{fig:layers}
 \end{figure}
@@ -300,7 +301,7 @@ Then more layers were added and the number of neurons was increase. Simply addin
 A parameter grid based on all the models with a good RMSE score was then created and then a GridSearch was performed. The best model that was found by the grid search was then found and its score is the best performing amongst other LSTM models\\
 \begin{figure}[H]
 \centering
-\includegraphics[width=5in,height=3in]{Data/grid_search.pdf}
+\includegraphics[width=5in,height=3in]{../Data/grid_search.pdf}
 \caption{Grid Search}
 \label{fig:grid}
 \end{figure}
@@ -308,7 +309,7 @@ A parameter grid based on all the models with a good RMSE score was then created
 Although outside the scope of the study, a basic Feed Forward Deep Neural Network (FFDNN) also known as a Multilayer Perceptron (MLP) was created to show the effect of a simpler model on a small dataset. This model averaged a 6.85 RMSE and is consistently more accurate than LSTM models. \\
 \begin{figure}[H]
 \centering
-\includegraphics[width=5in,height=3in]{Data/ffdnn.pdf}
+\includegraphics[width=5in,height=3in]{../Data/ffdnn.pdf}
 \caption{Feed Forward Deep Neural Network (MLP)}
 \label{fig:mlp}
 \end{figure}

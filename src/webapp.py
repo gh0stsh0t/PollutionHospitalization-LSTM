@@ -14,6 +14,7 @@ import pandas as pd
 import tensorflow as tf
 import keras
 from keras.models import load_model
+from keras import backend as kk
 
 # initialize our Flask application and the Keras model
 app = Flask(__name__)
@@ -25,7 +26,21 @@ def load_models():
     global y_scaler
     global graph
     graph = tf.get_default_graph()
-    model = load_model('models/lstm.h5')
+    if kk.tensorflow_backend._get_available_gpus():
+        model = load_model('models/lstm.h5')
+    else:
+        import json
+        from keras.models import model_from_json, model_to_json
+        with open('models/lstm.json', 'r') as file:
+            json_data = json.load(file)
+            for item in json_data:
+                # change below
+                if item['ParameterKey'] in ["Shell","Type"]:
+                    item['ParameterKey'] = "new value"
+        with open('/models/lstm.json', 'w') as file:
+            json.dump(json_data, file, indent=2)
+        model = model_from_json('models/lstm.json')
+        model.load_weights('models/lstm_weights.h5')
     x_scaler = joblib.load('models/x_scaler.save')
     y_scaler = joblib.load('models/x_scaler.save')
 
@@ -49,10 +64,19 @@ def predict():
     return jsonify(data)
 
 
-@app.route('/upload')
+@app.route('/')
 def upload_file():
     return render_template('upload.html')
 
+@app.route('/uploader_form', methods=['POST'])
+def read_submission():
+    if request.method == 'POST':
+        X = []
+        for station in ['02', '07', '11', '14']:
+            pm10, so2, no2, o3 = request.form['pm10_'+station]
+            X.append(pm10, so2, no2, o3)
+        X = np.array(X).astype('float32')
+        return predictor(X)
 
 @app.route('/uploader', methods=['GET', 'POST'])
 def uploadr_file():
@@ -62,11 +86,15 @@ def uploadr_file():
         X.fillna(-1, inplace=True)
         X = X.drop("date", axis=1)
         X = X.values.astype('float32')
-        X = x_scaler.fit_transform(X)
-        X = X.reshape((X.shape[0], 1, X.shape[1]))
-        yhat = model.predict(X)
+        return predictor(X)
+
+def predictor(data):
+        data = x_scaler.fit_transform(data)
+        data = data.reshape((data.shape[0], 1, data.shape[1]))
+        yhat = model.predict(data)
         inv_yhat = y_scaler.inverse_transform(yhat)
         return inv_yhat
+
 
 # if this is the main thread of execution first load the model and
 # then start the server

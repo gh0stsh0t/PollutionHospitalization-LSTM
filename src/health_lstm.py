@@ -3,24 +3,23 @@ import pandas as pd
 import sys
 import matplotlib
 matplotlib.use("pgf")
+import time
 from matplotlib import pyplot as plt
-matplotlib.rcParams['text.latex.unicode']=True
-matplotlib.rcParams['text.usetex']=True
-matplotlib.rcParams['pgf.texsystem'] = 'pdflatex'
-from sklearn.model_selection import KFold, cross_val_score, GridSearchCV, TimeSeriesSplit
-from sklearn.preprocessing import MinMaxScaler, LabelEncoder, StandardScaler
+from sklearn.model_selection import GridSearchCV, TimeSeriesSplit
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error
-from sklearn.svm import SVR
 from sklearn.externals import joblib
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation
 from keras.wrappers.scikit_learn import KerasRegressor
 from keras.callbacks import EarlyStopping
 from math import sqrt
-import time
 from datetime import datetime
-from keras import backend as K
-if K.tensorflow_backend._get_available_gpus():
+from keras import backend as kk
+matplotlib.rcParams['text.latex.unicode']=True
+matplotlib.rcParams['text.usetex']=True
+matplotlib.rcParams['pgf.texsystem'] = 'pdflatex'
+if kk.tensorflow_backend._get_available_gpus():
     from keras.layers import CuDNNLSTM
     print("Using GPU for training")
 else:
@@ -88,82 +87,28 @@ class Pollution:
         self.create_loss(hist, label)
         self.times.append(datetime.now() - start)
 
-    def svm_fit(self, X, y):
-        X_scaled = StandardScaler().fit_transform(X)
-        kfold = KFold(n_splits = 5, shuffle=False)
-        svm = SVR(verbose=True)
-        svm.fit(X_scaled, y)
-        scores = cross_val_score(svm, X_scaled, y, cv=kfold)
-        yhat = svm.predict(X_scaled)
-        self.predictor_magtanggol(yhat, "svm")
-
     def manual(self, X, y):
-        # # define and fit model 0
-        # self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2])),
-        #                 Dense(1)],
-        #                train_X=X, train_y=y, optim='adam', batch=50, label="first")
-        # # define and fit model 1
-        # self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2])),
-        #                 Dropout(0.2),
-        #                 Dense(1)],
-        #                train_X=X, train_y=y, optim='adam', batch=50, label="second")
-        # # define and fit model 2
-        # self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-        #                 Dropout(0.2),
-        #                 CuDNNLSTM(100),
-        #                 Dropout(0.2),
-        #                 Dense(1)],
-        #                train_X=X, train_y=y, batch=50, label="third")
-        # define and fit model 3
         self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
                         Dropout(0.2),
                         CuDNNLSTM(100),
                         Dropout(0.2),
                         Dense(1),
                         Activation('linear')],
-                       train_X=X, train_y=y, batch=50, label="fourth")
-        # define and fit model 4
+                       train_X=X, train_y=y, optim='rmsprop', batch=50, label="basic_rmsprop2")
         self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
                         Dropout(0.2),
                         CuDNNLSTM(100),
                         Dropout(0.2),
                         Dense(1),
                         Activation('linear')],
-                       train_X=X, train_y=y, optim='adam', batch=50, label="fifth")
-        # Note: adam is really bad
-        # define and fit model 5
+                       train_X=X, train_y=y, optim='adam', batch=50, label="basic_adam2")
         self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
                         Dropout(0.2),
                         CuDNNLSTM(100),
                         Dropout(0.2),
                         Dense(1),
                         Activation('linear')],
-                       train_X=X, train_y=y, label="sixth")
-        # define and fit model 6
-        # self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-        #                 Dropout(0.2),
-        #                 CuDNNLSTM(100),
-        #                 Dropout(0.2),
-        #                 Dense(1),
-        #                 Activation('linear')],
-        #                train_X=X, train_y=y, label="seventh")
-        # define and fit model 7
-        # self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-        #                 Dropout(0.2),
-        #                 CuDNNLSTM(100),
-        #                 Dropout(0.2),
-        #                 Dense(1),
-        #                 Activation('linear')],
-        #                train_X=X, train_y=y, epochs=100, batch=5, label="eighth")
-        # # define and fit model 8
-        # self.model_fit([CuDNNLSTM(25, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-        #                 Dropout(0.2),
-        #                 CuDNNLSTM(50),
-        #                 Dropout(0.2),
-        #                 Dense(1),
-        #                 Activation('linear')],
-        #                train_X=X, train_y=y, epochs=250, batch=5, label="ninth")
-        # define and fit model 9
+                       train_X=X, train_y=y, label="Lower_batch2")
         self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
                         Dropout(0.2),
                         CuDNNLSTM(100, return_sequences=True),
@@ -171,17 +116,15 @@ class Pollution:
                         CuDNNLSTM(100),
                         Dense(1),
                         Activation('linear')],
-                       train_X=X, train_y=y, batch=5, label="tenth")
-        # define and fit model 10
-        # self.model_fit([CuDNNLSTM(100, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-        #                 Dropout(0.2),
-        #                 CuDNNLSTM(200, return_sequences=True),
-        #                 Dropout(0.2),
-        #                 CuDNNLSTM(100),
-        #                 Dense(1),
-        #                 Activation('linear')],
-        #                train_X=X, train_y=y, label="eleventh")
-        # define and fit model 11
+                       train_X=X, train_y=y, batch=50, label="basic3")
+        self.model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
+                        Dropout(0.2),
+                        CuDNNLSTM(100, return_sequences=True),
+                        Dropout(0.2),
+                        CuDNNLSTM(100),
+                        Dense(1),
+                        Activation('linear')],
+                       train_X=X, train_y=y, batch=5, label="lower_batch3")
         self.model_fit([CuDNNLSTM(150, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
                         Dropout(0.2),
                         CuDNNLSTM(250, return_sequences=True),
@@ -189,45 +132,7 @@ class Pollution:
                         CuDNNLSTM(200),
                         Dense(1),
                         Activation('linear')],
-                       train_X=X, train_y=y, label="twelfth")
-        # define and fit model 12
-        self.model_fit([CuDNNLSTM(150, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-                        Dropout(0.2),
-                        CuDNNLSTM(300, return_sequences=True),
-                        Dropout(0.2),
-                        CuDNNLSTM(200),
-                        Dense(1),
-                        Activation('linear')],
-                       train_X=X, train_y=y, batch=5, label="thirteenth")
-        # Note: Worse performing, thus batch size must be 50 > s > 5
-        # define and fit model 13
-        # self.model_fit([CuDNNLSTM(150, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-        #                 Dropout(0.2),
-        #                 CuDNNLSTM(300, return_sequences=True),
-        #                 Dropout(0.2),
-        #                 CuDNNLSTM(200),
-        #                 Dense(1),
-        #                 Activation('linear')],
-        #                train_X=X, train_y=y, batch=20, label="fourteenth")
-        # # define and fit model 14
-        # self.model_fit([CuDNNLSTM(150, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-        #                 Dropout(0.2),
-        #                 CuDNNLSTM(300, return_sequences=True),
-        #                 Dropout(0.2),
-        #                 CuDNNLSTM(300),
-        #                 Dense(1),
-        #                 Activation('linear')],
-        #                train_X=X, train_y=y, batch=20, label="fifteenth")
-        # define and fit model 15
-        # self.model_fit([CuDNNLSTM(150, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
-        #                 Dropout(0.2),
-        #                 CuDNNLSTM(400, return_sequences=True),
-        #                 Dropout(0.2),
-        #                 CuDNNLSTM(300),
-        #                 Dense(1),
-        #                 Activation('linear')],
-        #                train_X=X, train_y=y, batch=4, label="sixteenth")
-        # define and fit model BEST
+                       train_X=X, train_y=y, label="high_neuron3")
         self.model_fit([CuDNNLSTM(150, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
                         Dropout(0.2),
                         CuDNNLSTM(300, return_sequences=True),
@@ -237,7 +142,7 @@ class Pollution:
                         CuDNNLSTM(450),
                         Dense(1),
                         Activation('linear')],
-                       train_X=X, train_y=y, batch=20, label="Four layers")
+                       train_X=X, train_y=y, batch=20, label="basic4")
         self.model_fit([CuDNNLSTM(150, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
                         Dropout(0.2),
                         CuDNNLSTM(300, return_sequences=True),
@@ -247,8 +152,7 @@ class Pollution:
                         CuDNNLSTM(450),
                         Dense(1),
                         Activation('linear')],
-                       train_X=X, train_y=y, batch=5, label="Four layers v2")
-        # define and fit model BEST
+                       train_X=X, train_y=y, batch=5, label="lower_batch4")
         self.model_fit([CuDNNLSTM(250, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
                         Dropout(0.2),
                         CuDNNLSTM(200, return_sequences=True),
@@ -276,7 +180,14 @@ class Pollution:
             sub2.set_title('Test Loss')
         sub1.legend()
         sub2.legend()
-        plt.savefig("Data/"+fn)
+        # plt.savefig("Data/"+fn, bbox_inches='tight')
+        plt.gcf().clear()
+        plt.plot(self.y, label="real")
+        for vals in [self.predictions[i] for i in models]:
+            plt.plot(vals[0], label=vals[1])
+        plt.axvline(x=self.split)
+        plt.legend()
+        plt.savefig("Data/predictions_" + fn, bbox_inches='tight')
         plt.gcf().clear()
 
     def predictor_magtanggol(self, inv_yhat, label):
@@ -289,7 +200,7 @@ class Pollution:
                           sqrt(mean_squared_error(yforms[4], yforms[5])), mean_absolute_error(yforms[4], yforms[5])))
 
     def create_loss(self, hist, label):
-        self.history.append({'loss':hist.history['loss'], 'val_loss':hist.history['val_loss'], 'label':label})
+        self.history.append({'loss': hist.history['loss'], 'val_loss': hist.history['val_loss'], 'label': label})
         plt.subplot(2, 1, 1)
         plt.plot(hist.history['loss'], label=label)
         plt.ylabel('Train Loss')
@@ -331,7 +242,6 @@ class Pollution:
 
         self.y = pd.Series(y).values.astype('float32').reshape(-1, 1)
         self.split = (self.y.shape[0] // 3) * 2
-        svm_y = y
         y = self.scalers[0].fit_transform(self.y)
         self.y_test = y[self.split:, :]
         y = y[:self.split, :]
@@ -351,23 +261,21 @@ class Pollution:
         print("{} {}".format(X.shape, y.shape))
         startTime = datetime.now()
 
-        # SVM model
-        self.svm_fit(svm_X, svm_y)
         # Basic feed forward neural network
         mlp_train_X = self.scalers[1].transform(svm_X[:self.split])
         mlp_test_X = self.scalers[1].transform(svm_X[self.split:])
         self.model_fit([Dense(12, input_dim=svm_X.shape[1], activation='relu'),
                         Dense(8, activation='relu'),
                         Dense(1)],
-                        train_X=mlp_train_X, train_y=y, test_X=mlp_test_X, optim='adam', epochs=500, batch=2, label="FFDNN")
+                       train_X=mlp_train_X, train_y=y, test_X=mlp_test_X, optim='adam', epochs=500, batch=2, label="FFDNN")
         if auto == 0:
             self.manual(X, y)
             for ind, x in enumerate(self.times):
-                print("Time for {}: {}".format(ind, x))
+                print("Time for {}:{}".format(self.history[ind]['label'], x))
             print("\nTraining time of All Models {}\n".format(datetime.now() - startTime))
 
             plt.legend()
-            if(graphing < 1):
+            if graphing < 1:
                 plt.show()
             plt.gcf().clear()
 
@@ -375,9 +283,9 @@ class Pollution:
             print("Train-Test split: {:.2f} {:.2f}".format(split, 100 - split))
             for index, error in enumerate(self.loss):
                 print(
-                    'Model #{}\nTotal RMSE: {:.2f}\nTotal MAE: {:.2f}\nTrain RMSE: {:.2f}\nTrain  MAE: {:.2f}'.format(index - 1, error[0], error[1], error[2], error[3]))
-                # print('\nTest RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(error[4], error[5]), file=open("Loss_vals.txt", "a"))
-                print('\n{:.2f}\n{:.2f}\n'.format(error[4], error[5]), file=open("Data/Loss_vals.txt", "a"))
+                        'Model {}:\nTotal RMSE: {:.2f}\nTotal MAE: {:.2f}\nTrain RMSE: {:.2f}\nTrain  MAE: {:.2f}'.format(self.history[index]['label'], error[0], error[1], error[2], error[3]))
+                print('\nTest RMSE: {:.2f}\nTest  MAE: {:.2f}\n'.format(error[4], error[5]))
+                print('{:.2f}\n{:.2f}'.format(error[4], error[5]), file=open("Data/Loss_vals.txt", "a"))
         else:
             print("Starting GridSearch in 5")
             time.sleep(5)
@@ -400,21 +308,22 @@ class Pollution:
             inv_yhat = self.scalers[0].inverse_transform(yhat)
             self.predictor_magtanggol(inv_yhat, "Best")
             plt.legend()
-            if(graphing < 1):
+            if graphing < 1:
                 plt.show()
             plt.gcf().clear()
         plt.plot(self.y, label="real")
         for vals in self.predictions:
             plt.plot(vals[0], label=vals[1])
+        plt.axvline(x=self.split, color='k', linestyle='--')
         plt.legend()
-        if(graphing < 1):
+        if graphing < 1:
             plt.show()
         plt.gcf().clear()
 
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        x = int(sys.argv[1])%2
+        x = int(sys.argv[1]) % 2
         z = int(sys.argv[1])//2
         if len(sys.argv) > 2:
             y = int(sys.argv[2])

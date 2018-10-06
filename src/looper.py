@@ -1,4 +1,3 @@
 import health_lstm
-pol = health_lstm.Pollution()
-for x in range(25):
-    pol.main(1,0,1)
+for x in range(100):
+    health_lstm.Pollution().main(1,0,1)
