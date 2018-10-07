@@ -453,19 +453,21 @@ Higher Neurons3 & 3 (150, 300, 200) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 5\\
     The 2 best performing models are Lower Batch4 and Grid Search3. Based on the results, it shows that RNNs can accurately predict hospitalization rate, with a 3 point difference from the FFDNN. A lower dropout and batch size results in an accurate prediction regardless of the number of layers as long as nodes are 100 and above.
 \chapter{Conclusions and Recommendations}
 \section{Conclusions}
-RNNs are a type of deep neural network that uses a state cell to act as memory to use previous inputs in a sequence. This makes it a good choice for time series data which takes into account the order of inputs
+Recurrent Neural Networks work by analyzing current and previous inputs in calculating their prediction. Unlike neural networks such as Feedforward wherein information runs in only one direction, information in RNNs runs in a loop; for every succeeding input, the information of each input is stored and taken into account in the calculation of the networks' prediction. In short, the RNNs remember previous information in their calculations. Although normal RNNs suffer from the vanishing gradient problem, wherein it struggles to remember inputs far away in the sequence, modified RNNs such as Long Short-Term Memory and Gated Recurrent Unit are used to deal with this problem, with the former being used for this research study. It can be inferred that the 10\% error achieved is due to the structure of the LSTMs enabling it to remember long-term inputs despite the large number of data and epochs. 
 
-Pollution is measured by sensors which continuously filter the air or use lasers to detect the presence of certain particles. This study utilizes the sensors of DENR placed in various places in Davao.
+Pollutants and their concentration levels can be measured by dedicated air pollution monitoring analyzers and sensors. In gathering the pollution data, the DENR used state-of-the-art air monitoring analyzers; namely, Open-Path Dedicated Outdoor Air Systems (DOAS) and Continuous Ambient Monitoring Stations (CAMS). These air monitoring analyzers measure pollutants such as carbon dioxide (CO2) and ozone (O3) which are used in this study. Air Quality Indices are also useful to gauge the concentration levels of pollutants, which were used by DENR to know if said levels of pollutants were dangerous or not.
 
+Predicting the number of hospitalization cases is fairly easy outside of being accurate. The pollution data is correlated with the hospitalization cases data, and is subsequently used as the dataset for the RNN models. The RNN models' parameters are tuned with the desired values of the proponents and are run for training and testing. These models then output their predicted number of hospitalization cases. Inside of being accurate, however, was the main frustration of this research. While grid searching was used to get the best parameters out of a specified range of values, it took a long time to process only one type of parameter. In the end, it all boiled down to trial and error, tuning each parameters of the model until it output a prediction value very close to the real value of hospitalizations cases found in the gathered data. 
 
-Using LSTM cells the model was set with grid searched parameters that uses the input data to predict the number of hospitalizations for the next week. The network can predict somewhat reliably however it performs poorly when the input is missing a large amount of data
-
-
-Accuracy is measured by RMSE based on the predictions on the test set, by comparing it to the normal values of the targets. Thus an error of 9.56 from the average values of 100 is considered accurate.
+Determining accuracy of the models' prediction of hospitalization cases can be measured using Root-Mean-Square Error (RMSE). The RMSE outputs the percentage number on how much the predicted numbers of the models deviated from the real number of hospitalization cases found in gathered data. Another way of determining accuracy is to use a benchmark model. In this study, a Feedforward Deep Neural Network was used as the benchmark due to its very high prediction accuracy compared to previously tested RNN models with different parameters.
 
 
 \section{Recommendations}
-For future studies related to this research, it is recommended to utilize a larger dataset with shorter time intervals, e.g. daily data. The larger amount of data could possibly help the model detect more trends and increase the accuracy. In addition to that, when using rather similar data to this research, the usage of MLPs in future studies could result in higher accuracy.
+For future studies related to this research, it is recommended to utilize a larger dataset with shorter time intervals, e.g. daily data. The larger amount of data could possibly help the model detect more trends and increase the accuracy. 
+In addition, based on the results of this research, multilayer perceptrons (MLP) are warranted to be researched on due to the fact it performed better than the best RNN models. A study on MLP accuracy levels similar to this research is recommended.
+For future proponents who will be conducting research related to hospitalization cases, it's recommended to use Davao Doctors Hospital as a source of data due to having a database system of their own and extensive number of cases.
+
+
 
     \bibliographystyle{acm}
     \bibliography{ref}
