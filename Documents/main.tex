@@ -262,7 +262,7 @@ to a list the same number of times, effectively distributing the value of the fe
         \item The date column of the features were then dropped and then rescaled to a range of [0, 1], and the targets were similarly scaled. Both target and feature data was then split 67\% train and 33\%  test. 
     \end{enumerate}
     \subsection{Defining, Training and Fitting the Model}
-    The number of layers, neurons and number of features that the basic LSTM model would have were then defined. The basic LSTM model consisted of 2 layers with 50 and 100 neurons in each layer, 0.2 dropout, a batch size of 50 and 500 epochs. Multiple iterations of training and tuning were performed to realize the ideal number of epochs and batch sizes that would be fitted to the model.
+    Utilizing the Keras neural network library \cite{chollet2015keras} using the Tensorflow library \cite{tensorflow2015-whitepaper} as backend, the number of layers, neurons and number of features that the basic LSTM model would have were then defined. The basic LSTM model consisted of 2 layers with 50 and 100 neurons in each layer, 0.2 dropout, a batch size of 50 and 500 epochs. Multiple iterations of training and tuning were performed to realize the ideal number of epochs and batch sizes that would be fitted to the model.
     \subsection{Evaluating the Model}
     The trained model is run on the test set which would then collect all predictions and calculate an error score. The output shall be the calculated Root Mean Squared Error (RMSE) that gives error in the same units as the variable itself. The data will be presented in a graph format to illustrate the improvement of the model over time.
     \subsection{Implementing the Model}
@@ -405,7 +405,14 @@ Test  MAE: 3.92
 \pagebreak
 \section{Results}
 Out of 22 models with different parameters which were trained and tested, 7 essential models were handpicked, and these models were trained and tested 10 times. Each run, the 2 best performing models’ parameters were used in a grid search to calculate even better parameter values. The accuracy of the 7 models along with the grid search was gauged through an accompanying feedforward neural network on each run. The RMSE, MAE, and range values of the models, grid search, and FFDNN was recorded and averaged. The parameters of the models are shown in \ref{table:params} while the overall averaged values of the models are shown in \ref{fig:results}\\
-
+\begin{figure}[H]
+    \centering
+    \subfloat[train/test loss graph]{{\includegraphics[width=7.5cm,height=5cm]{Data/all_models.pdf}}}%
+    \qquad
+    \subfloat[prediction graph]{{\includegraphics[width=7.5cm,height=5cm]{Data/predictions_all_models.pdf} }}%
+    \caption{Multilayer Perceptron}%
+    \label{fig:all_graphs}%
+\end{figure}
 \begin{table}[H]
 \centering
 \begin{threeparttable}
@@ -415,28 +422,28 @@ Out of 22 models with different parameters which were trained and tested, 7 esse
  \hline
 Models & Number of LSTM Layers & Dropout & Dense & Optimization & Epochs & Batch Size\\
  \hline
- FFDNN & N/A & 0 & 3 (12, 8, 1) & adam & 500 & 2\\
+ FFDNN & N/A & N/A & 3 (12, 8, 1) & adam & 500 & 2\\
  \hline
- Basic2 & 2 (50, 100) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 50\\
+ Basic2 & 2 (50, 100) & 0.2 & 1 (1) & rmsprop & 500 & 50\\
  \hline
- Basic ADAM2 & 2 (50, 100) & 2 (0.2)* & 1 (1) & adam & 500 & 50\\
+ Basic ADAM2 & 2 (50, 100) & 0.2 & 1 (1) & adam & 500 & 50\\
  \hline
- Lower Batch3 & 3 (50, 100, 100) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 5\\
+ Lower Batch3 & 3 (50, 100, 100) & 0.2 & 1 (1) & rmsprop & 500 & 5\\
  \hline
- Basic3 & 3 (150, 250, 200) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 10\\
+ Basic3 & 3 (150, 250, 200) & 0.2 & 1 (1) & rmsprop & 500 & 10\\
  \hline
-Higher Neurons3 & 3 (150, 300, 200) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 5\\
+Higher Neurons3 & 3 (150, 300, 200) & 0.2 & 1 (1) & rmsprop & 500 & 5\\
  \hline
- Basic4 & 4 (150, 300, 200, 450) & 3 (0.2)* & 1 (1) & rmsprop & 500 & 20\\
+ Basic4 & 4 (150, 300, 200, 450) & 0.2 & 1 (1) & rmsprop & 500 & 20\\
  \hline
- Lower Batch4 & 4 (150, 300, 200, 450) & 3 (0.2)* & 1 (1) & rmsprop & 500 & 5\\
+ Lower Batch4 & 4 (150, 300, 200, 450) & 0.2 & 1 (1) & rmsprop & 500 & 5\\
  \hline
- Grid Search3 & 3 (250, 200, 300) & 2 (0.2)* & 1 (1) & rmsprop & 500 & 5\\
+ Grid Search3 & 3 (250, 200, 300) & 0.2 & 1 (1) & rmsprop & 500 & 5\\
  \hline
 \end{tabular}
 \begin{tablenotes}
       \small
-      \item * denotes values are the same consecutively in an interval
+      \item parenthesis indicates number of neurons of each layer respectively
     \end{tablenotes}
 \end{threeparttable}
 \caption{Parameters}
