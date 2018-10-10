@@ -262,8 +262,9 @@ to a list the same number of times, effectively distributing the value of the fe
         \item The date column of the features were then dropped and then rescaled to a range of [0, 1], and the targets were similarly scaled. Both target and feature data was then split 67\% train and 33\%  test. 
     \end{enumerate}
     Take note that the average value of the target spread across the months is 103.
+    \pagebreak
     \subsection{Defining, Training and Fitting the Model}
-    Utilizing the Keras neural network library \cite{chollet2015keras} using the Tensorflow library \cite{tensorflow2015-whitepaper} as backend, the number of layers, neurons and number of features that the basic LSTM model would have were then defined. The basic LSTM model consisted of 2 layers with 50 and 100 neurons in each layer, 0.2 dropout, a batch size of 50 and 500 epochs with the architecture shown in figure \ref{fig:basic_arch}. Multiple iterations of training and tuning were performed to realize the ideal number of epochs and batch sizes that would be fitted to the model.
+    Utilizing the Keras neural network library \cite{chollet2015keras} using the Tensorflow library \cite{tensorflow2015-whitepaper} as backend, the number of layers, neurons and number of features that the basic LSTM model would have were then defined. The basic LSTM model consisted of 2 layers with 50 and 100 neurons in each layer, 0.2 dropout, a batch size of 50 and 500 epochs with the architecture shown in figure \ref{fig:basic_arch}. The layers used were cuDNN\cite{Chetlur2014cuDNNEP} optimized versions of the LSTM named cuDNNLSTM, which takes advantage of the parallel computing power of graphics processing units (GPU). Multiple iterations of training and tuning were performed to realize the ideal number of epochs and batch sizes that would be fitted to the model.
 \begin{figure}[H]
 \includegraphics[width=\linewidth]{basic_architecture.png}
 \caption{Basic Model Architecture}
@@ -271,9 +272,6 @@ to a list the same number of times, effectively distributing the value of the fe
 \end{figure}
     \subsection{Evaluating the Model}
     The trained model is run on the test set which would then collect all predictions and calculate an error score. The output shall be the calculated Root Mean Squared Error (RMSE) that gives error in the same units as the variable itself. The data will be presented in a graph format to illustrate the improvement of the model over time.
-    \subsection{Implementing the Model}
-    Upon achieving the best possible accuracy, the model was embedded in a simple web app.
-
 \chapter{Results and Discussions}
 \section{Experiments}
 
@@ -335,6 +333,7 @@ Test RMSE: 10.49
 Test  MAE: 8.32
 \end{verbatim}
 \end{multicols}
+\pagebreak
 \subsubsection{Layers stacked}
 Then more layers were added and the number of neurons was increased. Simply adding a layer caused a great decrease in the RMSE. Doubling Neurons also had a noticable decrease in the RMSE\\
 \begin{figure}[H]
@@ -410,7 +409,7 @@ Test  MAE: 3.92
 \end{verbatim}
 \end{multicols}
 \section{Results}
-Out of 22 models with different parameters which were trained and tested, 7 essential models were handpicked, and these models were trained and tested 100 times. The accuracy of the 7 models along with the grid searched model was gauged through an accompanying feed forward neural network on each run. The RMSE, MAE, and range values of the models, grid search, and FFDNN was recorded and averaged. The parameters of the models are shown in \ref{table:params} while the multiple values of the models' RMSE and MAE within 100 runs are shown in \ref{table:results}\\
+Out of 22 models with different parameters which were trained and tested, 7 essential models were handpicked, and these models were trained and tested 100 times. The accuracy of the 7 models along with the grid searched model was gauged through an accompanying feed forward neural network on each run. All previous graph's data in a single run were collated into as single graph in figure \ref{fig:all_graphs}. While the RMSE, MAE, and range values of the models, grid search, and FFDNN were recorded and averaged for 100 runs. The parameters of the models are shown in table \ref{table:params} while the multiple values of the models' RMSE and MAE within 100 runs are shown in table \ref{table:results}\\
 \begin{figure}[H]
     \centering
     \subfloat[train/test loss graph]{{\includegraphics[width=7.5cm,height=5cm]{Data/all_models.pdf}}}%
@@ -498,7 +497,7 @@ Pollutants and their concentration levels can be measured by dedicated air pollu
 
 Predicting the number of hospitalization cases is fairly easy outside of being accurate. The pollution data is correlated with the hospitalization cases data, and is subsequently used as the dataset for the RNN models. The RNN models' parameters are tuned with the desired values of the proponents and are run for training and testing. These models then output their predicted number of hospitalization cases. Inside of being accurate, however, was the main frustration of this research. While grid searching was used to get the best parameters out of a specified range of values, it takes a long time to train and compare multiple models. In the end, it all boiled down to trial and error, tuning each parameter of the model until it scores a lower error value resulting a very close to the real value of hospitalizations cases found in the gathered data. 
 
-Determining accuracy of the models' prediction of hospitalization cases can be measured using Root-Mean-Square Error (RMSE). The RMSE outputs the percentage number on how much the predicted numbers of the models deviated from the real number of hospitalization cases found in gathered data. Since the RMSE is expressed in the same units as the output value it can be compared to the average value of the target. A 10.25 score compared to an average value of 103 can be likened to a ≈10\% deviation or ≈90\% accuracy. Although a model used for benchmarking, the FFDNN, had a better accuracy than the LSTM it is not within the scope of this research, but could be a good subject of study.
+Determining accuracy of the models' prediction of hospitalization cases can be measured using Root-Mean-Square Error (RMSE). The RMSE outputs the percentage number on how much the predicted numbers of the models deviated from the real number of hospitalization cases found in gathered data. Since the RMSE is expressed in the same units as the output value it can be compared to the average value of the target. A 10.25 score compared to an average value of 103 can be likened to a $\approx$10\% deviation or $\approx$90\% accuracy. Although a model used for benchmarking, the FFDNN, had a better accuracy than the LSTM it is not within the scope of this research, but could be a good subject of study.
 
 
 \section{Recommendations}
