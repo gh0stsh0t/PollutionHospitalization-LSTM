@@ -132,7 +132,7 @@ their system it would take a longer time. Initially, the data intervals of hospi
     \section{Root-Mean-Square Error (RMSE)}
     The Root-Mean-Square Error is a statistical metric commonly used in measuring model performance. It is widely considered as the standard metric in model errors. As concluded by Chai et al. (2014) in their research, RMSE best represents model performance when error distribution is expected to be normal, and that it satisfies the triangle inequality requirement to be considered as a distance metric.
     
-The formula, with respect to the estimated variable Xmodel is defined as the square root of the mean squared error (MSE) where Xobs is observed values and Xmodel is modelled values at time/place i.\\
+The formula, with respect to the estimated variable Xmodel is defined as the square root of the mean squared error (MSE) where Xobs is observed values and Xmodel is modeled values at time/place i.\\
     \begingroup
 \Large
     \begin{math}
@@ -254,7 +254,7 @@ date  & target  \\
     \subsection{Preprocessing of Data}
     The organized data was then preprocessed to fix gaps. The steps were as follows:
     \begin{enumerate}
-        \item The csv files with weekly intervals were then parsed into pandas DataFrames and all station data per year was merged based on their date, then all years were concatenated into a single DataFrame.
+        \item The CSV files with weekly intervals were then parsed into pandas DataFrames and all station data per year was merged based on their date, then all years were concatenated into a single DataFrame.
         \item Dropped all rows with more than 6 NaN values
         \item Replaced remaining NaN values with -1
         \item The target data was then parsed into a DataFrame, and each month's value was then divided by the number of feature rows in the corresponding month and appended
@@ -264,14 +264,14 @@ to a list the same number of times, effectively distributing the value of the fe
     Take note that the average value of the target spread across the months is 103.
     \pagebreak
     \subsection{Defining, Training and Fitting the Model}
-    Utilizing the Keras neural network library \cite{chollet2015keras} using the Tensorflow library \cite{tensorflow2015-whitepaper} as backend, the number of layers, neurons and number of features that the basic LSTM model would have were then defined. The basic LSTM model consisted of 2 layers with 50 and 100 neurons in each layer, 0.2 dropout, a batch size of 50 and 500 epochs with the architecture shown in figure \ref{fig:basic_arch}. The layers used were cuDNN\cite{Chetlur2014cuDNNEP} optimized versions of the LSTM named cuDNNLSTM, which takes advantage of the parallel computing power of graphics processing units (GPU). Multiple iterations of training and tuning were performed to realize the ideal number of epochs and batch sizes that would be fitted to the model.
+    Utilizing the Keras neural network library \cite{chollet2015keras} using the Tensorflow library \cite{tensorflow2015-whitepaper} as backend, the number of layers, neurons and number of features that the basic LSTM model would have were then defined. The basic LSTM model consisted of two layers with 50 and 100 neurons in each layer, 0.2 dropout, a batch size of 50 and 500 epochs with the architecture shown in figure \ref{fig:basic_arch}. The layers used were cuDNN\cite{Chetlur2014cuDNNEP} optimized versions of the LSTM named cuDNNLSTM, which takes advantage of the parallel computing power of graphics processing units (GPU). Multiple iterations of training and tuning were performed to realize the ideal number of epochs and batch sizes that would be fitted to the model.
 \begin{figure}[H]
 \includegraphics[width=\linewidth]{basic_architecture.png}
 \caption{Basic Model Architecture}
 \label{fig:basic_arch}
 \end{figure}
     \subsection{Evaluating the Model}
-    The trained model is run on the test set which would then collect all predictions and calculate an error score. The output shall be the calculated Root Mean Squared Error (RMSE) that gives error in the same units as the variable itself. The data will be presented in a graph format to illustrate the improvement of the model over time.
+    The trained model is run on the test set which would then collect all predictions and calculate an error score. The output shall be the calculated Root Mean Squared Error (RMSE) that gives the error in the same units as the variable itself. The data will be presented in a graph format to illustrate the improvement of the model over time.
 \chapter{Results and Discussions}
 \section{Experiments}
 
@@ -491,19 +491,19 @@ FFDNN & 5.75 & 2.55-13.34 & 4.43 & 1.85-9.76 \\
     The 2 best performing models are Lower Batch4 and Grid Search3. Based on the results, it shows that RNNs can accurately predict hospitalization rate, as they are on average 10 cases off the true value, with the true value being on average 103.
 \chapter{Conclusions and Recommendations}
 \section{Conclusions}
-Recurrent Neural Networks work by analyzing current and previous inputs in calculating their prediction. Unlike neural networks such as Feed Forward wherein information runs in only one direction, information in RNNs runs in a loop; for every succeeding input, the information of each input is stored and taken into account in the calculation of the networks' prediction. In short, the RNNs remember previous information in their calculations. Although normal RNNs suffer from the vanishing gradient problem, wherein it struggles to remember inputs far away in the sequence, modified RNNs such as Long Short-Term Memory and Gated Recurrent Unit are used to deal with this problem, with the former being used for this study. It can be inferred that the 10\% error achieved is due to the structure of the LSTMs enabling it to remember long-term inputs despite the large number of data and epochs. 
+Recurrent Neural Networks work by analyzing current and previous inputs in calculating their prediction. Unlike neural networks such as Feed Forward wherein information runs in only one direction, information in RNNs runs in a loop; for every succeeding input, the information of each input is stored and taken into account in the calculation of the networks' prediction. In short, the RNNs remember previous information in their calculations. Although normal RNNs suffer from the vanishing gradient problem, wherein it struggles to remember inputs far away in the sequence, modified RNNs such as Long Short-Term Memory and Gated Recurrent Unit are used to deal with this problem, with the former being used for this study. It can be inferred that the 10\% error achieved is due to the structure of the LSTMs enabling it to remember long-term inputs despite a large number of data and epochs. 
 
 Pollutants and their concentration levels can be measured by dedicated air pollution monitoring analyzers and sensors. In gathering the pollution data, the DENR used state-of-the-art air monitoring analyzers; namely, Open-Path Dedicated Outdoor Air Systems (DOAS) and Continuous Ambient Monitoring Stations (CAMS). These air monitoring analyzers measure pollutants such as carbon dioxide (CO2) and ozone (O3) which are used in this study. Air Quality Indices are also useful to gauge the concentration levels of pollutants, which were used by DENR to know if said levels of pollutants were dangerous or not.
 
-Predicting the number of hospitalization cases is fairly easy outside of being accurate. The pollution data is correlated with the hospitalization cases data, and is subsequently used as the dataset for the RNN models. The RNN models' parameters are tuned with the desired values of the proponents and are run for training and testing. These models then output their predicted number of hospitalization cases. Inside of being accurate, however, was the main frustration of this research. While grid searching was used to get the best parameters out of a specified range of values, it takes a long time to train and compare multiple models. In the end, it all boiled down to trial and error, tuning each parameter of the model until it scores a lower error value resulting a very close to the real value of hospitalizations cases found in the gathered data. 
+Predicting the number of hospitalization cases is fairly easy outside of being accurate. The pollution data is correlated with the hospitalization cases data and is subsequently used as the dataset for the RNN models. The RNN models' parameters are tuned with the desired values of the proponents and are run for training and testing. These models then output their predicted number of hospitalization cases. Inside of being accurate, however, was the main frustration of this research. While grid searching was used to get the best parameters out of a specified range of values, it takes a long time to train and compare multiple models. In the end, it all boiled down to trial and error, tuning each parameter of the model until it scores a lower error value resulting in a close to the real value of hospitalizations cases found in the gathered data. 
 
-Determining accuracy of the models' prediction of hospitalization cases can be measured using Root-Mean-Square Error (RMSE). The RMSE outputs the percentage number on how much the predicted numbers of the models deviated from the real number of hospitalization cases found in gathered data. Since the RMSE is expressed in the same units as the output value it can be compared to the average value of the target. A 10.25 score compared to an average value of 103 can be likened to a $\approx$10\% deviation or $\approx$90\% accuracy. Although a model used for benchmarking, the FFDNN, had a better accuracy than the LSTM it is not within the scope of this research, but could be a good subject of study.
+Determining the accuracy of the models' prediction of hospitalization cases can be measured using Root-Mean-Square Error (RMSE). The RMSE outputs the percentage number on how much the predicted numbers of the models deviated from the real number of hospitalization cases found in gathered data. Since the RMSE is expressed in the same units as the output value, it can be compared to the average value of the target. A 10.25 score compared to an average value of 103 can be likened to a $\approx$10\% deviation or $\approx$90\% accuracy. Although a model used for benchmarking, the FFDNN, had better accuracy than the LSTM, it is not within the scope of this research, but could be a good subject of study.
 
 
 \section{Recommendations}
 For future studies related to this research, it is recommended to utilize a larger dataset with shorter time intervals, e.g. daily data. The larger amount of data could possibly help the model detect more trends and increase the accuracy. 
 In addition, based on the results of this research the FFDNN are warranted to be researched on due to the fact it performed better than the best RNN models. A study on FFDNN accuracy levels similar to this research is recommended.
-For future proponents who will be conducting research related to hospitalization cases, it's recommended to use Davao Doctors Hospital as a source of data due to having a database system of their own and extensive number of cases.
+For future proponents who will be conducting research related to hospitalization cases, it's recommended to use Davao Doctors Hospital as a source of data due to having a database system of their own and an extensive number of cases.
     \bibliographystyle{acm}
     \bibliography{ref}
 \end{document}
