@@ -64,6 +64,14 @@ def main():
     X = X[:split]
     X = X.reshape((X.shape[0], 1, X.shape[1]))
     print("{} {}".format(X.shape, y.shape))
+    model_fit([CuDNNLSTM(50, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
+               Dropout(0.2),
+               CuDNNLSTM(100),
+               Dropout(0.2),
+               Dense(1),
+               Activation('linear')],
+              train_X=X, train_y=y, test_X=X_test, test_y=y_test, optim='rmsprop', batch=50)
+    return
     model_fit([CuDNNLSTM(250, input_shape=(X.shape[1], X.shape[2]), return_sequences=True),
                Dropout(0.2),
                CuDNNLSTM(200, return_sequences=True),

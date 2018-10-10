@@ -66,7 +66,7 @@ class Pollution:
         model.compile(loss='mean_squared_error', optimizer=optimizer, metrics=['mse'])
         return model
 
-    def model_fit(self, layers, train_X, train_y, label, test_X=0, epochs=500, optim='rmsprop', batch=10, save=False):
+    def model_fit(self, layers, train_X, train_y, label, test_X=0, epochs=500, optim='adam', batch=10, save=False):
         test_X = self.X_test if type(test_X) is int else test_X
         test_y = self.y_test
         start = datetime.now()
@@ -167,11 +167,11 @@ class Pollution:
                         Dense(1),
                         Activation('linear')],
                        train_X=X, train_y=y, batch=5, label="Grid Searched")
-        self.graph_flush("optimizer.pdf", [1, 2])
-        self.graph_flush("batch_size.pdf", [1, 3, 4])
-        self.graph_flush("layer_3.pdf", [3, 6, 7])
-        self.graph_flush("grid_search.pdf", [6, 10])
-        self.graph_flush("ffdnn.pdf", [0, 10])
+        # self.graph_flush("optimizer.pdf", [1, 2])
+        # self.graph_flush("batch_size.pdf", [1, 3, 4])
+        # self.graph_flush("layer_3.pdf", [3, 6, 7])
+        # self.graph_flush("grid_search.pdf", [6, 10])
+        # self.graph_flush("ffdnn.pdf", [0, 10])
 
     def graph_flush(self, fn, models):
         plt.gcf().clear()
@@ -184,14 +184,14 @@ class Pollution:
             sub2 = fig.add_subplot(2, 1, 2)
             sub2.plot(i['val_loss'], label=i['label'])
             sub2.set_title('Test Loss')
-        sub1.legend()
-        sub2.legend()
+        sub1.legend(loc=2)
+        sub2.legend(loc=2)
         plt.savefig("Data/"+fn, bbox_inches='tight')
         plt.gcf().clear()
         plt.plot(self.y, label="real")
         for vals in [self.predictions[i] for i in models]:
             plt.plot(vals[0], label=vals[1])
-        plt.legend()
+        plt.legend(loc=2)
         plt.savefig("Data/predictions_" + fn, bbox_inches='tight')
         plt.gcf().clear()
 
@@ -306,11 +306,11 @@ class Pollution:
             yhat = pd.Series(yhat).values.astype('float32').reshape(-1, 1)
             inv_yhat = self.scalers[0].inverse_transform(yhat)
             self.predictor_magtanggol(inv_yhat, "Best")
-            plt.legend()
+            plt.legend(loc=2)
             if graphing < 1:
                 plt.show()
             plt.gcf().clear()
-        self.graph_flush("all_models.pdf", [i for i in range(0, 11)])
+        # self.graph_flush("all_models.pdf", [i for i in range(0, 11)])
 
 
 if __name__ == "__main__":

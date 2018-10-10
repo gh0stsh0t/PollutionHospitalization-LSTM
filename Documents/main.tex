@@ -261,8 +261,14 @@ date  & target  \\
 to a list the same number of times, effectively distributing the value of the feature to all the weeks of the months.
         \item The date column of the features were then dropped and then rescaled to a range of [0, 1], and the targets were similarly scaled. Both target and feature data was then split 67\% train and 33\%  test. 
     \end{enumerate}
+    Take note that the average value of the target spread across the months is 103.
     \subsection{Defining, Training and Fitting the Model}
-    Utilizing the Keras neural network library \cite{chollet2015keras} using the Tensorflow library \cite{tensorflow2015-whitepaper} as backend, the number of layers, neurons and number of features that the basic LSTM model would have were then defined. The basic LSTM model consisted of 2 layers with 50 and 100 neurons in each layer, 0.2 dropout, a batch size of 50 and 500 epochs. Multiple iterations of training and tuning were performed to realize the ideal number of epochs and batch sizes that would be fitted to the model.
+    Utilizing the Keras neural network library \cite{chollet2015keras} using the Tensorflow library \cite{tensorflow2015-whitepaper} as backend, the number of layers, neurons and number of features that the basic LSTM model would have were then defined. The basic LSTM model consisted of 2 layers with 50 and 100 neurons in each layer, 0.2 dropout, a batch size of 50 and 500 epochs with the architecture shown in figure \ref{fig:basic_arch}. Multiple iterations of training and tuning were performed to realize the ideal number of epochs and batch sizes that would be fitted to the model.
+\begin{figure}[H]
+\includegraphics[width=\linewidth]{basic_architecture.png}
+\caption{Basic Model Architecture}
+\label{fig:basic_arch}
+\end{figure}
     \subsection{Evaluating the Model}
     The trained model is run on the test set which would then collect all predictions and calculate an error score. The output shall be the calculated Root Mean Squared Error (RMSE) that gives error in the same units as the variable itself. The data will be presented in a graph format to illustrate the improvement of the model over time.
     \subsection{Implementing the Model}
@@ -272,6 +278,7 @@ to a list the same number of times, effectively distributing the value of the fe
 \section{Experiments}
 
 \subsection{Defining, Training and Evaluating the Model}
+The following graphs and results reflect a single run unless stated otherwise.
 \subsubsection{Basic Model}
 In order to know the number of epochs all the models would be trained at, the basic Model with 2 layers containing 50 and 100 neurons and a Dropout of 0.2 was trained with the Early Stopping function enabled to determine when the model would no longer improve. Then it was determined that after 500 epochs the model no longer improves, and thus this would be the default number of epochs for all proceeding models.
 
@@ -402,9 +409,8 @@ Test RMSE: 5.88
 Test  MAE: 3.92
 \end{verbatim}
 \end{multicols}
-\pagebreak
 \section{Results}
-Out of 22 models with different parameters which were trained and tested, 7 essential models were handpicked, and these models were trained and tested 10 times. Each run, the 2 best performing models’ parameters were used in a grid search to calculate even better parameter values. The accuracy of the 7 models along with the grid search was gauged through an accompanying feedforward neural network on each run. The RMSE, MAE, and range values of the models, grid search, and FFDNN was recorded and averaged. The parameters of the models are shown in \ref{table:params} while the overall averaged values of the models are shown in \ref{fig:results}\\
+Out of 22 models with different parameters which were trained and tested, 7 essential models were handpicked, and these models were trained and tested 100 times. The accuracy of the 7 models along with the grid searched model was gauged through an accompanying feed forward neural network on each run. The RMSE, MAE, and range values of the models, grid search, and FFDNN was recorded and averaged. The parameters of the models are shown in \ref{table:params} while the multiple values of the models' RMSE and MAE within 100 runs are shown in \ref{table:results}\\
 \begin{figure}[H]
     \centering
     \subfloat[train/test loss graph]{{\includegraphics[width=7.5cm,height=5cm]{Data/all_models.pdf}}}%
@@ -422,23 +428,23 @@ Out of 22 models with different parameters which were trained and tested, 7 esse
  \hline
 Models & Number of LSTM Layers & Dropout & Dense & Optimization & Epochs & Batch Size\\
  \hline
- FFDNN & N/A & N/A & 3 (12, 8, 1) & adam & 500 & 2\\
- \hline
  Basic2 & 2 (50, 100) & 0.2 & 1 (1) & rmsprop & 500 & 50\\
  \hline
  Basic ADAM2 & 2 (50, 100) & 0.2 & 1 (1) & adam & 500 & 50\\
  \hline
- Lower Batch3 & 3 (50, 100, 100) & 0.2 & 1 (1) & rmsprop & 500 & 5\\
+ Lower Batch3 & 3 (50, 100, 100) & 0.2 & 1 (1) & adam & 500 & 5\\
  \hline
- Basic3 & 3 (150, 250, 200) & 0.2 & 1 (1) & rmsprop & 500 & 10\\
+ Basic3 & 3 (150, 250, 200) & 0.2 & 1 (1) & adam & 500 & 10\\
  \hline
-Higher Neurons3 & 3 (150, 300, 200) & 0.2 & 1 (1) & rmsprop & 500 & 5\\
+Higher Neurons3 & 3 (150, 300, 200) & 0.2 & 1 (1) & adam & 500 & 5\\
  \hline
- Basic4 & 4 (150, 300, 200, 450) & 0.2 & 1 (1) & rmsprop & 500 & 20\\
+ Basic4 & 4 (150, 300, 200, 450) & 0.2 & 1 (1) & adam & 500 & 20\\
  \hline
- Lower Batch4 & 4 (150, 300, 200, 450) & 0.2 & 1 (1) & rmsprop & 500 & 5\\
+ Lower Batch4 & 4 (150, 300, 200, 450) & 0.2 & 1 (1) & adam & 500 & 5\\
  \hline
- Grid Search3 & 3 (250, 200, 300) & 0.2 & 1 (1) & rmsprop & 500 & 5\\
+ Grid Search3 & 3 (250, 200, 300) & 0.2 & 1 (1) & adam & 500 & 5\\
+  \hline
+ FFDNN & N/A & N/A & 3 (12, 8, 1) & adam & 500 & 2\\
  \hline
 \end{tabular}
 \begin{tablenotes}
@@ -449,33 +455,56 @@ Higher Neurons3 & 3 (150, 300, 200) & 0.2 & 1 (1) & rmsprop & 500 & 5\\
 \caption{Parameters}
 \label{table:params}
 \end{table}
-\begin{figure}[H]
-\includegraphics[width=\linewidth]{results.png}
-\caption{Prediction Results of each Models}
-\label{fig:results}
-\end{figure}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|}
+\toprule
+Model & Ave RMSE & Range & Ave MAE & Range \\
+\hline
+basic\_rmsprop2  & 18.99 & 17.11-20.49 & 12.52 & 11.7-13.48 \\
+\hline
+basic\_adam2  & 16.71 & 15.49-18.23 & 11.41 & 10.63-12.20 \\
+\hline
+lower\_batch2 & 13.33 & 10.93-15.42 & 1032 & 8.48-11.69  \\
+\hline
+lowest\_batch2 & 11.06 & 9.21-14.85 & 8.88 & 7.51-11.57 \\
+\hline
+basic3 & 18.06 & 15.56-21.06 & 12.58 & 11.55-14.20 \\
+\hline
+lower\_batch3 & 11.15 & 9.21-15.32 & 8.57 & 7.12-11.30 \\
+\hline
+high\_neuron3 & 10.92 & 8.00-14.86 & 8.60 & 6.63-11.25 \\
+\hline
+basic4 & 13.04 & 10.04-19.31 & 10.14 & 8.27-16.54 \\
+\hline
+lower\_batch4 & 10.17 & 8.27-16.54 & 7.97 & 6.39-11.08 \\
+\hline
+Grid Searched & 10.25 & 8.08-16.23 & 7.83 & 6.17-10.76 \\
+\hline
+FFDNN & 5.75 & 2.55-13.34 & 4.43 & 1.85-9.76 \\
+\bottomrule
+\end{tabular}
+\caption{Tabulated error scores}
+\label{table:results}
+\end{table}
 
 \section{Discussion}
-
-    The 2 best performing models are Lower Batch4 and Grid Search3. Based on the results, it shows that RNNs can accurately predict hospitalization rate, with a 3 point difference from the FFDNN. A lower dropout and batch size results in an accurate prediction regardless of the number of layers as long as nodes are 100 and above.
+    The 2 best performing models are Lower Batch4 and Grid Search3. Based on the results, it shows that RNNs can accurately predict hospitalization rate, as they are on average 10 cases off the true value, with the true value being on average 103.
 \chapter{Conclusions and Recommendations}
 \section{Conclusions}
-Recurrent Neural Networks work by analyzing current and previous inputs in calculating their prediction. Unlike neural networks such as Feedforward wherein information runs in only one direction, information in RNNs runs in a loop; for every succeeding input, the information of each input is stored and taken into account in the calculation of the networks' prediction. In short, the RNNs remember previous information in their calculations. Although normal RNNs suffer from the vanishing gradient problem, wherein it struggles to remember inputs far away in the sequence, modified RNNs such as Long Short-Term Memory and Gated Recurrent Unit are used to deal with this problem, with the former being used for this research study. It can be inferred that the 10\% error achieved is due to the structure of the LSTMs enabling it to remember long-term inputs despite the large number of data and epochs. 
+Recurrent Neural Networks work by analyzing current and previous inputs in calculating their prediction. Unlike neural networks such as Feed Forward wherein information runs in only one direction, information in RNNs runs in a loop; for every succeeding input, the information of each input is stored and taken into account in the calculation of the networks' prediction. In short, the RNNs remember previous information in their calculations. Although normal RNNs suffer from the vanishing gradient problem, wherein it struggles to remember inputs far away in the sequence, modified RNNs such as Long Short-Term Memory and Gated Recurrent Unit are used to deal with this problem, with the former being used for this study. It can be inferred that the 10\% error achieved is due to the structure of the LSTMs enabling it to remember long-term inputs despite the large number of data and epochs. 
 
 Pollutants and their concentration levels can be measured by dedicated air pollution monitoring analyzers and sensors. In gathering the pollution data, the DENR used state-of-the-art air monitoring analyzers; namely, Open-Path Dedicated Outdoor Air Systems (DOAS) and Continuous Ambient Monitoring Stations (CAMS). These air monitoring analyzers measure pollutants such as carbon dioxide (CO2) and ozone (O3) which are used in this study. Air Quality Indices are also useful to gauge the concentration levels of pollutants, which were used by DENR to know if said levels of pollutants were dangerous or not.
 
-Predicting the number of hospitalization cases is fairly easy outside of being accurate. The pollution data is correlated with the hospitalization cases data, and is subsequently used as the dataset for the RNN models. The RNN models' parameters are tuned with the desired values of the proponents and are run for training and testing. These models then output their predicted number of hospitalization cases. Inside of being accurate, however, was the main frustration of this research. While grid searching was used to get the best parameters out of a specified range of values, it took a long time to process only one type of parameter. In the end, it all boiled down to trial and error, tuning each parameters of the model until it output a prediction value very close to the real value of hospitalizations cases found in the gathered data. 
+Predicting the number of hospitalization cases is fairly easy outside of being accurate. The pollution data is correlated with the hospitalization cases data, and is subsequently used as the dataset for the RNN models. The RNN models' parameters are tuned with the desired values of the proponents and are run for training and testing. These models then output their predicted number of hospitalization cases. Inside of being accurate, however, was the main frustration of this research. While grid searching was used to get the best parameters out of a specified range of values, it takes a long time to train and compare multiple models. In the end, it all boiled down to trial and error, tuning each parameter of the model until it scores a lower error value resulting a very close to the real value of hospitalizations cases found in the gathered data. 
 
-Determining accuracy of the models' prediction of hospitalization cases can be measured using Root-Mean-Square Error (RMSE). The RMSE outputs the percentage number on how much the predicted numbers of the models deviated from the real number of hospitalization cases found in gathered data. Another way of determining accuracy is to use a benchmark model. In this study, a Feedforward Deep Neural Network was used as the benchmark due to its very high prediction accuracy compared to previously tested RNN models with different parameters.
+Determining accuracy of the models' prediction of hospitalization cases can be measured using Root-Mean-Square Error (RMSE). The RMSE outputs the percentage number on how much the predicted numbers of the models deviated from the real number of hospitalization cases found in gathered data. Since the RMSE is expressed in the same units as the output value it can be compared to the average value of the target. A 10.25 score compared to an average value of 103 can be likened to a ≈10\% deviation or ≈90\% accuracy. Although a model used for benchmarking, the FFDNN, had a better accuracy than the LSTM it is not within the scope of this research, but could be a good subject of study.
 
 
 \section{Recommendations}
 For future studies related to this research, it is recommended to utilize a larger dataset with shorter time intervals, e.g. daily data. The larger amount of data could possibly help the model detect more trends and increase the accuracy. 
-In addition, based on the results of this research, multilayer perceptrons (MLP) are warranted to be researched on due to the fact it performed better than the best RNN models. A study on MLP accuracy levels similar to this research is recommended.
+In addition, based on the results of this research the FFDNN are warranted to be researched on due to the fact it performed better than the best RNN models. A study on FFDNN accuracy levels similar to this research is recommended.
 For future proponents who will be conducting research related to hospitalization cases, it's recommended to use Davao Doctors Hospital as a source of data due to having a database system of their own and extensive number of cases.
-
-
-
     \bibliographystyle{acm}
     \bibliography{ref}
 \end{document}
