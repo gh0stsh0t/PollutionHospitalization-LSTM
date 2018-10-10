@@ -335,7 +335,7 @@ Test  MAE: 8.32
 \end{multicols}
 \pagebreak
 \subsubsection{Layers stacked}
-Then more layers were added and the number of neurons was increased. Simply adding a layer caused a great decrease in the RMSE. Doubling Neurons also had a noticable decrease in the RMSE\\
+Then more layers were added and the number of neurons was increased. Simply adding a layer caused a great decrease in the RMSE. Doubling Neurons also had a noticeable decrease in the RMSE\\
 \begin{figure}[H]
     \centering
     \subfloat[train/test loss graph]{{\includegraphics[width=7.5cm,height=5cm]{Data/layer_3.pdf}}}%
@@ -363,7 +363,7 @@ Test  MAE: 8.94
 \end{verbatim}
 \end{multicols}
 \subsubsection{Grid Search}
-A parameter grid based on all the models with a good RMSE score was then created and then a GridSearch was performed. The best model that was found by the grid search was then found and its score is the best performing amongst other LSTM models\\
+A parameter grid based on all the models with a good RMSE score was then created and then a Grid Search was performed. The grid search iterates through all possible combinations of the parameter grid to find the best model with its parameters, The best model that was found by the grid search was then tested and its score is one of the best performing amongst other LSTM models\\
 \begin{figure}[H]
     \centering
     \subfloat[train/test loss graph]{{\includegraphics[width=7.5cm,height=5cm]{Data/grid_search.pdf}}}%
@@ -386,7 +386,7 @@ Test  MAE: 7.04
 \end{verbatim}
 \end{multicols}
 \subsubsection{Feed Forward Deep Neural Network}
-Although outside the scope of the study, a basic Feed Forward Deep Neural Network (FFDNN) also known as a Multilayer Perceptron (MLP) was created to show the effect of a simpler model on a small dataset. This model averaged a 6.85 RMSE and is consistently more accurate than LSTM models. \\
+Although outside the scope of the study, a basic Feed Forward Deep Neural Network (FFDNN) also known as a Multilayer Perceptron (MLP) was created to show the effect of a simpler model on a small dataset. This model averaged a 5.88 RMSE and is consistently more accurate than LSTM models. \\
 \begin{figure}[H]
     \centering
     \subfloat[train/test loss graph]{{\includegraphics[width=7.5cm,height=5cm]{Data/ffdnn.pdf}}}%
@@ -488,7 +488,7 @@ FFDNN & 5.75 & 2.55-13.34 & 4.43 & 1.85-9.76 \\
 \end{table}
 
 \section{Discussion}
-    The 2 best performing models are Lower Batch4 and Grid Search3. Based on the results, it shows that RNNs can accurately predict hospitalization rate, as they are on average 10 cases off the true value, with the true value being on average 103.
+    The 2 best performing models are Lower Batch4 and Grid Search3. Giving the impression that a lower batch size coupled with high neurons and number of layers would result in a better score. Based on the results, it shows that RNNs can accurately predict hospitalization rate, as they are on average 10 cases off the true value, with the true value being on average 103.
 \chapter{Conclusions and Recommendations}
 \section{Conclusions}
 Recurrent Neural Networks work by analyzing current and previous inputs in calculating their prediction. Unlike neural networks such as Feed Forward wherein information runs in only one direction, information in RNNs runs in a loop; for every succeeding input, the information of each input is stored and taken into account in the calculation of the networks' prediction. In short, the RNNs remember previous information in their calculations. Although normal RNNs suffer from the vanishing gradient problem, wherein it struggles to remember inputs far away in the sequence, modified RNNs such as Long Short-Term Memory and Gated Recurrent Unit are used to deal with this problem, with the former being used for this study. It can be inferred that the 10\% error achieved is due to the structure of the LSTMs enabling it to remember long-term inputs despite a large number of data and epochs. 
