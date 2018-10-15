@@ -1,15 +1,198 @@
-<html>
-   <body>
-      <form action = "http://localhost:5000/uploader_form" method = "POST"
-         enctype = "multipart/form-data">
-         <input type = "file" name = "file" />
-         <input type = "submit"/>
-      </form>
-      <form action = "http://localhost:5000/uploader" method = "POST"
-         enctype = "multipart/form-data">
-         <input type = "file" name = "file" />
-         <input type = "submit"/>
-      </form>
+<html lang="en" dir="ltr" xmlns="http://www.w3.org/1999/html">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-   </body>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
+    <title>Hospitalization Predictor</title>
+</head>
+<body>
+<style>
+    body {
+        background-color: #174345
+    }
+</style>
+<main role="main" class=container>
+    <div id="signupbox" style="background-color: #78A1DE; margin-top:50px"
+         class="mainbox col-md-6 col-md-offset-2 col-sm-8 col-sm-offset-2">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="panel-title">Sensor Measurements</div>
+            </div>
+            <div class="panel-body">
+                <form method="post" action=".">
+                    <form method="post" action=".">
+                        <div class="row form-group">
+                            <div class="controls col ">
+                                <label class=" form-group-text" for=" formGroupSelect01">Stations</label>
+                            </div>
+                            <div class="controls col">
+                                 <label class=" form-group-text" for=" formGroupSelect01">PM10</label>
+                            </div>
+                            <div class="controls col">
+                                 <label class=" form-group-text" for=" formGroupSelect01">SO2</label>
+                            </div>
+                            <div class="controls col">
+                                 <label class=" form-group-text" for=" formGroupSelect01">NO2</label>
+                            </div>
+                            <div class="controls col">
+                                 <label class=" form-group-text" for=" formGroupSelect01">O3</label>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="controls col ">
+                                <label class=" form-group-text" for=" formGroupSelect01">Station 02</label>
+                            </div>
+                            <div class="controls col">
+                                <input type="number" , name="02_pm10" , step=".001" class="form-control"
+                                       aria-label="Sizing example input"
+                                       aria-describedby=" formGroup-sizing-default">
+                            </div>
+                            <div class="controls col">
+                                <input type="number" , name="02_so2" , step=".001" class="form-control"
+                                       aria-label="Sizing example input"
+                                       aria-describedby=" formGroup-sizing-default">
+                            </div>
+                            <div class="controls col">
+                                <input type="number" , name="02_no2" , step=".001" class="form-control"
+                                       aria-label="Sizing example input"
+                                       aria-describedby=" formGroup-sizing-default">
+                            </div>
+                            <div class="controls col">
+                                <input type="number" , name="02_o3" , step=".001" class="form-control"
+                                       aria-label="Sizing example input"
+                                       aria-describedby=" formGroup-sizing-default">
+                            </div>
+                        </div>
+                        <div class="row form-group ">
+                            <div class="controls col">
+                                <label class=" form-group-text" for=" formGroupSelect01">Station 07</label>
+                            </div>
+                            <div class="controls col">
+                                <input type="number" , name="07_pm10" , step=".001" class="form-control"
+                                       aria-label="Sizing example input"
+                                       aria-describedby=" formGroup-sizing-default">
+                            </div>
+                            <div class="controls col">
+                                <input type="number" , name="07_so2" , step=".001" class="form-control"
+                                       aria-label="Sizing example input"
+                                       aria-describedby=" formGroup-sizing-default">
+                            </div>
+                            <div class="controls col">
+                                <input type="number" , name="07_no2" , step=".001" class="form-control"
+                                       aria-label="Sizing example input"
+                                       aria-describedby=" formGroup-sizing-default">
+                            </div>
+                            <div class="controls col">
+                                <input type="number" , name="07_o3" , step=".001" class="form-control"
+                                       aria-label="Sizing example input"
+                                       aria-describedby=" formGroup-sizing-default">
+                            </div>
+                        </div>
+                        <div class="row form-group ">
+                            <div class="controls col">
+                                <label class=" form-group-text" for=" formGroupSelect01">Station 11</label>
+                            </div>
+                            <div class="controls col">
+                                <input type="number" , name="11_pm10" , step=".001" class="form-control"
+                                       aria-label="Sizing example input"
+                                       aria-describedby=" formGroup-sizing-default">
+                            </div>
+                            <div class="controls col">
+                                <input type="number" , name="11_so2" , step=".001" class="form-control"
+                                       aria-label="Sizing example input"
+                                       aria-describedby=" formGroup-sizing-default">
+                            </div>
+                            <div class="controls col">
+                                <input type="number" , name="11_no2" , step=".001" class="form-control"
+                                       aria-label="Sizing example input"
+                                       aria-describedby=" formGroup-sizing-default">
+                            </div>
+                            <div class="controls col">
+                                <input type="number" , name="11_o3" , step=".001" class="form-control"
+                                       aria-label="Sizing example input"
+                                       aria-describedby=" formGroup-sizing-default">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="controls col">
+                                <label class=" form-group-text" for=" formGroupSelect01">Station 14</label>
+                            </div>
+                            <div class="controls col">
+                                <input type="number" , name="14_pm10" , step=".001" class="form-control"
+                                       aria-label="Sizing example input"
+                                       aria-describedby=" formGroup-sizing-default">
+                            </div>
+                            <div class="controls col">
+                                <input type="number" , name="14_so2" , step=".001" class="form-control"
+                                       aria-label="Sizing example input"
+                                       aria-describedby=" formGroup-sizing-default">
+                            </div>
+                            <div class="controls col">
+                                <input type="number" , name="14_no2" , step=".001" class="form-control"
+                                       aria-label="Sizing example input"
+                                       aria-describedby=" formGroup-sizing-default">
+                            </div>
+                            <div class="controls col">
+                                <input type="number" , name="14_o3" , step=".001" class="form-control"
+                                       aria-label="Sizing example input"
+                                       aria-describedby=" formGroup-sizing-default">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="aab controls col-md-4 "></div>
+                            <div class="controls col-md-8 ">
+                                <button type="submit" class="btn btn-success">Predict</button>
+                                <input type="reset" class="btn btn-secondary">
+                            </div>
+                        </div>
+                    </form>
+                </form>
+                <form class="form-horizontal" method="post" action="." , enctype="multipart/form-data">
+                    <div class="row form-group">
+                        <div class="custom-file">
+                            <input type="file" name="file" class="custom-file-input" id="customFile" accept=".csv">
+                            <label class="custom-file-label" for="customFile">or Choose a file</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="aab controls col-md-4 "></div>
+                        <div class="controls col-md-8 ">
+                            <button type="submit" class="btn btn-success">Predict</button>
+                            <input type="reset" class="btn btn-secondary">
+                        </div>
+                    </div>
+                </form>
+                {% if predict %}
+                <div class=" form-group-prepend">
+                    <label class=" form-group-text" for=" formGroupSelect01">Expected number of patients: {{ predict
+                        }}</label>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#customFile').on('change', function () {
+            //get the file name
+            var fileName = $(this).val();
+            //replace the "Choose a file" label
+            $(this).next('.custom-file-label').html(fileName);
+        })
+    </script>
+</main>
+</body>
 </html>

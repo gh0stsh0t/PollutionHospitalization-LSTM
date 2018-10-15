@@ -32,56 +32,57 @@ def load_models():
     model.summary()
 
 
-@app.route("/predict", methods=["POST"])
-def predict():
-    data = {"success": False}
-
-    params = request.json
-    if params is None:
-        params = request.args
-
-    # if parameters are found, return a prediction
-    if params is not None:
-        x = pd.DataFrame.from_dict(params, orient='index').transpose()
-        with graph.as_default():
-            data["prediction"] = str(model.predict(x)[0][0])
-            data["success"] = True
-
-    # return a response in json format
-    return jsonify(data)
-
-
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def upload_file():
-    return render_template('upload.html')
-
-@app.route('/uploader_form', methods=['POST'])
-def read_submission():
     if request.method == 'POST':
-        X = []
-        for station in ['02', '07', '11', '14']:
-            pm10, so2, no2, o3 = request.form['pm10_'+station]
-            X.append(pm10, so2, no2, o3)
-        X = np.array(X).astype('float32')
-        return predictor(X)
+        print(request.headers)
+        if "multipart/form-data" in request.headers.get('Content-Type'):
+            print("file uploaded")
+            return render_template('upload.html', predict=uploadr_file(request))
+        else:
+            print("Tabular input")
+            print(request.form)
+            read_submission(request)
+            return render_template('upload.html', predict=read_submission(request))
+    else:
+        return render_template('upload.html')
 
-@app.route('/uploader', methods=['GET', 'POST'])
-def uploadr_file():
-    if request.method == 'POST':
-        f = request.files['file']
-        X = pd.read_csv(f, index_col=0)
-        X.fillna(-1, inplace=True)
-        X = X.drop("date", axis=1)
-        X = X.values.astype('float32')
-        return predictor(X)
+
+def read_submission(sent):
+    X = []
+    for station in ['02', '07', '11', '14']:
+        for pollutant in ['pm10', 'so2', 'no2', 'o3']:
+            try:
+                value = float(sent.form[station+'_'+pollutant])
+                value = -1 if value < 0 else value
+            except ValueError:
+                value = -1
+            print("{} {} {}".format(X, value, sent.form[station+'_'+pollutant]))
+            X.append(value)
+    X = np.array(X).astype('float32').reshape(1, -1)
+    return predictor(X)
+
+
+def uploadr_file(sent):
+    f = sent.files['file']
+    X = pd.read_csv(f, index_col=0)
+    print(3)
+    X.fillna(-1, inplace=True)
+    print(4)
+    X = X.drop("date", axis=1)
+    X = X.values.astype('float32')
+    return predictor(X)
+
 
 def predictor(data):
-        data = x_scaler.transform(data)
-        data = data.reshape((data.shape[0], 1, data.shape[1]))
-        with graph.as_default():
-            yhat = model.predict(data)
-        inv_yhat = y_scaler.inverse_transform(yhat)
-        return str(inv_yhat)
+    print(data)
+    data = x_scaler.transform(data)
+    data = data.reshape((data.shape[0], 1, data.shape[1]))
+    with graph.as_default():
+        yhat = model.predict(data)
+    inv_yhat = y_scaler.inverse_transform(yhat)
+    print(inv_yhat)
+    return str(inv_yhat[0])
 
 
 # if this is the main thread of execution first load the model and
@@ -90,4 +91,4 @@ if __name__ == "__main__":
     print(("* Loading Keras model and Flask starting server..."
            "please wait until server has fully started"))
     load_models()
-    app.run()
+    app.run(host='0.0.0.0')
