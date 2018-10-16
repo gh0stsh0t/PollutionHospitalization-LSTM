@@ -258,7 +258,7 @@ date  & target  \\
         \item Dropped all rows with more than 6 NaN values
         \item Replaced remaining NaN values with -1
         \item The target data was then parsed into a DataFrame, and each month's value was then divided by the number of feature rows in the corresponding month and appended
-to a list the same number of times, effectively distributing the value of the feature to all the weeks of the months.
+to a list the same number of times, effectively distributing the value of the target to all the weeks of the months.
         \item The date column of the features were then dropped and then rescaled to a range of [0, 1], and the targets were similarly scaled. Both target and feature data was then split 67\% train and 33\%  test. 
     \end{enumerate}
     The final number of samples after preprocesssing was 103, also take note that the average value of the target spread across the months is 101.65.
@@ -495,7 +495,7 @@ Time for high_neuron3:0:00:32.737798
 Time for lower_batch4:0:01:26.715916
 Time for Grid Searched:0:01:05.732816
     \end{verbatim}
-    This ~50\% to ~300\% increase in traning time makes it impractical to grid search, taking days to weeks to find the best model.
+    This ~50\% to ~300\% increase in training time makes it impractical to grid search, taking days to weeks to find the best model.
     In the end the two best performing models are Lower Batch4 and Grid Search3. Giving the impression that a lower batch size coupled with high neurons and number of layers would result in a better score. Based on the results, it shows that RNNs can accurately predict hospitalization rate, as they are on average 10 cases off the true value, with the true value being on average 103.
 \chapter{Conclusions and Recommendations}
 \section{Conclusions}
@@ -505,7 +505,7 @@ Pollutants and their concentration levels can be measured by dedicated air pollu
 
 Predicting the number of hospitalization cases is fairly easy outside of being accurate. The pollution data is correlated with the hospitalization cases data and is subsequently used as the dataset for the RNN models. The RNN models' parameters are tuned with the desired values of the proponents and are run for training and testing. These models then output their predicted number of hospitalization cases. Inside of being accurate, however, was the main frustration of this research. While grid searching was used to get the best parameters out of a specified range of values, it took a long time to train and compare multiple models. In the end, it all boiled down to trial and error, tuning each parameter of the model until it scores a lower error value resulting in a close to the real value of hospitalizations cases found in the gathered data. 
 
-Determining the accuracy of the models' prediction of hospitalization cases can be measured using Root-Mean-Square Error (RMSE). The RMSE outputs the percentage number on how much the predicted numbers of the models deviated from the real number of hospitalization cases found in gathered data. Since the RMSE is expressed in the same units as the output value, it can be compared to the average value of the target. A 10.25 score compared to an average value of 103 can be likened to a $\approx$10\% deviation or $\approx$90\% accuracy. Although a model used for benchmarking, the FFDNN, had better accuracy than the LSTM, it is not within the scope of this research, but could be a good subject of study.
+Determining the accuracy of the models' prediction of hospitalization cases can be measured using Root-Mean-Square Error (RMSE). The RMSE outputs the percentage number on how much the predicted numbers of the models deviated from the real number of hospitalization cases found in gathered data. Since the RMSE is expressed in the same units as the output value, it can be compared to the average value of the target. A 10.25 score compared to an average value of 103 can be likened to a $\approx$10\% deviation or $\approx$90\% accuracy. Although a model outside the scope of the study, the FFDNN, had better accuracy than the LSTM, this could be a good subject of study.
 
 
 \section{Recommendations}
