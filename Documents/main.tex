@@ -261,7 +261,7 @@ date  & target  \\
 to a list the same number of times, effectively distributing the value of the feature to all the weeks of the months.
         \item The date column of the features were then dropped and then rescaled to a range of [0, 1], and the targets were similarly scaled. Both target and feature data was then split 67\% train and 33\%  test. 
     \end{enumerate}
-    Take note that the average value of the target spread across the months is 103.
+    The final number of samples after preprocesssing was 103, also take note that the average value of the target spread across the months is 101.65.
     \pagebreak
     \subsection{Defining, Training and Fitting the Model}
     Utilizing the Keras neural network library \cite{chollet2015keras} using the Tensorflow library \cite{tensorflow2015-whitepaper} as backend, the number of layers, neurons and number of features that the basic LSTM model would have were then defined. The basic LSTM model consisted of two layers with 50 and 100 neurons in each layer, 0.2 dropout, a batch size of 50 and 500 epochs with the architecture shown in figure \ref{fig:basic_arch}. The layers used were cuDNN\cite{Chetlur2014cuDNNEP} optimized versions of the LSTM named cuDNNLSTM, which takes advantage of the parallel computing power of graphics processing units (GPU). Multiple iterations of training and tuning were performed to realize the ideal number of epochs and batch sizes that would be fitted to the model.
@@ -431,7 +431,9 @@ Models & Number of LSTM Layers & Dropout & Dense & Optimization & Epochs & Batch
  \hline
  Basic ADAM2 & 2 (50, 100) & 0.2 & 1 (1) & adam & 500 & 50\\
  \hline
- Lower Batch3 & 3 (50, 100, 100) & 0.2 & 1 (1) & adam & 500 & 5\\
+ Lower Batch3 & 3 (50, 100, 100) & 0.2 & 1 (1) & adam & 500 & 20\\
+ \hline
+ Lowest Batch3 & 3 (50, 100, 100) & 0.2 & 1 (1) & adam & 500 & 5\\
  \hline
  Basic3 & 3 (150, 250, 200) & 0.2 & 1 (1) & adam & 500 & 10\\
  \hline
@@ -488,7 +490,13 @@ FFDNN & 5.75 & 2.55-13.34 & 4.43 & 1.85-9.76 \\
 \end{table}
 
 \section{Discussion}
-    The 2 best performing models are Lower Batch4 and Grid Search3. Giving the impression that a lower batch size coupled with high neurons and number of layers would result in a better score. Based on the results, it shows that RNNs can accurately predict hospitalization rate, as they are on average 10 cases off the true value, with the true value being on average 103.
+    Looking at table \ref{table:results} some initial results like the lowest\_batch2 against high\_neuron3 had a different outcome after multiple runs, as it seemed that lowest\_batch2 was better but it actually was a result of high\_neuron3 overfitting in that specific instance. With high\_neuron3 being better it seems that a higher number of layers coupled with an increase in neurons actually has a noticeable effect on the RMSE. The grid searched model also presents this effect with all its layers consisting of 200 and more neurons. Then the effect of batch size is seen in all basic to lower batch models, a large decrease in batch size also has a large decrease in the RMSE, this is a side effect of the high number of iterations of fitting, before finishing a single epoch. A batch size of 50 would have 2 steps before finishing an epoch, while a batch size of 5 would have 14 steps, thus increasing the learning capabilities of the model. Then with these effects in mind, an experiment with 4 layers LSTM was conducted, and it produced the best model amongst LSTM models. With the caveat that it has the longest training time: \begin{verbatim}
+Time for high_neuron3:0:00:32.737798
+Time for lower_batch4:0:01:26.715916
+Time for Grid Searched:0:01:05.732816
+    \end{verbatim}
+    This ~50\% to ~300\% increase in traning time makes it impractical to grid search, taking days to weeks to find the best model.
+    In the end the two best performing models are Lower Batch4 and Grid Search3. Giving the impression that a lower batch size coupled with high neurons and number of layers would result in a better score. Based on the results, it shows that RNNs can accurately predict hospitalization rate, as they are on average 10 cases off the true value, with the true value being on average 103.
 \chapter{Conclusions and Recommendations}
 \section{Conclusions}
 Recurrent Neural Networks work by analyzing current and previous inputs in calculating their prediction. Unlike neural networks such as Feed Forward wherein information runs in only one direction, information in RNNs runs in a loop; for every succeeding input, the information of each input is stored and taken into account in the calculation of the networks' prediction. In short, the RNNs remember previous information in their calculations. Although normal RNNs suffer from the vanishing gradient problem, wherein it struggles to remember inputs far away in the sequence, modified RNNs such as Long Short-Term Memory and Gated Recurrent Unit are used to deal with this problem, with the former being used for this study. It can be inferred that the 10\% error achieved is due to the structure of the LSTMs enabling it to remember long-term inputs despite a large number of data and epochs. 
