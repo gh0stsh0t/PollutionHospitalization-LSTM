@@ -261,7 +261,7 @@ date  & target  \\
 to a list the same number of times, effectively distributing the value of the feature to all the weeks of the months.
         \item The date column of the features were then dropped and then rescaled to a range of [0, 1], and the targets were similarly scaled. Both target and feature data was then split 67\% train and 33\%  test. 
     \end{enumerate}
-    Take note that the average value of the target spread across the months is 103.
+    The final number of samples after preprocesssing was 103, also take note that the average value of the target spread across the months is 101.65.
     \pagebreak
     \subsection{Defining, Training and Fitting the Model}
     Utilizing the Keras neural network library \cite{chollet2015keras} using the Tensorflow library \cite{tensorflow2015-whitepaper} as backend, the number of layers, neurons and number of features that the basic LSTM model would have were then defined. The basic LSTM model consisted of two layers with 50 and 100 neurons in each layer, 0.2 dropout, a batch size of 50 and 500 epochs with the architecture shown in figure \ref{fig:basic_arch}. The layers used were cuDNN\cite{Chetlur2014cuDNNEP} optimized versions of the LSTM named cuDNNLSTM, which takes advantage of the parallel computing power of graphics processing units (GPU). Multiple iterations of training and tuning were performed to realize the ideal number of epochs and batch sizes that would be fitted to the model.
@@ -304,9 +304,9 @@ Test RMSE: 16.74
 Test  MAE: 10.98
 \end{verbatim}
 \end{multicols}
-From figure \ref{fig:basic} the Adam model had a lower train loss compared to the RMSprop model, but was worse in the test loss. However as the RMSE was calculated in this instance, Adam showed to be a better optimizer and thus is chosen as the default for all proceeding models.\\
+From figure \ref{fig:basic} the Adam model had a lower train loss compared to the RMSprop model, but was apparently worse in the test loss. However as the RMSE was calculated in this instance, Adam showed to be a better optimizer and thus is chosen as the default for all proceeding models.\\
 \subsubsection{Batch size}
-The batch size was then adjusted to see whether a lower or higher batch size will improve the model. the batch size was then decreased to 20 and the RMSE decreased slightly, then it was set to 5 and the batch size had a more noticable change\\
+The batch size was then adjusted to see whether a lower or higher batch size will improve the model. the batch size was then decreased to 20 and the RMSE decreased slightly, then it was set to 5 and the batch size had a more noticable change.\\
 \begin{figure}[H]
     \centering
     \subfloat[train/test loss graph]{{\includegraphics[width=7.5cm,height=5cm]{Data/batch_size.pdf}}}%
@@ -335,7 +335,7 @@ Test  MAE: 8.32
 \end{multicols}
 \pagebreak
 \subsubsection{Layers stacked}
-Then more layers were added and the number of neurons was increased. Simply adding a layer caused a great decrease in the RMSE. Doubling Neurons also had a noticeable decrease in the RMSE\\
+Then more layers were added and the number of neurons was increased. Simply adding a layer created a difference in the train and test loss, the same was expected by increasing the neurons, however the train loss increased after several epochs and is an indicator of overfitting.\\
 \begin{figure}[H]
     \centering
     \subfloat[train/test loss graph]{{\includegraphics[width=7.5cm,height=5cm]{Data/layer_3.pdf}}}%
@@ -363,7 +363,7 @@ Test  MAE: 8.94
 \end{verbatim}
 \end{multicols}
 \subsubsection{Grid Search}
-A parameter grid based on all the models with a good RMSE score was then created and then a Grid Search was performed. The grid search iterates through all possible combinations of the parameter grid to find the best model with its parameters, The best model that was found by the grid search was then tested and its score is one of the best performing amongst other LSTM models\\
+A parameter grid based on all the models with a good RMSE score was then created and then a Grid Search was performed. The grid search iterates through all possible combinations of the parameter grid to find the best model with its parameters, The best model that was found by the grid search, which had 3 layers with 250, 300, 200 neurons with a batch size of 5, was then tested and its score is one of the best performing amongst other LSTM models\\
 \begin{figure}[H]
     \centering
     \subfloat[train/test loss graph]{{\includegraphics[width=7.5cm,height=5cm]{Data/grid_search.pdf}}}%
@@ -488,7 +488,7 @@ FFDNN & 5.75 & 2.55-13.34 & 4.43 & 1.85-9.76 \\
 \end{table}
 
 \section{Discussion}
-    The 2 best performing models are Lower Batch4 and Grid Search3. Giving the impression that a lower batch size coupled with high neurons and number of layers would result in a better score. Based on the results, it shows that RNNs can accurately predict hospitalization rate, as they are on average 10 cases off the true value, with the true value being on average 103.
+    The 2 best performing models are Lower Batch4 and Grid Search3. Giving the impression that a lower batch size coupled with high neurons and number of layers would result in a better score. Based on the results, it shows that RNNs can accurately predict hospitalization rate, as they are on average 10 cases off the true value, with the true value being on average 101.65.
 \chapter{Conclusions and Recommendations}
 \section{Conclusions}
 Recurrent Neural Networks work by analyzing current and previous inputs in calculating their prediction. Unlike neural networks such as Feed Forward wherein information runs in only one direction, information in RNNs runs in a loop; for every succeeding input, the information of each input is stored and taken into account in the calculation of the networks' prediction. In short, the RNNs remember previous information in their calculations. Although normal RNNs suffer from the vanishing gradient problem, wherein it struggles to remember inputs far away in the sequence, modified RNNs such as Long Short-Term Memory and Gated Recurrent Unit are used to deal with this problem, with the former being used for this study. It can be inferred that the 10\% error achieved is due to the structure of the LSTMs enabling it to remember long-term inputs despite a large number of data and epochs. 

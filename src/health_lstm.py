@@ -238,6 +238,7 @@ class Pollution:
             which = (int(date[2:-3]) - 1) + (int(date[-2:]) - 15) * 12
             weeks[which] = weeks[which] + 1
         print(weeks)
+        print("Shape of features {}".format(X.shape))
 
         targets = target_raw['target'].get_values()
         y = []
@@ -246,6 +247,7 @@ class Pollution:
             y.extend(amp)
 
         self.y = pd.Series(y).values.astype('float32').reshape(-1, 1)
+        print("Average value of targets {}".format(self.y.mean()))
         self.split = (self.y.shape[0] // 3) * 2
         y = self.scalers[0].fit_transform(self.y)
         self.y_test = y[self.split:, :]
