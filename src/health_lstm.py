@@ -66,7 +66,7 @@ class Pollution:
         model.compile(loss='mean_squared_error', optimizer=optimizer, metrics=['mse'])
         return model
 
-    def model_fit(self, layers, train_X, train_y, label, test_X=0, epochs=500, optim='adam', batch=10, save=False):
+    def model_fit(self, layers, train_X, train_y, label, test_X=0, epochs=50000, optim='adam', batch=10, save=False):
         test_X = self.X_test if type(test_X) is int else test_X
         test_y = self.y_test
         start = datetime.now()
@@ -245,11 +245,16 @@ class Pollution:
         for ind, people in enumerate(targets):
             amp = [people // weeks[ind] for _ in range(weeks[ind])]
             y.extend(amp)
-
+        print(y)
+        pd.Series(y).to_csv("Data/Targets.csv")
+        printable = X
+        printable['target'] = pd.Series(y, index=X.index)
+        printable.to_csv("Data/ProcessedData.csv")
         self.y = pd.Series(y).values.astype('float32').reshape(-1, 1)
         print("Average value of targets {}".format(self.y.mean()))
         self.split = (self.y.shape[0] // 3) * 2
         y = self.scalers[0].fit_transform(self.y)
+        #y.to_csv("Data/TargetsScaled.csv")
         self.y_test = y[self.split:, :]
         y = y[:self.split, :]
 
