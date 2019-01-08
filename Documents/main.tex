@@ -505,7 +505,26 @@ Predicting the number of hospitalization cases is fairly easy outside of being a
 
 Determining the accuracy of the models' prediction of hospitalization cases can be measured using Root-Mean-Square Error (RMSE). The RMSE outputs the percentage number on how much the predicted numbers of the models deviated from the real number of hospitalization cases found in gathered data. Since the RMSE is expressed in the same units as the output value, it can be compared to the average value of the target. A 10.25 score compared to an average value of 103 can be likened to a $\approx$10\% deviation or $\approx$90\% accuracy. Although a model outside the scope of the study, the FFDNN, had better accuracy than the LSTM, this could be a good subject of study.
 
-Results of the accuracy of the most efficient models Lower Batch4 and Grid Search3 indicates a positive correlation between air quality and hospitalization cases. Using the data as shown in Table 3.1 and 3.2 under the months of October and November 2015, the model outputs a total number of approximately 418 and 332 cases, respectively. Although the output is off by a few cases, it more or less shows that poorer air quality levels directly results to higher hospitalization cases, with October having higher pollutant measurements compared to November. 
+
+Results of the accuracy of the most efficient models Lower Batch4 and Grid Search3 indicates a correlation between air quality and hospitalization cases. For further insight, each pollutant level from a different station, or group of stations yielded the following correlation levels with Target.
+
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|}
+\toprule
+Station    & pm10  & so2   & no2   & o3    \\
+\hline
+1st  & -0.00117809847548528 & 0.0649830137732408   & -0.157945979415051     & -0.175355629894131   \\
+\hline
+2nd  & -0.183510358538085 & 0.0478200093836347 & -0.266901411223444   & -0.180209032157528   \\
+\hline
+3rd  & -0.0144039541529944 & 0.0725283294960922  & -0.00177406426539516 & -0.0434073697672339  \\
+\hline
+4th & -0.158424266002198 & 0.0252018282149746 & -0.171389052291548  & -0.0766180987948896    \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Among all pollutants, Sulfur Dioxide seems to be the highest possible cause of lung-related hospitalizations cases due to having positive correlation for all stations, while the other pollutants, having negative correlation, may not necessarily lead to high number of hospitalizations cases even having high levels. At the very least, this data signifies that poor air quality does have an effect on the number of lung-related hospitalizations; its severity dependent on the kind of pollutant/s involved.
 
 
 \section{Recommendations}
