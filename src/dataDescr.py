@@ -8,8 +8,24 @@ def minMaxer(items):
         holder.append((item.max(), item.min(), item.mean()))
     return holder
 
+def grapher(partial):
+    plt.style.use('seaborn-darkgrid')
+    fig, ax1 = plt.subplots()
+    ax1.set_ylabel("µg/Ncm")
+    ax1.set_xlabel("day")
+    for station in partial:
+        ax1.plot(station)
+    ax1.tick_params(axis='y')
+    ax2 = ax1.twinx()
+    ax2.set_ylabel("Hospitalizations")
+    ax2.fill_between(range(0,103), targets, alpha=0.2)
+    ax2.tick_params(axis='y')
+    fig.tight_layout()
+    plt.show()
+
 raw_feat = pd.read_csv("Data/ProcessedData.csv", index_col = 0)
 print(raw_feat)
+raw_feat[list(raw_feat)] = raw_feat[list(raw_feat)].replace({-1:np.nan})
 dateList = raw_feat['date']
 raw_feat = raw_feat.drop('date', 1)
 targets = raw_feat['target']
@@ -39,16 +55,5 @@ pollutant = ['pm10', 'so2', 'no2', 'o3']
 for count, val in enumerate(minMaxes):
     for counter, stat in enumerate(val):
         print("Station {:>2} {:>4} - Max: {:6} Min: {:>5} Mean: {:.3f}".format(stations[counter], pollutant[count], stat[0], stat[1], stat[2]))
-
-fig, ax1 = plt.subplots()
-ax1.set_xlabel("µg/Ncm")
-ax1.set_ylabel("day")
-for station in pollus[0]:
-    ax1.plot(station)
-ax1.tick_params(axis='y')
-ax2 = ax1.twinx()
-color = 'tab:red'
-ax2.set_ylabel("Hospitalizations")
-ax2.tick_params(axis='y')
-fig.tight_layout()
-plt.show()
+for pollu in pollus:
+    grapher(pollu)
