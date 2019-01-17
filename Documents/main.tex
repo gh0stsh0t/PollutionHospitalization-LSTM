@@ -12,6 +12,7 @@
 \definecolor{grey}{RGB}{183,183,183}
 \usepackage[font={color=grey},figurename=figure.]{caption}
 \usepackage[left=1.2in,right=1in,top=1in,bottom=.8in]{geometry}
+\usepackage{tikz}
 \usepackage{booktabs}
 \usepackage{float}
 \iffalse
@@ -155,11 +156,62 @@ RMSE = \sqrt{}\frac{\sum_{n}^{i=1}\left ( X_{obs,i} - X_{model,i}\right )^{2}}{n
     \subsection{Gathering of Pollution and Hospitalization Data}
     Two sets of data were then collected. The First set of data, labeled as Target, contains hospitalizations sourced from medical records of Davao Doctors Hospital. The hospitalizations listed patients who were diagnosed with lung diseases; specifically, Asthma, Chronic Obstructive Pulmonary Disease, Chronic Bronchitis, Emphysema, Lung Cancer, Pneumonia, and Tuberculosis. The second set of data, labeled as Features, contains pollution data sourced from the Department of Environment and Natural
     Resources(DENR). Pollution data was given by the DENR in several pdf files, each containing daily and weekly data for a year. The data contained the measurements collected by six monitoring stations, namely: DC Station 02, DC Station 07, DC Station 11, DC Station 14, DC Station 15, and DC Station 16, which were located at Amparo Subdivision Open Lot, Barangay Compound, Brgy 12-B, Davao Memorial Park, Phase II, Toril Open Park Area, Toril Poblacion, Davao City, Davao International Airport, AGL Open
-Area, and Calinan National High School, Oval Open Area, respectively. The former four stations sample the air weekly while the latter two sample continuously daily. The pollution data used for training the models consist of the levels of concentrations of different pollutants that have been detected in different areas in Davao City; namely, PM10, NO2, O3, and SO2. All data gathered took place in 2015-2017, with a monthly interval.
+Area, and Calinan National High School, Oval Open Area, respectively. The former four stations sample the air weekly while the latter two sample continuously daily. The pollution data used for training the models consist of the levels of concentrations of different pollutants that have been detected in different areas in Davao City; namely, PM10, NO2, O3, and SO2. All data gathered took place in 2015-2017, with a monthly interval. The data represented in a graph is shown below.\\
+\begin{figure}[H]
+\centering
+\resizebox{!}{10cm}{\input{Data/pm10.pgf}}
+\caption{PM10 Readings across stations}
+\label{fig:pm10graph}
+\end{figure}
+\begin{figure}[H]
+\centering
+\resizebox{!}{10cm}{\input{Data/so2.pgf}}
+\caption{SO2 Readings across stations}
+\label{fig:so2graph}
+\end{figure}
+\begin{figure}[H]
+\centering
+\resizebox{!}{10cm}{\input{Data/no2.pgf}}
+\caption{NO2 Readings across stations}
+\label{fig:no2graph}
+\end{figure}
+\begin{figure}[H]
+\centering
+\resizebox{!}{10cm}{\input{Data/o3.pgf}}
+\caption{O3 Readings across stations}
+\label{fig:o3graph}
+\end{figure}
     \subsection{Organizing Data}
-Data from the PDF files given by DENR was extracted into CSV files named by the station and year the data came from e.g. "02\_15.csv". The columns were date, pm10, so2, no2, and o3, the date is formatted as week/month/year and blank entries were encoded as "nan" as shown in \ref{table:data_csv1}
+Data from the PDF files given by DENR was extracted into CSV files named by the station and year the data came from e.g. "02\_15.csv". The columns were date, pm10, so2, no2, and o3, the date is formatted as week/month/year and blank entries were encoded as "nan" as shown in \ref{table:data_csv1} with statistics in \ref{table:minMax}
 
 Data from Davao Doctors was a printed worksheet with the number of hospital cases for specific lung diseases for every month, all the cases per month were then summed and encoded into the file "MonthlyTarget.csv" with the columns date and target. the date was formatted as month/year. Sample data is shown below in \ref{table:data_csv2}\\
+\centering
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lllllllllll}
+\toprule 
+      &\multicolumn{4}{c}{Station 2} & \multicolumn{4}{c}{Station 7} \\
+    \midrule
+     & PM10 & SO2 & NO2 & O3 & PM10 & SO2 & NO2 & O3 \\
+    \midrule
+    Max & 69.0 & 6.1 & 29.8 & 42.09 & 84.9 & 4.7 & 35.3 & 40.56 \\
+    Min & 17.8 & 0.001 & 0.15 & 0.0 & 3.03 & 0.001 & 0.43 & 0.0  \\
+    Mean & 36.572 & 0.619 & 9.383 & 5.049 & 46.926 & 0.553 & 14.611 & 5.122 \\
+    \midrule
+    & \multicolumn{4}{c}{Station 11} & \multicolumn{4}{c}{Station 14} \\
+    \midrule
+    Max & 97.4 & 6.54 & 24.78 & 28.0 & 125.8 & 16.2 & 22.4 & 15.3 \\
+    Min & 4.37 & 0.001 & 0.41 & 0.0 & 12.5 & 0.001 & 0.1 & 0.0 \\
+    Mean & 37.370 & 0.826 & 8.565 & 3.455 & 60.422 & 0.793 & 12.106 & 2.029 \\
+    \bottomrule
+\end{tabular}
+    \caption{Statistics across stations}
+    \label{table:minMax}
+\end{table}
+    \centering
+    
+
+
 \begin{table}[H]
 \parbox{.45\linewidth}{
 \centering
@@ -248,7 +300,6 @@ date  & target  \\
 \label{table:data_csv2}
 }
 \end{table}
-
     \subsection{Preprocessing of Data}
     The organized data was then preprocessed to fix gaps. The steps were as follows:
     \begin{enumerate}
@@ -279,7 +330,9 @@ The following graphs and results reflect a single run unless stated otherwise.
 In order to know the number of epochs all the models would be trained at, the basic Model with 2 layers containing 50 and 100 neurons and a Dropout of 0.2 was trained with the Early Stopping function enabled to determine when the model would no longer improve. Then it was determined that after 500 epochs the model no longer improves, and thus this would be the default number of epochs for all proceeding models.
 
 Based on the previous research by Ruder(2016), Adam
-and RMSprop are rather similar algorithms that do well in the same circumstances, however Adam slightly outperforms RMSprop, thus being the recommended optimizer. \cite{DBLP:journals/corr/Ruder16} Nonetheless both optimizers were tested using the basic model.
+and RMSprop are rather similar algorithms that do well in the same circumstances, however Adam slightly outperforms RMSprop, thus being the recommended optimizer. \cite{DBLP:journals/corr/Ruder16} Nonetheless both optimizers were tested using the basic model.\\
+
+
 \begin{figure}[H]
     \centering
     \subfloat[train/test loss graph]{{\includegraphics[width=7.5cm,height=5cm]{Data/optimizer.pdf}}}%
