@@ -181,14 +181,14 @@ Area, and Calinan National High School, Oval Open Area, respectively. The former
 \caption{O3 Readings across stations}
 \label{fig:o3graph}
 \end{figure}
+\pagebreak
     \subsection{Organizing Data}
 Data from the PDF files given by DENR was extracted into CSV files named by the station and year the data came from e.g. "02\_15.csv". The columns were date, pm10, so2, no2, and o3, the date is formatted as week/month/year and blank entries were encoded as "nan" as shown in \ref{table:data_csv1} with statistics in \ref{table:minMax}
 
 Data from Davao Doctors was a printed worksheet with the number of hospital cases for specific lung diseases for every month, all the cases per month were then summed and encoded into the file "MonthlyTarget.csv" with the columns date and target. the date was formatted as month/year. Sample data is shown below in \ref{table:data_csv2}\\
-\centering
 \begin{table}[H]
     \centering
-    \begin{tabular}{lllllllllll}
+    \begin{tabular}{lllll|llllll}
 \toprule 
       &\multicolumn{4}{c}{Station 2} & \multicolumn{4}{c}{Station 7} \\
     \midrule
@@ -208,7 +208,6 @@ Data from Davao Doctors was a printed worksheet with the number of hospital case
     \caption{Statistics across stations}
     \label{table:minMax}
 \end{table}
-    \centering
     
 
 
