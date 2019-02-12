@@ -309,7 +309,7 @@ date  & target  \\
 to a list the same number of times, effectively distributing the value of the target to all the weeks of the months.
         \item The date column of the features were then dropped and then rescaled to a range of [0, 1], and the targets were similarly scaled. Both target and feature data was then split 67\% train and 33\%  test. 
     \end{enumerate}
-    The final number of samples after preprocesssing was 103, also take note that the average value of the target spread across the months is 101.65.
+    The final number of samples after preprocessing was 103, also take note that the average value of the target spread across the months is 101.65.
     \pagebreak
     \subsection{Defining, Training and Fitting the Model}
     Utilizing the Keras neural network library \cite{chollet2015keras} using the Tensorflow library \cite{tensorflow2015-whitepaper} as backend, the number of layers, neurons and number of features that the basic LSTM model would have were then defined. The basic LSTM model consisted of two layers with 50 and 100 neurons in each layer, 0.2 dropout, a batch size of 50 and 500 epochs with the architecture shown in figure \ref{fig:basic_arch}. The layers used were cuDNN\cite{Chetlur2014cuDNNEP} optimized versions of the LSTM named cuDNNLSTM, which takes advantage of the parallel computing power of graphics processing units (GPU). Multiple iterations of training and tuning were performed to realize the ideal number of epochs and batch sizes that would be fitted to the model.
@@ -565,13 +565,13 @@ Results of the accuracy of the most efficient models Lower Batch4 and Grid Searc
 \toprule
 Station    & pm10  & so2   & no2   & o3    \\
 \hline
-1st  & -0.00117809847548528 & 0.0649830137732408   & -0.157945979415051     & -0.175355629894131   \\
+1st  & -0.001178 & 0.064983   & -0.157946    & -0.175356   \\
 \hline
-2nd  & -0.183510358538085 & 0.0478200093836347 & -0.266901411223444   & -0.180209032157528   \\
+2nd  & -0.183510 & 0.047820 & -0.266901   & -0.180209   \\
 \hline
-3rd  & -0.0144039541529944 & 0.0725283294960922  & -0.00177406426539516 & -0.0434073697672339  \\
+3rd  & -0.014404 & 0.072528  & -0.001774 & -0.043407  \\
 \hline
-4th & -0.158424266002198 & 0.0252018282149746 & -0.171389052291548  & -0.0766180987948896    \\
+4th & -0.158424 & 0.025202 & -0.171389  & -0.076618    \\
 \bottomrule
 \end{tabular}
 \end{center}
