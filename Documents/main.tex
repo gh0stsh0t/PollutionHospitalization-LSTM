@@ -561,7 +561,9 @@ Determining the accuracy of the models' prediction of hospitalization cases can 
 Results of the accuracy of the most efficient models Lower Batch4 and Grid Search3 indicates a correlation between air quality and hospitalization cases. For further insight, each pollutant level from a different station, or group of stations yielded the following correlation levels with Target.
 
 \begin{center}
-\begin{tabular}{|l|l|l|l|l|}
+\begin{table}
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
 \toprule
 Station    & pm10  & so2   & no2   & o3    \\
 \hline
@@ -574,6 +576,10 @@ Station    & pm10  & so2   & no2   & o3    \\
 4th & -0.158424 & 0.025202 & -0.171389  & -0.076618    \\
 \bottomrule
 \end{tabular}
+    \caption{Correlation }
+    \label{table:correl}
+\end{table}
+
 \end{center}
 
 Among all pollutants, Sulfur Dioxide seems to be the highest possible cause of lung-related hospitalizations cases due to having positive correlation for all stations, while the other pollutants, having negative correlation, may not necessarily lead to high number of hospitalizations cases even having high levels. At the very least, this data signifies that poor air quality does have an effect on the number of lung-related hospitalizations; its severity dependent on the kind of pollutant/s involved.
