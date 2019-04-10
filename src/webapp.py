@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from sklearn.externals import joblib
 from flask import Flask, render_template, request, jsonify
 import pandas as pd
@@ -7,7 +8,7 @@ from keras.models import load_model
 from keras import backend as kk
 
 # initialize our Flask application and the Keras model
-app = Flask(__name__)
+app = Flask(__name__, template_folder='src/templates')
 
 
 def load_models():
@@ -91,4 +92,6 @@ if __name__ == "__main__":
     print(("* Loading Keras model and Flask starting server..."
            "please wait until server has fully started"))
     load_models()
-    app.run(host='0.0.0.0')
+    port = 5000
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)

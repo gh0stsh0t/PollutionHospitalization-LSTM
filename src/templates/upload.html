@@ -22,11 +22,19 @@
 <body>
 <style>
     body {
-        background-color: #174345
+        background-image: url("{{ url_for('static', filename = 'bg.jpg') }}");
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 100%;
+        background-position: center;
+    }
+    .panel-transparrent
+    {
+        background: 
     }
 </style>
 <main role="main" class=container>
-    <div id="signupbox" style="background-color: #78A1DE; margin-top:50px"
+    <div id="signupbox" style="background: rgba(120, 161, 222, 0.8)!important;margin-top:50px"
          class="mainbox col-md-6 col-md-offset-2 col-sm-8 col-sm-offset-2">
         <div class="panel panel-info">
             <div class="panel-heading">
