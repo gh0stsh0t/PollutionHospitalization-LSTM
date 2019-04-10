@@ -8,7 +8,7 @@ from keras.models import load_model
 from keras import backend as kk
 
 # initialize our Flask application and the Keras model
-app = Flask(__name__, template_folder='src/templates')
+app = Flask(__name__)
 
 
 def load_models():
